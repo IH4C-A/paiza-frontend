@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:react\" \"npm run dev:flask\"",
     "dev:react": "vite",
-    "dev:flask": "cmd /c \"cd ../backend && flask run\"",
+    "dev:flask": "cmd /c \"cd ../paiza-backend && flask run\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
