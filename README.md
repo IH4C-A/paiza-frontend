@@ -1,54 +1,23 @@
-# React + TypeScript + Vite
+# 作業のルール
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+何か作業をするときはissueを作成してください。
+issueを作成する際は、どういう作業を行うのか、かける範囲で説明欄に記入してください。
 
-Currently, two official plugins are available:
+作業する際のブランチ名は　feature/#issue番号　とかがやりやすいと思います。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# 起動コマンド
 
-## Expanding the ESLint configuration
+npm run dev(今後pnpmを導入する場合、 pnpm run dev になります。)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# アーキテクチャ
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+後日追記
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+# 作成ページ
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Top - スキルチェック
+    - メンター
+    - うちのコ
+    - プロフィール(簡易的)
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+その他作成ページがあれば追記
