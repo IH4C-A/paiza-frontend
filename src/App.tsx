@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import MarkdownEditor from './routes/articles/ArticlesPage';
+import MarkdownEditor from './routes/articles/create/ArticlesPage';
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
 } from "react-router-dom";
+import ArticlesListPage from './routes/articles/all/ArticlesListPage';
+import ArticleDetailPage from './routes/articles/details/ArticleDetailPage';
 
 function App() {
   const [message, setMessage] = useState<string>('');
@@ -31,7 +33,9 @@ function App() {
     <>
     <Router>
       <Routes>
-        <Route path="/article" element={<MarkdownEditor />} />
+        <Route path="/article" element={<ArticlesListPage />}/>
+        <Route path="/article/:id" element={<ArticleDetailPage />}/>
+        <Route path="/article/new" element={<MarkdownEditor />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

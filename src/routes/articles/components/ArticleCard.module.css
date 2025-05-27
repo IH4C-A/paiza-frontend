@@ -1,0 +1,43 @@
+.card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  background: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.card h2 {
+  margin: 0 0 8px;
+  color: #2c963f;
+}
+
+.summary {
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.tags {
+  margin: 8px 0;
+}
+
+.tag {
+  display: inline-block;
+  background: #e0f3e8;
+  color: #2c963f;
+  font-size: 12px;
+  padding: 4px 8px;
+  margin-right: 4px;
+  border-radius: 12px;
+}
+
+.date {
+  color: #888;
+  font-size: 12px;
+}
