@@ -151,7 +151,7 @@ export const useCurrentUser = (token: string | null) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('http://localhost:5000/current_user', {
+            const response = await fetch('http://localhost:5000/login_user', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
