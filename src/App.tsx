@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
-import './App.css'
+import MarkdownEditor from './routes/articles/ArticlesPage';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 
 function App() {
   const [message, setMessage] = useState<string>('');
@@ -23,7 +29,13 @@ function App() {
 
   return (
     <>
-      <div className="App">
+    <Router>
+      <Routes>
+        <Route path="/article" element={<MarkdownEditor />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
+      <div>
           <h1>Paiza Project</h1>
           <p>{message}</p>
       </div>
