@@ -10,3 +10,4 @@ export * from './useComment';
 export * from './useCourseProgress';
 export * from './useCourse';
 export * from './useGroupChat';
+export * from './useMentorShip';
