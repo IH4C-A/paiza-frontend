@@ -11,3 +11,5 @@ export * from './useCourseProgress';
 export * from './useCourse';
 export * from './useGroupChat';
 export * from './useMentorShip';
+export * from './useNotification';
+export * from './usePlant';
