@@ -5,3 +5,10 @@ export type GroupChat = {
     created_at: Date;
     created_by: string;
 }
+
+export type GroupChatMember = {
+    group_id: string;
+    user_id: string;
+    user_name: string;
+    user_image: string | null;
+}
