@@ -5,6 +5,7 @@ export type ArticleCategory = {
 }
 
 export type ArticleCategoryAll = {
+    category_id: string;
     article_category_id: string;
     article_id: string;
     user_id: string;
