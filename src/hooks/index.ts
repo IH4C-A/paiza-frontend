@@ -5,3 +5,4 @@ export * from './useArticle';
 export * from './useArticleCategory';
 export * from './useArticleLikes';
 export * from './useBoard';
+export * from './useCategory';
