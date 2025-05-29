@@ -4,3 +4,4 @@ export * from './useAnswer';
 export * from './useArticle';
 export * from './useArticleCategory';
 export * from './useArticleLikes';
+export * from './useBoard';
