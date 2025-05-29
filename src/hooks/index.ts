@@ -6,3 +6,4 @@ export * from './useArticleCategory';
 export * from './useArticleLikes';
 export * from './useBoard';
 export * from './useCategory';
+export * from './useComment';
