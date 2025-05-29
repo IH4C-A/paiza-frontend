@@ -15,3 +15,4 @@ export * from './useNotification';
 export * from './usePlant';
 export * from './useProblem';
 export * from './useRank';
+export * from './useSchoolInfo';
