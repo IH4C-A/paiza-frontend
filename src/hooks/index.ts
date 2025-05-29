@@ -8,3 +8,4 @@ export * from './useBoard';
 export * from './useCategory';
 export * from './useComment';
 export * from './useCourseProgress';
+export * from './useCourse';
