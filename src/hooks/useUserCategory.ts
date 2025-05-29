@@ -43,7 +43,7 @@ export const useRegisterUserCategory = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const registerUserCategory = async (category: string[]) => {
+    const registerUserCategory = async (categoryids: string[]) => {
         setLoading(true);
         setError(null);
         try {
@@ -53,7 +53,7 @@ export const useRegisterUserCategory = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ category })
+                body: JSON.stringify({ categoryids })
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
