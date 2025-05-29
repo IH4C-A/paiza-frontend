@@ -1,26 +1,27 @@
-import { useEffect, useState } from 'react';
-import MarkdownEditor from './routes/articles/ArticlesPage';
+import { useEffect, useState } from "react";
+import MarkdownEditor from "./routes/articles/ArticlesPage";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
 } from "react-router-dom";
+import { Header } from "./components/header/Header";
 
 function App() {
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     const fetchMessage = async () => {
       try {
-        const response = await fetch('http://localhost:5000/hello');
+        const response = await fetch("http://localhost:5000/hello");
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setMessage(data.message);
       } catch (error) {
-        console.error('Error fetching message:', error);
+        console.error("Error fetching message:", error);
       }
     };
 
@@ -29,18 +30,19 @@ function App() {
 
   return (
     <>
-    <Router>
-      <Routes>
-        <Route path="/article" element={<MarkdownEditor />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/article" element={<MarkdownEditor />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
       <div>
-          <h1>Paiza Project</h1>
-          <p>{message}</p>
+        <h1>Paiza Project</h1>
+        <p>{message}</p>
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
