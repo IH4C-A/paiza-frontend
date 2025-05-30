@@ -18,3 +18,4 @@ export * from './useRank';
 export * from './useSchoolInfo';
 export * from './useStudyLogs';
 export * from './useUserRank';
+export * from './useChat';
