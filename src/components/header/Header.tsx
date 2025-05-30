@@ -6,7 +6,7 @@ export const Header = () => {
     <div className={style.container}>
       <div className={style.navigationList}>
         <figure>
-          <img src="" alt="" />
+          <img src="/logo.png" alt="logo" width={250} />
         </figure>
         <a className={style.navigationLink} href="/">
           トップ

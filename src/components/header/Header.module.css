@@ -10,11 +10,16 @@
 }
 .navigationList {
   display: flex;
+  align-items: center;
   gap: 20px;
 }
 .navigationLink {
+  transition: 0.3s;
   padding: 10px;
   height: 100%;
   text-decoration: none;
   color: #fff;
+}
+.navigationLink:hover {
+  opacity: 0.5;
 }
