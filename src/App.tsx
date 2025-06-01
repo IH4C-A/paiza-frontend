@@ -1,16 +1,20 @@
-import { useEffect, useState } from 'react';
-import MarkdownEditor from './routes/articles/create/ArticlesPage';
+import { useEffect, useState } from "react";
+import MarkdownEditor from "./routes/articles/create/ArticlesPage";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import { Header } from "./components/header/Header";
-import ArticlesListPage from './routes/articles/all/ArticlesListPage';
-import ArticleDetailPage from './routes/articles/details/ArticleDetailPage';
+import ArticlesListPage from "./routes/articles/all/ArticlesListPage";
+import ArticleDetailPage from "./routes/articles/details/ArticleDetailPage";
+import { SigninPage } from "./routes/auth/signin/SigninPage";
+import { SignupPage } from "./routes/auth/signup/SignupPage";
 
-function App() {
+function AppContent() {
+  const location = useLocation();
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
@@ -30,23 +34,34 @@ function App() {
     fetchMessage();
   }, []);
 
+  const hideHeader =
+    location.pathname.startsWith("/auth/signin") ||
+    location.pathname.startsWith("/auth/signup");
+
   return (
     <>
-      <Router>
-          <Header />
-            <Routes>
-              <Route path="/article" element={<ArticlesListPage />}/>
-              <Route path="/article/:id" element={<ArticleDetailPage />}/>
-              <Route path="/article/new" element={<MarkdownEditor />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-      </Router>
-
+      {!hideHeader && <Header />}
+      <Routes>
+        <Route path="/article" element={<ArticlesListPage />} />
+        <Route path="/article/:id" element={<ArticleDetailPage />} />
+        <Route path="/article/new" element={<MarkdownEditor />} />
+        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/auth/signin" element={<SigninPage />} />
+        <Route path="/auth/signup" element={<SignupPage />} />
+      </Routes>
       <div>
         <h1>Paiza Project</h1>
         <p>{message}</p>
       </div>
     </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 
