@@ -6,7 +6,7 @@
   gap: 25px;
 
   width: 700px;
-  padding: 40px;
+  padding: 40px 20px;
   box-shadow: 1px 2px 7px 0px rgba(0, 0, 0, 0.45);
   border-radius: 10px;
 }
@@ -46,4 +46,18 @@
   color: #fff;
   font-size: 1.1rem;
   font-weight: 500;
+}
+.errorSummary {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c66;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.errorMessage {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
 }
