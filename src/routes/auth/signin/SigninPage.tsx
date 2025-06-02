@@ -1,3 +1,10 @@
+import { SigninForm } from "./components/SigninForm";
+import style from "./SigninPage.module.css";
+
 export const SigninPage = () => {
-  return <div>SigninPage</div>;
+  return (
+    <div className={style.container}>
+      <SigninForm />
+    </div>
+  );
 };
