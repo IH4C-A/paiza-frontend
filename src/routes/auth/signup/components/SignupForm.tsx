@@ -31,10 +31,10 @@ export const SignupForm = () => {
               className={style.inputForm}
               type="text"
               placeholder="姓"
-              {...register("lastname")}
+              {...register("last_name")}
             />
-            {errors.lastname && (
-              <p className={style.errorMessage}>{errors.lastname.message}</p>
+            {errors.last_name && (
+              <p className={style.errorMessage}>{errors.last_name.message}</p>
             )}
           </div>
 
@@ -44,10 +44,10 @@ export const SignupForm = () => {
               className={style.inputForm}
               type="text"
               placeholder="名"
-              {...register("firstname")}
+              {...register("first_name")}
             />
-            {errors.firstname && (
-              <p className={style.errorMessage}>{errors.firstname.message}</p>
+            {errors.first_name && (
+              <p className={style.errorMessage}>{errors.first_name.message}</p>
             )}
           </div>
 
@@ -81,16 +81,16 @@ export const SignupForm = () => {
             <input
               className={style.inputForm}
               type="text"
-              {...register("address")}
+              {...register("adrress")}
             />
-            {errors.address && (
-              <p className={style.errorMessage}>{errors.address.message}</p>
+            {errors.adrress && (
+              <p className={style.errorMessage}>{errors.adrress.message}</p>
             )}
           </div>
 
           <div>
             <p className={style.inputLabel}>性別</p>
-            <select className={style.inputForm} {...register("gender")}>
+            <select className={style.inputForm} {...register("seibetu")}>
               <option value="">性別を選択してください</option>
               {genderOption.map((item) => (
                 <option key={item.id} value={item.gender}>
@@ -98,8 +98,8 @@ export const SignupForm = () => {
                 </option>
               ))}
             </select>
-            {errors.gender && (
-              <p className={style.errorMessage}>{errors.gender.message}</p>
+            {errors.seibetu && (
+              <p className={style.errorMessage}>{errors.seibetu.message}</p>
             )}
           </div>
 
@@ -119,7 +119,7 @@ export const SignupForm = () => {
 
           <div className={style.inputFullWidth}>
             <p className={style.inputLabel}>職業</p>
-            <select className={style.inputForm} {...register("industry")}>
+            <select className={style.inputForm} {...register("employment_status")}>
               <option value="">現在の職業</option>
               {industryOption.map((item) => (
                 <option key={item.id} value={item.industry}>
@@ -127,8 +127,8 @@ export const SignupForm = () => {
                 </option>
               ))}
             </select>
-            {errors.industry && (
-              <p className={style.errorMessage}>{errors.industry.message}</p>
+            {errors.employment_status && (
+              <p className={style.errorMessage}>{errors.employment_status.message}</p>
             )}
           </div>
 
