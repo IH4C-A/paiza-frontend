@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import ArticleCard from '../components/ArticleCard';
+import { useArticlesWithCategories } from '../../../hooks/useArticle';
+import type { Article } from '../../../types/articleType';
 
 const dummyArticles = [
   {
@@ -25,13 +27,16 @@ const ArticlesListPage: React.FC = () => {
   const [filterTag, setFilterTag] = useState('');
   const [page, setPage] = useState(1);
   const articlesPerPage = 5;
+  const { articles } = useArticlesWithCategories();
 
-  const filteredArticles = dummyArticles
-    .filter((article) =>
+  const filteredArticles = articles
+    .filter((article:Article) =>
       article.title.toLowerCase().includes(search.toLowerCase()) ||
-      article.tags.some((tag) => tag.toLowerCase().includes(search.toLowerCase()))
+      article.categories.some((tag) => tag.category_name.toLowerCase().includes(search.toLowerCase()))
     )
-    .filter((article) => (filterTag ? article.tags.includes(filterTag) : true));
+  .filter((article: Article) =>
+      filterTag ? article.categories.some((tag) => tag.category_name === filterTag) : true
+  )
 
   const paginatedArticles = filteredArticles.slice(
     (page - 1) * articlesPerPage,
@@ -73,7 +78,7 @@ const ArticlesListPage: React.FC = () => {
 
       {paginatedArticles.map((article) => (
         <ArticleCard
-          key={article.id}
+          key={article.article_id}
           {...article}
         />
       ))}
