@@ -12,6 +12,9 @@ import ArticleDetailPage from "./routes/articles/details/ArticleDetailPage";
 import { SigninPage } from "./routes/auth/signin/SigninPage";
 import { SignupPage } from "./routes/auth/signup/SignupPage";
 import MentorsPage from "./routes/mentor/MentorPage";
+import ChatsPage from "./routes/chats/ChatsPage";
+import IndividualChatPage from "./routes/chats/userChat/UserChatPage";
+import GroupChatPage from "./routes/chats/groupChat/GroupChatPage";
 
 function AppContent() {
   const location = useLocation();
@@ -31,6 +34,11 @@ function AppContent() {
         <Route path="/auth/signin" element={<SigninPage />} />
         <Route path="/auth/signup" element={<SignupPage />} />
         <Route path="/mentor" element={<MentorsPage />} />
+        <Route path="/chats" element={<ChatsPage />} />
+        <Route path="/chats/:id" element={<IndividualChatPage params={{
+          id: ""
+        }} />} />
+        <Route path="/group/:id" element={<GroupChatPage params={{id:""}}/>}/>
       </Routes>
     </>
   );
