@@ -1,0 +1,667 @@
+/* --- CSS変数定義（再掲、プロジェクトのグローバルCSSに移動推奨） --- */
+:root {
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(222.2 47.4% 11.2%);
+  --muted-foreground: hsl(215.4 16.3% 46.9%);
+  --primary: #93b636;
+  --primary-foreground: hsl(210 20% 98%);
+  --secondary: #ef4444; /* mutedに近しい色をsecondaryとして定義 */
+  --secondary-foreground: hsl(222.2 47.4% 11.2%);
+  --muted: hsl(210 40% 96.1%); /* mutedの背景色 */
+  --muted-foreground: hsl(215.4 16.3% 46.9%);
+  --accent: hsl(210 40% 96.1%); /* accentもmutedに近しい色を定義 */
+  --accent-foreground: hsl(222.2 47.4% 11.2%);
+  --border: hsl(217.2 32.6% 17.5%);
+  --input-border: hsl(217.2 32.6% 17.5%);
+  --card-background: hsl(0 0% 100%);
+  --card-foreground: hsl(222.2 47.4% 11.2%);
+  --popover-background: hsl(0 0% 100%); /* ドロップダウンメニューの背景 */
+  --popover-foreground: hsl(222.2 47.4% 11.2%);
+  --ring: hsl(222.2 47.4% 11.2%); /* focus-visibleのリング色 */
+
+  --green-500: #22c55e;
+  --red-500: #ef4444;
+  --orange-500: #f97316;
+  --yellow-500: #facc15;
+  --primary-10: rgba(34, 47, 62, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: hsl(222.2 47.4% 11.2%);
+    --foreground: hsl(210 20% 98%);
+    --muted-foreground: hsl(215.4 16.3% 56.9%);
+    --primary: #93b636;
+    --primary-foreground: hsl(222.2 47.4% 11.2%);
+    --secondary: hsl(217.2 32.6% 17.5%);
+    --secondary-foreground: hsl(210 20% 98%);
+    --muted: hsl(217.2 32.6% 17.5%);
+    --muted-foreground: hsl(215.4 16.3% 56.9%);
+    --accent: hsl(217.2 32.6% 17.5%);
+    --accent-foreground: hsl(210 20% 98%);
+    --border: hsl(217.2 32.6% 37.5%);
+    --input-border: hsl(217.2 32.6% 37.5%);
+    --card-background: hsl(222.2 47.4% 11.2%);
+    --card-foreground: hsl(210 20% 98%);
+    --popover-background: hsl(222.2 47.4% 11.2%);
+    --popover-foreground: hsl(210 20% 98%);
+    --ring: hsl(210 20% 98%);
+    --primary-10: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* --- 全体レイアウト --- */
+.container {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+
+/* --- ボタン共通スタイル --- */
+.iconButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem; /* rounded-md */
+  height: 2.5rem; /* h-10 */
+  width: 2.5rem; /* w-10 */
+  background-color: transparent;
+  color: var(--foreground);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.iconButton:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* variant="ghost" hover */
+}
+.iconButton:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem; /* rounded-md */
+  height: 2.5rem; /* h-10 */
+  padding: 0 1rem; /* px-4 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  box-shadow: var(--shadow-sm);
+}
+
+.primaryButton:hover {
+  background-color: color-mix(in srgb, var(--primary) 90%, black);
+}
+.primaryButton:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.outlineIconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem; /* rounded-md */
+  height: 2.5rem; /* h-10 */
+  width: 2.5rem; /* w-10 */
+  background-color: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border); /* variant="outline" */
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  box-shadow: var(--shadow-sm);
+}
+.outlineIconButton:hover {
+  background-color: var(--accent); /* variant="outline" hover */
+  color: var(--accent-foreground);
+}
+.outlineIconButton:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.outlineButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem; /* rounded-md */
+  height: 2.5rem; /* h-10 */
+  padding: 0 1rem; /* px-4 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  background-color: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border); /* variant="outline" */
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  box-shadow: var(--shadow-sm);
+}
+.outlineButton:hover {
+  background-color: var(--accent); /* variant="outline" hover */
+  color: var(--accent-foreground);
+}
+.outlineButton:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.fullWidthButton {
+  width: 100%;
+}
+
+.icon {
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+}
+.iconSmall {
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 0.25rem; /* top-1 */
+  right: 0.25rem; /* right-1 */
+  height: 0.5rem; /* h-2 */
+  width: 0.5rem; /* w-2 */
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--primary);
+}
+
+/* --- メインコンテンツ --- */
+.main {
+  flex: 1; /* flex-1 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- チャットヘッダー --- */
+.chatHeaderWrapper {
+  border-bottom: 1px solid var(--border);
+  background-color: var(--background);
+}
+
+.chatHeaderContent {
+  display: flex;
+  height: 4rem; /* h-16 */
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem; /* px-4 */
+  max-width: 96rem; /* Tailwindの'container'のmax-widthに相当 */
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.chatHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* gap-4 */
+}
+
+.mentorInfoInHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* gap-3 */
+}
+
+/* --- アバター関連（ヘッダー、メッセージ内、サイドバーで使い回し） --- */
+.avatarWrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatarSmall {
+  display: flex;
+  height: 2.5rem; /* h-10 */
+  width: 2.5rem; /* w-10 */
+  border-radius: 9999px; /* rounded-full */
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--muted-foreground);
+  color: white;
+}
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.avatarFallback {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--muted-foreground);
+  color: white;
+  font-size: 1rem; /* text-base */
+  font-weight: 500;
+}
+
+.avatarMini {
+  display: flex;
+  height: 1.5rem; /* h-6 */
+  width: 1.5rem; /* w-6 */
+  border-radius: 9999px; /* rounded-full */
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--muted-foreground);
+  color: white;
+}
+.avatarFallbackMini {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--muted-foreground);
+  color: white;
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500;
+}
+
+.avatarLarge {
+  display: flex;
+  height: 3rem; /* h-12 */
+  width: 3rem; /* w-12 */
+  border-radius: 9999px; /* rounded-full */
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--muted-foreground);
+  color: white;
+}
+.avatarFallbackLarge {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--muted-foreground);
+  color: white;
+  font-size: 1.5rem; /* text-xl */
+  font-weight: 500;
+}
+
+.onlineIndicatorSmall {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 0.75rem; /* h-3 */
+  width: 0.75rem; /* w-3 */
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--green-500);
+  border: 2px solid var(--background);
+}
+
+.onlineIndicatorMini {
+  height: 0.5rem; /* h-2 */
+  width: 0.5rem; /* w-2 */
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--green-500);
+}
+
+.mentorRankRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+}
+
+.mentorNameHeader {
+  font-weight: 500; /* font-medium */
+  color: var(--foreground);
+  font-size: 1rem; /* text-base */
+}
+
+.mentorSpecialtyHeader {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+}
+
+.mentorRank {
+  display: flex;
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px; /* rounded-full */
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500; /* font-medium */
+  color: white;
+}
+.rankS { background-color: var(--red-500); }
+.rankA { background-color: var(--orange-500); }
+.rankB { background-color: var(--yellow-500); }
+
+/* --- ドロップダウンメニュー --- */
+.dropdownMenu {
+  position: relative;
+}
+
+.dropdownMenuContent {
+  position: absolute;
+  top: 100%; /* ドロップダウンをボタンの下に配置 */
+  right: 0;
+  margin-top: 0.5rem; /* 少し隙間を開ける */
+  background-color: var(--popover-background);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem; /* rounded-md */
+  box-shadow: var(--shadow-md);
+  min-width: 10rem; /* min-w-[8rem] */
+  padding: 0.25rem; /* p-1 */
+  z-index: 50; /* z-50 */
+  animation: fadeIn 0.2s ease-out; /* フェードインアニメーション */
+  transform-origin: top right;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.dropdownMenuItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0.75rem; /* px-2 py-1.5 */
+  font-size: 0.875rem; /* text-sm */
+  color: var(--popover-foreground);
+  background-color: transparent;
+  border: none;
+  border-radius: 0.25rem; /* rounded-sm */
+  cursor: pointer;
+  white-space: nowrap; /* text-nowrap */
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.dropdownMenuItem:hover {
+  background-color: var(--accent); /* hover:bg-accent */
+  color: var(--accent-foreground); /* hover:text-accent-foreground */
+}
+.dropdownMenuItem:focus-visible {
+  outline: none;
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.dropdownMenuItemIcon {
+  margin-right: 0.5rem; /* mr-2 */
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+}
+
+/* --- チャットとサイドバーのコンテナ --- */
+.chatAndSidebarContainer {
+  flex: 1; /* flex-1 */
+  display: flex;
+}
+
+/* --- チャットメッセージエリア --- */
+.chatArea {
+  flex: 1; /* flex-1 */
+  display: flex;
+  flex-direction: column;
+}
+
+.messagesContainer {
+  flex: 1; /* flex-1 */
+  overflow-y: auto; /* overflow-y-auto */
+  padding: 1rem; /* p-4 */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* space-y-4 */
+}
+
+.messageWrapper {
+  display: flex;
+}
+
+.messageUser {
+  justify-content: flex-end; /* justify-end */
+}
+
+.messageMentor {
+  justify-content: flex-start; /* justify-start */
+}
+
+.messageBubbleContainer {
+  max-width: 70%; /* max-w-[70%] */
+}
+
+.mentorAvatarInMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+  margin-bottom: 0.25rem; /* mb-1 */
+}
+
+.mentorNameMini {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: var(--foreground);
+}
+
+.messageBubble {
+  border-radius: 0.5rem; /* rounded-lg */
+  padding: 0.75rem; /* p-3 */
+}
+
+.messageBubblePrimary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.messageBubbleMuted {
+  background-color: var(--muted);
+  color: var(--foreground);
+}
+
+.messageBubbleCode {
+  background-color: var(--muted);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  padding: 0.75rem; /* p-3 */
+}
+
+.codeHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+  margin-bottom: 0.5rem; /* mb-2 */
+  color: var(--foreground);
+}
+
+.codeIcon {
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+}
+
+.codeLanguage {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+}
+
+.codeBlock {
+  font-size: 0.875rem; /* text-sm */
+  overflow-x: auto; /* overflow-x-auto */
+  background-color: transparent; /* preの背景を透明にする */
+  padding: 0; /* preのデフォルトpaddingをなくす */
+  margin: 0; /* preのデフォルトmarginをなくす */
+  color: inherit; /* 色を親から継承 */
+}
+
+.messageText {
+  font-size: 0.875rem; /* text-sm */
+  white-space: pre-wrap; /* whitespace-pre-wrap */
+  color: inherit;
+}
+
+.messageTimestamp {
+  font-size: 0.75rem; /* text-xs */
+  color: var(--muted-foreground);
+  margin-top: 0.25rem; /* mt-1 */
+}
+
+.messageTimestampUser {
+  text-align: right; /* text-right */
+}
+
+/* --- メッセージ入力エリア --- */
+.messageInputArea {
+  border-top: 1px solid var(--border);
+  padding: 1rem; /* p-4 */
+  background-color: var(--background);
+}
+
+.messageInputWrapper {
+  display: flex;
+  align-items: flex-end; /* items-end */
+  gap: 0.5rem; /* gap-2 */
+}
+
+.messageTextarea {
+  flex: 1; /* flex-1 */
+  min-height: 2.5rem; /* min-h-[40px] */
+  max-height: 7.5rem; /* max-h-[120px] */
+  resize: vertical; /* vertical */
+  border-radius: 0.375rem; /* rounded-md */
+  border: 1px solid var(--input-border); /* border border-input */
+  background-color: var(--background); /* bg-background */
+  padding: 0.5rem 0.75rem; /* px-3 py-2 */
+  font-size: 0.875rem; /* text-sm */
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  color: var(--foreground);
+}
+.messageTextarea:focus-visible {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-10);
+}
+.messageTextarea::placeholder {
+  color: var(--muted-foreground);
+}
+
+
+/* --- 右サイドバー --- */
+.sidebar {
+  width: 20rem; /* w-80 */
+  border-left: 1px solid var(--border); /* border-l */
+  background-color: var(--muted); /* bg-muted/30 */
+  padding: 1rem; /* p-4 */
+  flex-shrink: 0; /* サイドバーが縮まないように */
+  overflow-y: auto; /* サイドバーの内容が多い場合にスクロール可能に */
+  display: none; /* デフォルトで非表示 */
+}
+@media (min-width: 1024px) { /* lg: flex */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+
+/* --- カード（サイドバー内） --- */
+.card {
+  border: 1px solid var(--border); /* border */
+  border-radius: 0.5rem; /* rounded-lg */
+  background-color: var(--card-background); /* bg-card */
+  color: var(--card-foreground); /* text-card-foreground */
+  box-shadow: var(--shadow-sm); /* shadow-sm */
+}
+
+.cardHeader {
+  padding: 0.75rem 1rem; /* pb-3, px-4, pt-4 (一般的なCardHeaderのpadding) */
+  border-bottom: 1px solid var(--border); /* 必要に応じて */
+}
+
+.cardTitle {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600; /* font-semibold (通常h2だが、ここではh2なのでfont-boldではない) */
+  color: var(--foreground);
+}
+
+.cardContent {
+  padding: 1rem; /* p-4 */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* space-y-4 */
+}
+
+.mentorInfoBlock {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* gap-3 */
+}
+
+.mentorNameSidebar {
+  font-weight: 500;
+  color: var(--foreground);
+  font-size: 1rem;
+}
+
+.mentorSpecialtySidebar {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.mentorDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* space-y-2 */
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detailLabel {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: var(--foreground);
+}
+
+.detailValue {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem; /* gap-1 */
+}
+
+.detailText {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--foreground);
+}
+
+.detailTextMuted {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+}
+
+.starIcon {
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+  fill: var(--yellow-500);
+  color: var(--yellow-500); /* stroke color for unfilled part */
+}

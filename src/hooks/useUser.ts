@@ -84,7 +84,6 @@ export const useLogin = () => {
       const data = await response.json();
       
       setToken(data.token);
-    // ここが重要！localStorageに保存しておく
       localStorage.setItem("token", data.token);
       console.log("Login successful, token:", data.token);
     } catch (error) {

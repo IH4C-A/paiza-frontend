@@ -1,0 +1,577 @@
+/* -- UIライブラリのカラー変数もここに統合 (必要に応じて) -- */
+:root {
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(222.2 47.4% 11.2%);
+  --muted-foreground: hsl(215.4 16.3% 46.9%);
+  --primary: #93b636; /* 例: primaryカラーは濃い青 */
+  --primary-foreground: hsl(210 20% 98%); /* 例: primaryカラー上の文字色 */
+  --border: #e2e8f0;
+  --input-border: hsl(217.2 32.6% 17.5%);
+  --card-background: hsl(0 0% 100%);
+  --card-foreground: hsl(222.2 47.4% 11.2%);
+
+  --green-500: #22c55e;
+  --red-500: #ef4444;
+  --orange-500: #f97316;
+  --yellow-500: #facc15;
+  --primary-10: rgba(34, 47, 62, 0.1); /* primaryカラーの10%透明度 */
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* ボタンなどに使うシャドウ */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: hsl(222.2 47.4% 11.2%);
+    --foreground: hsl(210 20% 98%);
+    --muted-foreground: hsl(215.4 16.3% 56.9%);
+    --primary: hsl(210 20% 98%);
+    --primary-foreground: hsl(222.2 47.4% 11.2%);
+    --border: hsl(217.2 32.6% 37.5%);
+    --input-border: hsl(217.2 32.6% 37.5%);
+    --card-background: hsl(222.2 47.4% 11.2%);
+    --card-foreground: hsl(210 20% 98%);
+    --primary-10: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* --- 全体レイアウト --- */
+.container {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+/* --- ヘッダー --- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--background);
+}
+
+.headerContent {
+  display: flex;
+  height: 4rem; /* h-16 */
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem; /* px-4 */
+  max-width: 96rem; /* Tailwindの'container'のmax-widthに相当 */
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.logoNav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* gap-6 */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+  font-weight: 700; /* font-bold */
+  font-size: 1.25rem; /* text-xl */
+  text-decoration: none; /* Linkのデフォルト下線をなくす */
+  color: inherit; /* 親から色を継承 */
+}
+
+.logoPrimary {
+  color: var(--primary);
+}
+
+.nav {
+  display: none; /* md:hidden */
+  gap: 1.5rem; /* gap-6 */
+}
+@media (min-width: 768px) { /* md */
+  .nav {
+    display: flex; /* md:flex */
+  }
+}
+
+.navLink {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: var(--muted-foreground);
+  text-decoration: none; /* Linkのデフォルト下線をなくす */
+  transition: color 0.2s ease-in-out; /* hoverエフェクト */
+}
+
+.navLink:hover {
+  color: var(--foreground);
+}
+
+.navLinkActive {
+  color: var(--foreground);
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* gap-4 */
+}
+
+/* --- ボタンの共通スタイル --- */
+.iconButton {
+  position: relative;
+  display: inline-flex; /* button variant="ghost" size="icon" */
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem; /* rounded-md */
+  height: 2.5rem; /* h-10 */
+  width: 2.5rem; /* w-10 */
+  background-color: transparent; /* transparent */
+  color: var(--foreground);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.iconButton:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* ghost variant hover effect */
+}
+.iconButton:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem; /* rounded-md */
+  height: 2.5rem; /* h-10 */
+  padding: 0 1rem; /* px-4 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  box-shadow: var(--shadow-sm); /* button shadow */
+}
+
+.primaryButton:hover {
+  background-color: color-mix(in srgb, var(--primary) 90%, black); /* slightly darker primary on hover */
+}
+.primaryButton:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.icon {
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 0.25rem; /* top-1 */
+  right: 0.25rem; /* right-1 */
+  height: 0.5rem; /* h-2 */
+  width: 0.5rem; /* w-2 */
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--primary);
+}
+
+/* --- メインコンテンツ --- */
+.main {
+  flex: 1; /* flex-1 */
+}
+
+.mainContent {
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem; /* px-4 */
+  padding-top: 1.5rem; /* py-6 */
+  padding-bottom: 1.5rem; /* py-6 */
+  max-width: 96rem; /* Tailwindの'container'のmax-widthに相当 */
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.pageHeader {
+  margin-bottom: 1.5rem; /* mb-6 */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* gap-4 */
+}
+@media (min-width: 768px) { /* md */
+  .pageHeader {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.pageTitle {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 700; /* font-bold */
+  letter-spacing: -0.025em; /* tracking-tight */
+  color: var(--foreground);
+}
+
+.pageDescription {
+  color: var(--muted-foreground);
+  font-size: 0.875rem; /* text-sm */
+}
+
+.searchNewChat {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* gap-4 */
+  width: 100%; /* フル幅に広げる */
+}
+@media (min-width: 768px) { /* md */
+  .searchNewChat {
+    width: auto; /* md以上で自動幅に戻す */
+  }
+}
+
+.searchInputWrapper {
+  position: relative;
+  flex: 1; /* 残りスペースを埋める */
+}
+@media (min-width: 768px) { /* md */
+  .searchInputWrapper {
+    flex: none; /* md以上でflex: none */
+    width: 16rem; /* md:w-64 */
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.625rem; /* left-2.5 */
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+  color: var(--muted-foreground);
+  pointer-events: none; /* アイコンをクリック不可にする */
+}
+
+.searchInput {
+  width: 100%;
+  display: flex; /* flex */
+  height: 2.5rem; /* h-10 */
+  border-radius: 0.375rem; /* rounded-md */
+  border: 1px solid var(--input-border); /* border border-input */
+  background-color: var(--background); /* bg-background */
+  padding-left: 2.5rem; /* pl-8 */ /* アイコン分のスペース */
+  padding-right: 0.75rem; /* pr-3 */
+  font-size: 0.875rem; /* text-sm */
+  box-shadow: var(--shadow-sm); /* shadow-sm */
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.searchInput:focus-visible {
+  outline: none; /* デフォルトのアウトラインを削除 */
+  border-color: var(--primary); /* focus-visibleでprimaryカラーの枠線 */
+  box-shadow: 0 0 0 2px var(--primary-10); /* focus-visibleでシャドウ */
+}
+.searchInput::placeholder {
+  color: var(--muted-foreground);
+}
+
+.buttonIcon {
+  margin-right: 0.5rem; /* mr-2 */
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+}
+
+/* --- タブ部分 --- */
+.tabsRoot {
+  /* TailwindのTabsに相当するラッパー */
+  /* デフォルトでは特別なスタイルは不要だが、必要に応じて追加 */
+}
+
+.tabsList {
+  display: inline-flex; /* inline-flex */
+  height: 2.5rem; /* h-10 */
+  align-items: center; /* items-center */
+  justify-content: center; /* justify-center */
+  border-radius: 0.375rem; /* rounded-md */
+  background-color: rgba(0, 0, 0, 0.05); /* bg-muted */
+  padding: 0.25rem; /* p-1 */
+  color: var(--muted-foreground); /* text-muted-foreground */
+}
+
+.tabsTrigger {
+  display: inline-flex; /* inline-flex */
+  align-items: center; /* items-center */
+  justify-content: center; /* justify-center */
+  white-space: nowrap; /* whitespace-nowrap */
+  border-radius: 0.25rem; /* rounded-sm */
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem; /* px-4 */
+  padding-top: 0.25rem; /* py-1.5 */
+  padding-bottom: 0.25rem; /* py-1.5 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  background-color: transparent; /* bg-transparent */
+  color: inherit; /* inherit color from parent (tabsList) */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  flex: 1; /* flex-1 */
+  user-select: none; /* user-select-none */
+}
+
+.tabsTrigger:hover {
+  color: var(--foreground); /* hover:text-foreground */
+}
+.tabsTrigger:focus-visible {
+  outline: none; /* outline-none */
+  box-shadow: 0 0 0 2px var(--primary); /* focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 */
+  outline-offset: 2px;
+}
+
+.tabsTriggerActive {
+  background-color: var(--background); /* bg-background */
+  color: var(--foreground); /* text-foreground */
+  box-shadow: var(--shadow-sm); /* shadow-sm */
+}
+
+.tabContent {
+  margin-top: 1.5rem; /* mt-6 */
+}
+
+/* --- チャットカード共通 --- */
+.chatGrid {
+  display: grid;
+  gap: 1rem; /* gap-4 */
+}
+
+.chatCard {
+  border: 1px solid var(--border); /* border */
+  border-radius: 0.5rem; /* rounded-lg */
+  background-color: var(--card-background); /* bg-card */
+  color: var(--card-foreground); /* text-card-foreground */
+  overflow: hidden; /* hidden */
+  transition-property: box-shadow;
+  transition-duration: 150ms; /* transition-shadow */
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); /* transition-shadow */
+}
+
+.chatCard:hover {
+  box-shadow: var(--shadow-md); /* hover:shadow-md */
+}
+
+.cardLink {
+  text-decoration: none; /* Linkのデフォルト下線をなくす */
+  color: inherit; /* 親から色を継承 */
+  display: block; /* リンク全体をクリック可能に */
+}
+
+.cardContent {
+  padding: 1rem; /* p-4 */
+}
+
+.chatItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* gap-4 */
+}
+
+/* --- アバター --- */
+.avatarWrapper {
+  position: relative;
+  flex-shrink: 0; /* shrinkingなし */
+}
+
+.avatar {
+  /* Avatarコンポーネントに相当 */
+  display: flex;
+  height: 3rem; /* h-12 */
+  width: 3rem; /* w-12 */
+  border-radius: 9999px; /* rounded-full */
+  overflow: hidden; /* overflow-hidden */
+  justify-content: center;
+  align-items: center;
+  background-color: var(--muted-foreground); /* Fallback背景色 */
+  color: white; /* Fallback文字色 */
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarFallback {
+  /* AvatarFallbackコンポーネントに相当 */
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--muted-foreground); /* Fallback背景色 */
+  color: white; /* Fallback文字色 */
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 500;
+}
+
+.onlineIndicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 0.75rem; /* h-3 */
+  width: 0.75rem; /* w-3 */
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--green-500); /* bg-green-500 */
+  border: 2px solid var(--background); /* border-2 border-background */
+}
+
+/* --- チャット情報 --- */
+.chatInfo {
+  flex: 1; /* flex-1 */
+  min-width: 0; /* min-w-0 */
+}
+
+.mentorHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+  margin-bottom: 0.25rem; /* mb-1 */
+}
+
+.mentorName {
+  font-weight: 500; /* font-medium */
+  color: var(--foreground);
+  font-size: 1rem; /* text-base */
+}
+
+.mentorRank {
+  display: flex;
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px; /* rounded-full */
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500; /* font-medium */
+  color: white; /* text-white */
+}
+
+.rankS {
+  background-color: var(--red-500);
+}
+
+.rankA {
+  background-color: var(--orange-500);
+}
+
+.rankB {
+  background-color: var(--yellow-500);
+}
+
+.mentorSpecialty {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+  margin-bottom: 0.25rem; /* mb-1 */
+}
+
+.lastMessage {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* truncate */
+}
+
+.chatMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem; /* gap-2 */
+  flex-shrink: 0; /* 縮小しない */
+}
+
+.timestamp {
+  font-size: 0.75rem; /* text-xs */
+  color: var(--muted-foreground);
+}
+
+.unreadBadge {
+  display: flex;
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--primary);
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500; /* font-medium */
+  color: var(--primary-foreground);
+}
+
+/* --- グループチャットアイコン --- */
+.groupIconWrapper {
+  display: flex;
+  height: 3rem; /* h-12 */
+  width: 3rem; /* w-12 */
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--primary-10); /* bg-primary/10 */
+  flex-shrink: 0; /* 縮小しない */
+}
+
+.groupIcon {
+  height: 1.5rem; /* h-6 */
+  width: 1.5rem; /* w-6 */
+  color: var(--primary);
+}
+
+.groupHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+  margin-bottom: 0.25rem; /* mb-1 */
+}
+
+.groupName {
+  font-weight: 500; /* font-medium */
+  color: var(--foreground);
+  font-size: 1rem; /* text-base */
+}
+
+.groupCategory {
+  font-size: 0.75rem; /* text-xs */
+  background-color: var(--primary-10); /* bg-primary/10 */
+  color: var(--primary);
+  padding-left: 0.5rem; /* px-2 */
+  padding-right: 0.5rem; /* px-2 */
+  padding-top: 0.25rem; /* py-1 */
+  padding-bottom: 0.25rem; /* py-1 */
+  border-radius: 9999px; /* rounded-full */
+  white-space: nowrap; /* カテゴリ名が改行されないように */
+}
+
+.groupDescription {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+  margin-bottom: 0.25rem; /* mb-1 */
+}
+
+.memberCount {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+}
+
+.memberCountIcon {
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+  color: var(--muted-foreground);
+}
+
+.memberCountText {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+}
