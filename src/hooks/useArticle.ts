@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Article } from "../types/articleType";
 
-export const useArticles = () => {
+export const useArticlesWithCategories = () => {
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -17,7 +17,7 @@ export const useArticles = () => {
             const data: Article[] = await response.json();
             setArticles(data);
         } catch (error) {
-            console.error('Error fetching articles:', error);
+            console.error('Error fetching articles with categories:', error);
             setError(error instanceof Error ? error.message : 'Unknown error');
         } finally {
             setLoading(false);
@@ -70,7 +70,6 @@ export const useRegisterArticle = () => {
     const registerArticle = async (article: {
         title: string;
         content: string;
-        userId: string;
         categoryids?: string[];
     }) => {
         setLoading(true);

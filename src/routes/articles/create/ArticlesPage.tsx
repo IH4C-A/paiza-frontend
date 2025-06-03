@@ -1,33 +1,47 @@
-import React, { useState } from 'react';
-import { marked } from 'marked';
-import DOMPurify from 'dompurify';
+import React, { useEffect, useState } from "react";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
 import styles from "./ArticlesPage.module.css";
+import { useRegisterArticle } from "../../../hooks/useArticle";
 
 const MarkdownEditor: React.FC = () => {
-  const [title, setTitle] = useState('');
-  const [tags, setTags] = useState('');
-  const [markdown, setMarkdown] = useState('');
+  const [title, setTitle] = useState("");
+  const [tags, setTags] = useState("");
+  const [markdown, setMarkdown] = useState("");
+  const [html, setHtml] = useState("");
+  const { registerArticle } = useRegisterArticle();
 
   const handleSave = () => {
-    const article = {
-      title,
-      tags: tags.split(',').map((tag) => tag.trim()),
-      content: markdown,
-      date: new Date().toISOString(),
-    };
-    // 仮の保存 → ローカルStorage
-    localStorage.setItem('draft_article', JSON.stringify(article));
-    alert('下書きを保存しました！');
+    alert("記事を下書き保存しました！（保存ロジックは後ほど実装）");
   };
 
   const handlePublish = () => {
-    alert('記事を公開しました！（保存ロジックは後ほど実装）');
+    const article = {
+      title,
+      categoryids: tags.split(",").map((tag) => tag.trim()),
+      content: markdown,
+    };
+    registerArticle(article)
+      .then(() => {
+        alert("記事を新しく登録しました！");
+        setTitle("");
+        setTags("");
+        setMarkdown("");
+      })
+      .catch((error) => {
+        console.error("記事の保存に失敗しました:", error);
+        alert("記事の保存に失敗しました。");
+      });
   };
 
-  const getSanitizedHtml = () => {
-    const rawHtml = marked.parse(markdown, { breaks: true, gfm: true });
-    return { __html: DOMPurify.sanitize(rawHtml) };
-  };
+
+  useEffect(() => {
+    const processMarkdown = async () => {
+      const rawHtml = await marked.parse(markdown, { breaks: true, gfm: true });
+      setHtml(DOMPurify.sanitize(rawHtml));
+    };
+    processMarkdown();
+  }, [markdown]);
 
   return (
     <div className={styles.editorCard}>
@@ -63,17 +77,17 @@ const MarkdownEditor: React.FC = () => {
         </div>
         <div className={styles.previewPane}>
           <div className={styles.previewContent}>
-            <h1>{title || 'タイトル（プレビュー）'}</h1>
+            <h1>{title || "タイトル（プレビュー）"}</h1>
             <p>
               {tags
-                ? tags.split(',').map((tag, idx) => (
+                ? tags.split(",").map((tag, idx) => (
                     <span key={idx} className={styles.tagChip}>
                       #{tag.trim()}
                     </span>
                   ))
-                : 'タグなし'}
+                : "タグなし"}
             </p>
-            <div dangerouslySetInnerHTML={getSanitizedHtml()} />
+            <div dangerouslySetInnerHTML={{__html: html}} />
           </div>
         </div>
       </div>
