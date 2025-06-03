@@ -1,13 +1,13 @@
 /* Basic Variables (ideally global, but here for self-containment) */
 :root {
-  --primary-color: #007bff; /* Example primary color */
-  --primary-hover-color: #0056b3;
-  --background-color: #fff;
+  --primary-color: #93b636; /* Example primary color */
+  --primary-hover-color: #b0d93e;
   --card-background-color: #fff;
   --border-color: #e2e8f0;
   --text-color: #1a202c;
   --muted-foreground-color: #718096;
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
   --input-border-color: #cbd5e0;
   --red-500: #ef4444;
   --orange-500: #f97316;
@@ -15,113 +15,10 @@
 
 .pageContainer {
   display: flex;
-  min-height: 100vh; /* Assuming this is part of the overall page layout */
+  /* min-height: 100vh; */
   flex-direction: column;
   font-family: var(--font-family);
-  background-color: var(--background-color); /* Or a lighter gray for the page background */
   color: var(--text-color);
-}
-
-/* Header Styles (Copied for context, but you mentioned it's separate) */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  border-bottom: 1px solid var(--border-color);
-  background-color: var(--background-color); /* Or a specific header background */
-}
-
-.headerInner {
-  max-width: 1280px; /* Common container width */
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-  height: 4rem; /* 64px */
-  align-items: center;
-  justify-content: space-between;
-  padding-left: 1rem; /* 16px */
-  padding-right: 1rem;
-}
-
-.logoContainer {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem; /* 24px */
-}
-
-.logoLink {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem; /* 8px */
-  font-weight: bold;
-  font-size: 1.25rem; /* 20px */
-  text-decoration: none;
-  color: inherit;
-}
-
-.logoPrimaryText {
-  color: var(--primary-color);
-}
-
-.nav {
-  display: none; /* hidden */
-}
-
-@media (min-width: 768px) { /* md:flex */
-  .nav {
-    display: flex;
-    gap: 1.5rem; /* 24px */
-  }
-}
-
-.navLink {
-  font-size: 0.875rem; /* 14px */
-  font-weight: 500;
-  text-decoration: none;
-  color: var(--muted-foreground-color);
-}
-.navLink:hover {
-  color: var(--text-color);
-}
-.navLinkActive {
-  color: var(--text-color);
-  font-weight: 500; /* Or a more distinct active style */
-}
-
-
-.headerActions {
-  display: flex;
-  align-items: center;
-  gap: 1rem; /* 16px */
-}
-
-.iconButton {
-  background-color: transparent;
-  border: none;
-  padding: 0.5rem; /* 8px for size="icon" roughly */
-  border-radius: 0.375rem; /* rounded-md */
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.iconButton:hover {
-  background-color: #f3f4f6; /* Example hover */
-}
-.iconButton img {
-  height: 1.25rem; /* h-5 */
-  width: 1.25rem; /* w-5 */
-}
-
-.notificationBadge {
-  position: absolute;
-  top: 0.25rem; /* top-1 */
-  right: 0.25rem; /* right-1 */
-  height: 0.5rem; /* h-2 */
-  width: 0.5rem; /* w-2 */
-  border-radius: 9999px; /* rounded-full */
-  background-color: var(--primary-color);
 }
 
 /* Main Content Area */
@@ -130,10 +27,10 @@
 }
 
 .container {
-  max-width: 1280px; /* Example container width */
+  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  padding: 1.5rem 1rem; /* py-6 px-4 */
+  padding: 1.5rem 1rem;
 }
 
 .titleSection {
@@ -142,7 +39,8 @@
   flex-direction: column;
   gap: 1rem; /* gap-4 */
 }
-@media (min-width: 768px) { /* md:flex-row md:items-center md:justify-between */
+@media (min-width: 768px) {
+  /* md:flex-row md:items-center md:justify-between */
   .titleSection {
     flex-direction: row;
     align-items: center;
@@ -172,22 +70,26 @@
   position: relative;
   width: 100%;
 }
-@media (min-width: 768px) { /* md:w-64 */
+@media (min-width: 768px) {
+  /* md:w-64 */
   .searchInputContainer {
     width: 16rem; /* 256px */
   }
 }
-.searchInputContainer img { /* Search icon */
+.searchInputContainer img {
+  /* Search icon */
   position: absolute;
   left: 0.625rem; /* left-2.5 */
   top: 0.625rem; /* top-2.5 */
   height: 1rem; /* h-4 */
   width: 1rem; /* w-4 */
-  color: var(--muted-foreground-color); /* This won't work directly for img, set via filter or use SVG as component */
+  color: var(
+    --muted-foreground-color
+  ); /* This won't work directly for img, set via filter or use SVG as component */
 }
 .searchInput {
   width: 100%;
-  padding-left: 2rem; /* pl-8 to make space for icon */
+  padding-left: 5px; /* pl-8 to make space for icon */
   height: 2.5rem; /* typical input height */
   border: 1px solid var(--input-border-color);
   border-radius: 0.375rem;
@@ -198,7 +100,6 @@
   border-color: var(--primary-color);
   box-shadow: 0 0 0 1px var(--primary-color);
 }
-
 
 /* Tabs */
 .tabsContainer {
@@ -237,7 +138,8 @@
   flex-direction: column;
   gap: 1rem; /* gap-4 */
 }
-@media (min-width: 768px) { /* md:flex-row md:items-center */
+@media (min-width: 768px) {
+  /* md:flex-row md:items-center */
   .filtersRow {
     flex-direction: row;
     align-items: center;
@@ -253,7 +155,8 @@
   font-size: 0.875rem;
   background-color: var(--background-color);
 }
-@media (min-width: 768px) { /* md:w-[180px] */
+@media (min-width: 768px) {
+  /* md:w-[180px] */
   .selectControl {
     width: 180px;
   }
@@ -270,12 +173,14 @@
   display: grid;
   gap: 1rem; /* gap-4 */
 }
-@media (min-width: 768px) { /* md:grid-cols-2 */
+@media (min-width: 768px) {
+  /* md:grid-cols-2 */
   .cardsGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (min-width: 1024px) { /* lg:grid-cols-3 */
+@media (min-width: 1024px) {
+  /* lg:grid-cols-3 */
   .cardsGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -307,7 +212,8 @@
   object-fit: cover;
   background-color: #ccc; /* Fallback bg */
 }
-.avatarFallback { /* Basic visual fallback if image fails */
+.avatarFallback {
+  /* Basic visual fallback if image fails */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -318,9 +224,6 @@
   color: #777;
   font-weight: 500;
 }
-
-
-.cardTitleContainer {}
 
 .cardTitle {
   font-size: 1.125rem; /* text-lg or similar */
@@ -364,7 +267,6 @@
 .contentSection:last-child {
   margin-bottom: 0;
 }
-
 
 .subHeading {
   font-size: 0.875rem; /* text-sm */

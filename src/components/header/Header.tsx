@@ -22,7 +22,9 @@ export const Header = () => {
         </a>
       </div>
       <div className={style.navigationList}>
-        <FaBell className={style.navigationLink} />
+        <a className={style.navigationLink} href="/">
+          <FaBell className={style.navigationLink} />
+        </a>
         <a className={style.navigationLink} href="/auth/signin">
           ログイン
         </a>
