@@ -1,14 +1,32 @@
+import type { Category } from "./categoryType";
+import type { Rank } from "./rankType";
+
 export type GroupChat = {
     group_id: string;
     group_name: string;
     group_image: string | null;
     created_at: Date;
     created_by: string;
+    memberCount: number;
 }
 
 export type GroupChatMember = {
     group_id: string;
     user_id: string;
-    user_name: string;
-    user_image: string | null;
+    name: string;
+    prof_image: string | null;
+    rank: Rank; 
+}
+
+export type GroupChats = {
+    group_id: string;
+    group_name: string;
+    group_image: string | null;
+    created_at: Date;
+    created_by: string;
+    description: string;
+    category: Category;
+    last_message: string | null;
+    unread_count: number;
+    memberCount: number;
 }

@@ -4,7 +4,7 @@
   --foreground: hsl(222.2 47.4% 11.2%);
   --muted-foreground: hsl(215.4 16.3% 46.9%);
   --primary: #93b636;
-  --primary-foreground: hsl(210 20% 98%);
+  --primary-foreground: #93b636;
   --secondary: #ef4444; /* mutedに近しい色をsecondaryとして定義 */
   --secondary-foreground: hsl(222.2 47.4% 11.2%);
   --muted: hsl(210 40% 96.1%); /* mutedの背景色 */
