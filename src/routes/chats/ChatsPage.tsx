@@ -8,6 +8,8 @@ import { useUsers } from "../../hooks/useUser";
 import { useChatHistory } from "../../hooks/useChat";
 import { useMyGroupChats } from "../../hooks/useGroupChat";
 import type { ChatUsers } from "../../types/chatsType";
+import type { User } from "../../types/userTypes";
+import { useCreateGroupChat } from "../../hooks/useGroupChat";
 
 export default function ChatsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,6 +17,7 @@ export default function ChatsPage() {
   const { users } = useUsers();
   const { chatHistory } = useChatHistory();
   const { myGroupChats } = useMyGroupChats();
+  const { createGroupChat } = useCreateGroupChat();
 
 
 
@@ -33,6 +36,25 @@ export default function ChatsPage() {
   const [newGroupName, setNewGroupName] = useState('');
   const [newGroupDescription, setNewGroupDescription] = useState('');
 
+    // 新しいstate: グループに追加するメンバーのIDを管理
+  const [selectedGroupMembers, setSelectedGroupMembers] = useState<string[]>([]);
+
+  // メンバー選択のハンドラー
+  const handleMemberSelect = (userId: string) => {
+    setSelectedGroupMembers((prevSelectedMembers) =>
+      prevSelectedMembers.includes(userId)
+        ? prevSelectedMembers.filter((id) => id !== userId) // 既に選択されていれば削除
+        : [...prevSelectedMembers, userId] // 選択されていなければ追加
+    );
+  };
+
+  // 選択されたメンバーの名前を取得
+  const getSelectedMemberNames = () => {
+    return selectedGroupMembers.map(memberId => {
+      const user = users.find(u => u.user_id === memberId);
+      return user ? user.first_name : '';
+    }).filter(Boolean).join(', '); // 存在しないユーザー名をフィルタリングして結合
+  };
   return (
     <div className={styles.container}>
       <main className={styles.main}>
@@ -137,7 +159,7 @@ export default function ChatsPage() {
                               <div className={styles.groupHeader}>
                                 <h3 className={styles.groupName}>{chat.group_name}</h3>
                                 <span className={styles.groupCategory}>
-                                  {chat.category.category_name}
+                                  {chat.category?.category_name}
                                 </span>
                               </div>
                               <p className={styles.groupDescription}>{chat.description}</p>
@@ -233,16 +255,16 @@ export default function ChatsPage() {
               </>
             )}
 
-            {/* グループチャット - グループ作成画面 */}
+           {/* グループチャット - グループ作成画面 */}
             {modalView === 'createGroup' && (
-              <>
+              <form encType="multipart/form-data">
                 <div className={styles.modalHeaderWithBack}>
                   <button className={styles.modalBackButton} onClick={() => setModalView('main')}>
                     <HiOutlineArrowLeft className={styles.iconSmall} />
                   </button>
                   <h2 className={styles.modalTitle}>グループチャットを作成</h2>
                 </div>
-                <p className={styles.modalDescription}>新しいグループの情報を入力してください。</p>
+                <p className={styles.modalDescription}>新しいグループの情報を入力し、メンバーを選択してください。</p>
                 <div className={styles.formGroup}>
                   <label htmlFor="groupName" className={styles.formLabel}>グループ名</label>
                   <input
@@ -265,21 +287,63 @@ export default function ChatsPage() {
                     rows={3}
                   />
                 </div>
+
+                {/* メンバー選択セクションの追加 */}
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>メンバーを選択</label>
+                  <div className={styles.memberSelectionList}>
+                    {users.map((user: User) => (
+                      <div key={user.user_id} className={styles.memberSelectionItem}>
+                        <input
+                          type="checkbox"
+                          id={`user-${user.user_id}`}
+                          checked={selectedGroupMembers.includes(user.user_id)}
+                          onChange={() => handleMemberSelect(user.user_id)}
+                          className={styles.checkbox}
+                        />
+                        <label htmlFor={`user-${user.user_id}`} className={styles.memberLabel}>
+                          <div className={styles.avatarMini}>
+                            <img src={user.profile_image || ""} alt={user.first_name} className={styles.avatarImage} />
+                            <div className={styles.avatarFallbackMini}>{user.first_name.charAt(0)}</div>
+                          </div>
+                          <span className={styles.memberSelectionName}>{user.first_name}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  {selectedGroupMembers.length > 0 && (
+                    <p className={styles.selectedMembersText}>
+                      選択中のメンバー: {getSelectedMemberNames()}
+                    </p>
+                  )}
+                </div>
+
+
                 <button
                   className={styles.primaryButton}
                   onClick={() => {
-                    alert(`グループ「${newGroupName}」を作成します（説明: ${newGroupDescription}）`);
+                    if (!newGroupName.trim()) {
+                      alert("グループ名を入力してください。");
+                      return;
+                    }
+                    if (selectedGroupMembers.length === 0) {
+                      alert("グループにメンバーを一人以上選択してください。");
+                      return;
+                    }
+                    alert(`グループ「${newGroupName}」を作成します。\n説明: ${newGroupDescription}\nメンバー: ${getSelectedMemberNames()}`);
                     // TODO: 実際のグループ作成API呼び出しロジック
+                    // ここで newGroupName, newGroupDescription, selectedGroupMembers をAPIに送信
+                    createGroupChat(newGroupName,newGroupDescription,selectedGroupMembers);
                     closeModal();
                   }}
-                  disabled={!newGroupName.trim()}
+                  disabled={!newGroupName.trim() || selectedGroupMembers.length === 0} // グループ名とメンバーが選択されていないとボタンを無効化
                 >
                   グループを作成
                 </button>
                 <button className={styles.modalCloseButton} onClick={closeModal}>
                   キャンセル
                 </button>
-              </>
+              </form>
             )}
           </div>
         </div>
