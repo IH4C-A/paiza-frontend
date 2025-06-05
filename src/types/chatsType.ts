@@ -2,10 +2,11 @@ export type Chats = {
     chat_id: string;
     message: string | null;
     image: string | null;
-    send_user_id: string;
+    sender: string;
     receiver_user_id: string | null;
     group_id: string | null;
     chat_at: Date;
+    type: string;
 }
 
 export type ChatHistory = {
@@ -29,4 +30,7 @@ export type ChatUsers = {
     user_id: string;
     user_name: string;
     profile_image: string | null;
+    last_message: string | null;
+    last_chat_at: Date;
+    unread_count: number;
 }

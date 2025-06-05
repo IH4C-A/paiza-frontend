@@ -35,10 +35,8 @@ function AppContent() {
         <Route path="/auth/signup" element={<SignupPage />} />
         <Route path="/mentor" element={<MentorsPage />} />
         <Route path="/chats" element={<ChatsPage />} />
-        <Route path="/chats/:id" element={<IndividualChatPage params={{
-          id: ""
-        }} />} />
-        <Route path="/group/:id" element={<GroupChatPage params={{id:""}}/>}/>
+        <Route path="/chats/:id" element={<IndividualChatPage />} />
+        <Route path="/group/:id" element={<GroupChatPage />}/>
       </Routes>
     </>
   );
