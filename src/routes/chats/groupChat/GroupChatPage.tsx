@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react"
 // react-iconsからのインポートに置き換え
 import { HiOutlineArrowLeft, HiOutlineCog6Tooth, HiOutlineEllipsisVertical, HiOutlineUsers, HiOutlineMapPin } from "react-icons/hi2"; // Heroicons v2
-import { FaCrown, FaPaperPlane } from "react-icons/fa"; // Font Awesome
+import { FaPaperPlane } from "react-icons/fa"; // Font Awesome
 import styles from "./GroupChatPage.module.css"
 import { useChat } from "../../../hooks/useChat";
 import { useCurrentUser } from "../../../hooks/useUser";
@@ -13,43 +13,38 @@ import { useMyGroupChats, useGroupChatMembers } from "../../../hooks/useGroupCha
 export default function GroupChatPage() {
   const { id } = useParams();
   const [message, setMessage] = useState("")
-  const { chats, groupChatHistory, chatUsers, sendMessage, fetchChatHistory  } = useChat();
+  const { groupchat, sendMessage, fetchGroupChatHistory  } = useChat();
   const { myGroupChats } = useMyGroupChats();
-  const { members } = useGroupChatMembers(id ?? "");
+  const { members } = useGroupChatMembers(id ?? ""); // 一時的な変数名
+  const member = members || [];
   const { currentUser } = useCurrentUser();
 
+  console.log(groupchat);
+  console.log(member);
   const currentGroup = useMemo(() => {
     const groupData = myGroupChats.find((group) => group.group_id === id);
     return groupData;
 }, [myGroupChats, id]);
 
   useEffect(() => {
-  if (id && groupChatHistory && typeof fetchChatHistory === "function") {
-    fetchChatHistory(id); // group_id を渡してグループチャット履歴を取得
+  if (id && fetchGroupChatHistory) {
+    fetchGroupChatHistory(id); // group_id を渡してグループチャット履歴を取得
   }
-}, [id, fetchChatHistory, groupChatHistory]);
+}, [id, fetchGroupChatHistory]);
   // ドロップダウンメニューの開閉状態を管理するためのuseState
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const formattedMessages = chats.map((chat) => {
-  const senderUser = chatUsers.find((user) => user.user_id === chat.sender);
-
+  const formattedMessages = groupchat.map((chat) => {
+  const senderUser = members.find((user) => user.id === chat.send_user_id); 
   return {
     id: chat.chat_id,
-    sender: {
-      id: senderUser?.user_id || chat.sender,
-      name: senderUser?.user_name || "不明なユーザー",
-      avatar: senderUser?.profile_image || "/placeholder.svg",
-      rank: "C",
-      role: "member",
-    },
+    sender: senderUser?.name,
     content: chat.message,
-    timestamp: new Date(chat.chat_at).toLocaleTimeString([], {
+    timestamp: new Date(chat.timestamp).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     }),
-    type: chat.type || "text",
-    isPinned: false,
+    type: chat.type || "text"
   };
   });
 
@@ -63,6 +58,8 @@ export default function GroupChatPage() {
       setMessage("") // メッセージ送信後に入力フィールドをクリア
     }
   };
+
+  console.log(formattedMessages);
 
   // メッセージタイプに応じたスタイルクラスを返す関数
   const getMessageTypeClass = (type: string) => {
@@ -144,19 +141,19 @@ export default function GroupChatPage() {
                   <div className={styles.messageSenderInfo}>
                     {/* Avatarコンポーネントの代わりにdivとimgを使用 */}
                     <div className={styles.avatarMessageSender}>
-                      <img src={msg.sender.avatar || "/placeholder.svg"} alt={msg.sender.name} className={styles.avatarImage} />
-                      <div className={styles.avatarFallbackMessageSender}>{msg.sender.name.charAt(0)}</div>
+                      <img src={msg.sender || "/placeholder.svg"} alt={msg.sender} className={styles.avatarImage} />
+                      <div className={styles.avatarFallbackMessageSender}>{msg.sender}</div>
                     </div>
                     <div className={styles.messageContentWrapper}>
                       <div className={styles.messageSenderDetails}>
-                        <span className={styles.messageSenderName}>{msg.sender.name}</span>
-                        <div
+                        <span className={styles.messageSenderName}>{msg.sender}</span>
+                        {/* <div
                           className={`${styles.senderRank} ${
-                            msg.sender.rank === "S"
+                            msg.rank === "S"
                               ? styles.rankS
-                              : msg.sender.rank === "A"
+                              : msg.sender?.rank === "A"
                               ? styles.rankA
-                              : msg.sender.rank === "B"
+                              : msg.sender?.rank === "B"
                               ? styles.rankB
                               : styles.rankC
                           }`}
@@ -165,13 +162,13 @@ export default function GroupChatPage() {
                         </div>
                         {msg.sender.role === "moderator" && (
                           <FaCrown className={styles.moderatorIcon} title="モデレーター" />
-                        )}
+                        )} */}
                         {getMessageTypeLabel(msg.type) && (
                           <span className={styles.messageTypeLabel}>
                             {getMessageTypeLabel(msg.type)}
                           </span>
                         )}
-                        {msg.isPinned && <HiOutlineMapPin className={styles.pinnedIcon} title="ピン留め" />}
+                        {/* {msg.isPinned && <HiOutlineMapPin className={styles.pinnedIcon} title="ピン留め" />} */}
                         <span className={styles.messageTimestamp}>{msg.timestamp}</span>
                       </div>
                       <p className={styles.messageText}>{msg.content}</p>
@@ -215,7 +212,7 @@ export default function GroupChatPage() {
               <div className={styles.cardContent}>
                 <div className={styles.detailRow}>
                   <span className={styles.detailLabel}>カテゴリ</span>
-                  <span className={styles.groupCategoryChip}>{currentGroup?.category.category_name}</span>
+                  <span className={styles.groupCategoryChip}>{currentGroup?.category?.category_name}</span>
                 </div>
                 <div className={styles.detailRow}>
                   <span className={styles.detailLabel}>メンバー数</span>
@@ -231,7 +228,7 @@ export default function GroupChatPage() {
               </div>
               <div className={styles.cardContent}>
                 <div className={styles.memberList}>
-                  {members.map((member, index) => (
+                  {member.map((member, index) => (
                     <div key={index} className={styles.memberItem}>
                       <div className={styles.avatarWrapperMember}>
                         <div className={styles.avatarMember}>

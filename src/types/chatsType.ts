@@ -18,12 +18,14 @@ export type ChatHistory = {
 }
 
 export type GroupChatHistory = {
+    chat_id: string;
     message: string | null;
     timestamp: Date;
-    sender_user_id: string;
+    send_user_id: string;
     group_id: string;
     sender_name: string;
     profile_image: string | null;
+    type: string;
 }
 
 export type ChatUsers = {

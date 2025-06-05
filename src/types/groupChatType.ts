@@ -12,10 +12,10 @@ export type GroupChat = {
 
 export type GroupChatMember = {
     group_id: string;
-    user_id: string;
+    id: string;
     name: string;
     prof_image: string | null;
-    rank: Rank; 
+    rank: Rank;
 }
 
 export type GroupChats = {
@@ -25,7 +25,7 @@ export type GroupChats = {
     created_at: Date;
     created_by: string;
     description: string;
-    category: Category;
+    category: Category | null;
     last_message: string | null;
     unread_count: number;
     memberCount: number;
