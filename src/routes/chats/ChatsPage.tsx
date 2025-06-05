@@ -1,99 +1,37 @@
 "use client"
 
-import { HiOutlinePlus, HiOutlineMagnifyingGlass, HiOutlineUserGroup } from "react-icons/hi2"; // Heroicons v2
+import { HiOutlinePlus, HiOutlineMagnifyingGlass, HiOutlineUserGroup, HiOutlineArrowLeft, HiOutlineUser, HiOutlineUsers } from "react-icons/hi2"; // Heroicons v2
 // Import the CSS module
 import styles from "./ChatsPage.module.css"
 import { useState } from "react"
+import { useUsers } from "../../hooks/useUser";
+import { useChatHistory } from "../../hooks/useChat";
+import { useMyGroupChats } from "../../hooks/useGroupChat";
+import type { ChatUsers } from "../../types/chatsType";
 
 export default function ChatsPage() {
-  const individualChats = [
-    {
-      id: "1",
-      mentor: {
-        name: "田中さん",
-        rank: "S",
-        avatar: "/placeholder.svg?height=40&width=40",
-        specialty: "アルゴリズム、React",
-      },
-      lastMessage: "二分探索の実装について、もう少し詳しく説明しますね。",
-      timestamp: "2分前",
-      unreadCount: 2,
-      isOnline: true,
-    },
-    {
-      id: "2",
-      mentor: {
-        name: "佐藤さん",
-        rank: "A",
-        avatar: "/placeholder.svg?height=40&width=40",
-        specialty: "UI/UX、Vue.js",
-      },
-      lastMessage: "レスポンシブデザインの件、理解できましたか？",
-      timestamp: "1時間前",
-      unreadCount: 0,
-      isOnline: false,
-    },
-    {
-      id: "3",
-      mentor: {
-        name: "鈴木さん",
-        rank: "A",
-        avatar: "/placeholder.svg?height=40&width=40",
-        specialty: "情報処理試験、DB",
-      },
-      lastMessage: "データベース正規化の課題、お疲れ様でした！",
-      timestamp: "3時間前",
-      unreadCount: 1,
-      isOnline: true,
-    },
-  ]
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalView, setModalView] = useState<'main' | 'selectIndividual' | 'createGroup'>('main');
+  const { users } = useUsers();
+  const { chatHistory } = useChatHistory();
+  const { myGroupChats } = useMyGroupChats();
 
-  const groupChats = [
-    {
-      id: "1",
-      name: "React初心者の会",
-      description: "React学習者同士で質問・情報共有",
-      memberCount: 24,
-      lastMessage: "useEffectの依存配列について質問があります",
-      timestamp: "5分前",
-      unreadCount: 3,
-      category: "Webフレームワーク",
-    },
-    {
-      id: "2",
-      name: "アルゴリズム勉強会",
-      description: "競技プログラミング・アルゴリズム学習",
-      memberCount: 18,
-      lastMessage: "今度の勉強会の日程を決めましょう",
-      timestamp: "30分前",
-      unreadCount: 0,
-      category: "アルゴリズム",
-    },
-    {
-      id: "3",
-      name: "UI/UXデザイン研究室",
-      description: "デザインの知見共有とフィードバック",
-      memberCount: 31,
-      lastMessage: "新しいデザインツールについて教えてください",
-      timestamp: "2時間前",
-      unreadCount: 5,
-      category: "UI/UX",
-    },
-    {
-      id: "4",
-      name: "情報処理試験対策",
-      description: "基本情報・応用情報技術者試験の対策",
-      memberCount: 42,
-      lastMessage: "過去問の解説をお願いします",
-      timestamp: "4時間前",
-      unreadCount: 1,
-      category: "情報処理試験",
-    },
-  ]
+
 
   // Tabsの切り替え状態を管理するためのuseState
   // 今回はUIライブラリのTabsコンポーネントを使用しないため、自前で状態を管理します
   const [activeTab, setActiveTab] = useState("individual");
+
+  // モーダルを閉じる
+  const closeModal = () => {
+    setIsModalOpen(false);
+    // setModalView('main'); // モーダルを閉じるときにビューをリセットしても良いが、今回は開くときにリセット
+  }
+
+
+  // グループ作成フォームのState (簡易版)
+  const [newGroupName, setNewGroupName] = useState('');
+  const [newGroupDescription, setNewGroupDescription] = useState('');
 
   return (
     <div className={styles.container}>
@@ -111,7 +49,7 @@ export default function ChatsPage() {
                 <input type="search" placeholder="チャットを検索..." className={styles.searchInput} />
               </div>
               {/* ボタンは既存のUIライブラリのButtonコンポーネントに依存しないように変更 */}
-              <button className={styles.primaryButton}>
+              <button className={styles.primaryButton} onClick={() => setIsModalOpen(true)}>
                 <HiOutlinePlus className={styles.buttonIcon} />
                 新しいチャット
               </button>
@@ -137,40 +75,40 @@ export default function ChatsPage() {
             {activeTab === "individual" && (
               <div className={styles.tabContent}>
                 <div className={styles.chatGrid}>
-                  {individualChats.map((chat) => (
+                  {chatHistory.map((chat: ChatUsers) => (
                     // Cardコンポーネントの代わりにdivを使用
-                    <div key={chat.id} className={styles.chatCard}>
-                      <a href={`/chats/${chat.id}`} className={styles.cardLink}>
+                    <div key={chat.user_id} className={styles.chatCard}>
+                      <a href={`/chats/${chat.user_id}`} className={styles.cardLink}>
                         <div className={styles.cardContent}>
                           <div className={styles.chatItem}>
                             <div className={styles.avatarWrapper}>
                               {/* Avatarコンポーネントの代わりにimgとdivを使用 */}
                               <div className={styles.avatar}>
-                                <img src={chat.mentor.avatar || "/placeholder.svg"} alt={chat.mentor.name} className={styles.avatarImage} />
-                                <div className={styles.avatarFallback}>{chat.mentor.name.charAt(0)}</div>
+                                <img src={chat.profile_image || "/placeholder.svg"} alt={chat.user_name} className={styles.avatarImage} />
+                                <div className={styles.avatarFallback}>{chat.user_name}</div>
                               </div>
-                              {chat.isOnline && (
+                              {/* {chat.isOnline && (
                                 <div className={styles.onlineIndicator} />
-                              )}
+                              )} */}
                             </div>
                             <div className={styles.chatInfo}>
                               <div className={styles.mentorHeader}>
-                                <h3 className={styles.mentorName}>{chat.mentor.name}</h3>
-                                <div
+                                <h3 className={styles.mentorName}>{chat.user_name}</h3>
+                                {/* <div
                                   className={`${styles.mentorRank} ${chat.mentor.rank === "S" ? styles.rankS : chat.mentor.rank === "A" ? styles.rankA : styles.rankB
                                     }`}
                                 >
                                   {chat.mentor.rank}
-                                </div>
+                                </div> */}
                               </div>
-                              <p className={styles.mentorSpecialty}>{chat.mentor.specialty}</p>
-                              <p className={styles.lastMessage}>{chat.lastMessage}</p>
+                              {/* <p className={styles.mentorSpecialty}>{chat.mentor.specialty}</p> */}
+                              <p className={styles.lastMessage}>{chat.last_message}</p>
                             </div>
                             <div className={styles.chatMeta}>
-                              <span className={styles.timestamp}>{chat.timestamp}</span>
-                              {chat.unreadCount > 0 && (
+                              <span className={styles.timestamp}>{chat.last_chat_at instanceof Date ? chat.last_chat_at.toLocaleString() : chat.last_chat_at}</span>
+                              {chat.unread_count > 0 && (
                                 <div className={styles.unreadBadge}>
-                                  {chat.unreadCount}
+                                  {chat.unread_count}
                                 </div>
                               )}
                             </div>
@@ -186,10 +124,10 @@ export default function ChatsPage() {
             {activeTab === "group" && (
               <div className={styles.tabContent}>
                 <div className={styles.chatGrid}>
-                  {groupChats.map((chat) => (
+                  {myGroupChats.map((chat) => (
                     // Cardコンポーネントの代わりにdivを使用
-                    <div key={chat.id} className={styles.chatCard}>
-                      <a href={`/group/${chat.id}`} className={styles.cardLink}>
+                    <div key={chat.group_id} className={styles.chatCard}>
+                      <a href={`/group/${chat.group_id}`} className={styles.cardLink}>
                         <div className={styles.cardContent}>
                           <div className={styles.chatItem}>
                             <div className={styles.groupIconWrapper}>
@@ -197,23 +135,23 @@ export default function ChatsPage() {
                             </div>
                             <div className={styles.chatInfo}>
                               <div className={styles.groupHeader}>
-                                <h3 className={styles.groupName}>{chat.name}</h3>
+                                <h3 className={styles.groupName}>{chat.group_name}</h3>
                                 <span className={styles.groupCategory}>
-                                  {chat.category}
+                                  {chat.category.category_name}
                                 </span>
                               </div>
                               <p className={styles.groupDescription}>{chat.description}</p>
-                              <p className={styles.lastMessage}>{chat.lastMessage}</p>
+                              <p className={styles.lastMessage}>{chat.last_message}</p>
                             </div>
                             <div className={styles.chatMeta}>
                               <div className={styles.memberCount}>
                                 <HiOutlineUserGroup className={styles.memberCountIcon} />
                                 <span className={styles.memberCountText}>{chat.memberCount}</span>
                               </div>
-                              <span className={styles.timestamp}>{chat.timestamp}</span>
-                              {chat.unreadCount > 0 && (
+                              <span className={styles.timestamp}>{chat.created_at instanceof Date ? chat.created_at.toLocaleString() : chat.created_at}</span>
+                              {chat.unread_count > 0 && (
                                 <div className={styles.unreadBadge}>
-                                  {chat.unreadCount}
+                                  {chat.unread_count}
                                 </div>
                               )}
                             </div>
@@ -228,6 +166,124 @@ export default function ChatsPage() {
           </div> {/* End of Tabs Root */}
         </div>
       </main>
+
+      {/* モーダルウィンドウ */}
+      {isModalOpen && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            {/* メインビュー */}
+            {modalView === 'main' && (
+              <>
+                <h2 className={styles.modalTitle}>新しいチャットを作成</h2>
+                <p className={styles.modalDescription}>作成したいチャットの種類を選択してください。</p>
+
+                <div className={styles.modalOptions}>
+                  <button className={styles.modalOptionButton} onClick={() => setModalView('selectIndividual')}>
+                    <div className={styles.modalOptionIconWrapper}>
+                      <HiOutlineUser className={styles.modalOptionIcon} />
+                    </div>
+                    <h3 className={styles.modalOptionTitle}>個人チャット</h3>
+                    <p className={styles.modalOptionDescription}>特定のメンターとの個別相談を開始します。</p>
+                  </button>
+                  <button className={styles.modalOptionButton} onClick={() => setModalView('createGroup')}>
+                    <div className={styles.modalOptionIconWrapper}>
+                      <HiOutlineUsers className={styles.modalOptionIcon} />
+                    </div>
+                    <h3 className={styles.modalOptionTitle}>グループチャット</h3>
+                    <p className={styles.modalOptionDescription}>複数の学習者やメンターと共同で議論します。</p>
+                  </button>
+                </div>
+
+                <button className={styles.modalCloseButton} onClick={closeModal}>
+                  閉じる
+                </button>
+              </>
+            )}
+
+            {/* 個人チャット - メンバー選択画面 */}
+            {modalView === 'selectIndividual' && (
+              <>
+                <div className={styles.modalHeaderWithBack}>
+                  <button className={styles.modalBackButton} onClick={() => setModalView('main')}>
+                    <HiOutlineArrowLeft className={styles.iconSmall} />
+                  </button>
+                  <h2 className={styles.modalTitle}>メンターを選択</h2>
+                </div>
+                <p className={styles.modalDescription}>相談したいメンターを選択してください。</p>
+                <div className={styles.mentorSelectionList}>
+                  {users.map(mentor => (
+                    <a href={`/chats/${mentor.user_id}`} key={mentor.user_id} className={styles.mentorSelectionItem} onClick={closeModal}>
+                      <div className={styles.avatarWrapper}>
+                        <div className={styles.avatarMini}>
+                          <img src={mentor.profile_image || ""} alt={mentor.first_name} className={styles.avatarImage} />
+                          <div className={styles.avatarFallbackMini}>{mentor.first_name.charAt(0)}</div>
+                        </div>
+                        {/* {mentor.isOnline && <div className={styles.onlineIndicatorMini} />} */}
+                      </div>
+                      <div className={styles.mentorSelectionInfo}>
+                        <span className={styles.mentorSelectionName}>{mentor.first_name}</span>
+                        {/* <span className={styles.mentorSelectionSpecialty}>{mentor.specialty}</span> */}
+                      </div>
+                    </a>
+                  ))}
+                </div>
+                <button className={styles.modalCloseButton} onClick={closeModal}>
+                  キャンセル
+                </button>
+              </>
+            )}
+
+            {/* グループチャット - グループ作成画面 */}
+            {modalView === 'createGroup' && (
+              <>
+                <div className={styles.modalHeaderWithBack}>
+                  <button className={styles.modalBackButton} onClick={() => setModalView('main')}>
+                    <HiOutlineArrowLeft className={styles.iconSmall} />
+                  </button>
+                  <h2 className={styles.modalTitle}>グループチャットを作成</h2>
+                </div>
+                <p className={styles.modalDescription}>新しいグループの情報を入力してください。</p>
+                <div className={styles.formGroup}>
+                  <label htmlFor="groupName" className={styles.formLabel}>グループ名</label>
+                  <input
+                    type="text"
+                    id="groupName"
+                    className={styles.formInput}
+                    placeholder="例: React学習会"
+                    value={newGroupName}
+                    onChange={(e) => setNewGroupName(e.target.value)}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="groupDescription" className={styles.formLabel}>説明</label>
+                  <textarea
+                    id="groupDescription"
+                    className={styles.formTextarea}
+                    placeholder="グループの目的や内容を記述してください"
+                    value={newGroupDescription}
+                    onChange={(e) => setNewGroupDescription(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+                <button
+                  className={styles.primaryButton}
+                  onClick={() => {
+                    alert(`グループ「${newGroupName}」を作成します（説明: ${newGroupDescription}）`);
+                    // TODO: 実際のグループ作成API呼び出しロジック
+                    closeModal();
+                  }}
+                  disabled={!newGroupName.trim()}
+                >
+                  グループを作成
+                </button>
+                <button className={styles.modalCloseButton} onClick={closeModal}>
+                  キャンセル
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

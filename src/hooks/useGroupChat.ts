@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { GroupChat, GroupChatMember } from "../types/groupChatType";
+import type { GroupChat, GroupChatMember, GroupChats } from "../types/groupChatType";
 
 export const useGroupChats = () => {
     const [groupChats, setGroupChats] = useState<GroupChat[]>([]);
@@ -108,7 +108,7 @@ export const useCreateGroupChat = () => {
 
 // 自分が所属しているグループチャットを取得
 export const useMyGroupChats = () => {
-    const [myGroupChats, setMyGroupChats] = useState<GroupChat[]>([]);
+    const [myGroupChats, setMyGroupChats] = useState<GroupChats[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -117,7 +117,7 @@ export const useMyGroupChats = () => {
         setError(null);
         const token = localStorage.getItem("token");
         try {
-            const response = await fetch('http://localhost:5000/my_groupchats', {
+            const response = await fetch('http://localhost:5000/chat_groups', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -125,7 +125,7 @@ export const useMyGroupChats = () => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            const data: GroupChat[] = await response.json();
+            const data: GroupChats[] = await response.json();
             setMyGroupChats(data);
         } catch (error) {
             console.error('Error fetching my group chats:', error);
