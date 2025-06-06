@@ -34,3 +34,17 @@
 .markdowncontent a {
   color: #4078c0;
 }
+
+.tags {
+  margin: 8px 0;
+}
+
+.tag {
+  display: inline-block;
+  background: #e0f3e8;
+  color: #2c963f;
+  font-size: 12px;
+  padding: 4px 8px;
+  margin-right: 4px;
+  border-radius: 12px;
+}

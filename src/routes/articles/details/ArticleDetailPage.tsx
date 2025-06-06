@@ -13,19 +13,19 @@ const ArticleDetailPage: React.FC = () => {
 
   return (
     <div className={style.detailcontainer}>
-      <button onClick={() => navigate('/article')}>← 一覧に戻る</button>
+      <button onClick={() => navigate('/article')}>←</button>
       <h1>{article.title}</h1>
-      <div className="tags">
+      <div className={style.tags}>
         {article.categories.map((tag, idx) => (
-          <span key={idx} className="tag">
+          <span key={idx} className={style.tag}>
             #{tag.category_name}
           </span>
         ))}
       </div>
-      <small>{new Date(article.created_at).toLocaleDateString()}</small>
       <div className={style.markdowncontent}>
         <MarkdownRenderer content={article.content} />
       </div>
+      <small>{new Date(article.created_at).toLocaleDateString()}</small>
     </div>
   );
 };
