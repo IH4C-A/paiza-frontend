@@ -1,0 +1,380 @@
+/* General Styles copied from previous response, can be put in a global css if used across pages */
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Page Layout */
+.pageWrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid #e5e7eb; /* border-gray-200 */
+  background-color: #ffffff; /* bg-background (assuming white) */
+}
+
+.headerContainer {
+  display: flex;
+  height: 4rem; /* h-16 */
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem; /* px-4 */
+  max-width: 1280px; /* container default max-width, adjust as needed */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* gap-6 */
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+  font-weight: 700; /* font-bold */
+  font-size: 1.25rem; /* text-xl */
+  text-decoration: none;
+  color: inherit;
+}
+
+.logoTextPrimary {
+  color: #007bff; /* text-primary (example blue) */
+}
+
+.nav {
+  display: none; /* hidden by default */
+  gap: 1.5rem; /* gap-6 */
+}
+
+@media (min-width: 768px) { /* md:flex */
+  .nav {
+    display: flex;
+  }
+}
+
+.navLink {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: #6b7280; /* text-muted-foreground */
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: #111827; /* hover:text-foreground */
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* gap-4 */
+}
+
+.mainContent {
+  flex: 1;
+}
+
+.mainContainer {
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem; /* px-4 */
+  padding-top: 1.5rem; /* py-6 */
+  padding-bottom: 1.5rem; /* py-6 */
+  max-width: 1280px; /* container default max-width, adjust as needed */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Button Component Styles (can be shared) */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem; /* rounded-md */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  text-decoration: none;
+  background-color: #007bff; /* primary by default */
+  color: #ffffff;
+}
+.button:hover {
+    background-color: #0056b3;
+}
+
+.buttonVariantOutline {
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  color: #374151;
+}
+.buttonVariantOutline:hover {
+  background-color: #f9fafb;
+}
+
+.buttonVariantGhost {
+  background-color: transparent;
+  color: #374151; /* Adjusted for better visibility on white bg */
+}
+.buttonVariantGhost:hover {
+  background-color: #f3f4f6;
+}
+
+.buttonSizeIcon {
+  height: 2.5rem;
+  width: 2.5rem;
+  padding: 0.5rem;
+}
+
+.buttonRelative {
+  position: relative;
+}
+
+.buttonIconIndicator {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 9999px;
+  background-color: #007bff;
+}
+
+/* Notification Settings Page Specific Styles */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+  font-size: 0.875rem; /* text-sm */
+  color: #6b7280; /* text-muted-foreground */
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+.breadcrumbLink {
+  text-decoration: none;
+  color: inherit;
+}
+.breadcrumbLink:hover {
+  color: #111827; /* hover:text-foreground */
+}
+
+.pageTitleSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* gap-4 */
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.pageTitle {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 700; /* font-bold */
+  letter-spacing: -0.025em; /* tracking-tight */
+}
+.pageSubtitle {
+  color: #6b7280; /* text-muted-foreground */
+}
+
+.settingsGrid {
+  display: grid;
+  gap: 1.5rem; /* gap-6 */
+  max-width: 56rem; /* max-w-4xl (roughly 896px, 56rem * 16px) */
+}
+
+/* Card Styles (can be shared) */
+.card {
+  border-radius: 0.5rem; /* rounded-lg */
+  border: 1px solid #e5e7eb; /* border */
+  background-color: #ffffff; /* bg-card */
+}
+.cardHeader {
+  padding: 1.5rem; /* p-6, adjust as needed */
+  border-bottom: 1px solid #e5e7eb; /* For separation if needed */
+}
+.cardTitle {
+  font-size: 1.25rem; /* text-xl or similar */
+  font-weight: 600; /* font-semibold */
+}
+.cardDescription {
+  font-size: 0.875rem; /* text-sm */
+  color: #6b7280; /* text-muted-foreground */
+  margin-top: 0.25rem;
+}
+.cardContent {
+  padding: 1.5rem; /* p-6 */
+}
+
+/* Space Between Y for CardContent items */
+.spaceY6 > *:not([hidden]) ~ *:not([hidden]) {
+  margin-top: 1.5rem; /* space-y-6 */
+}
+.spaceY4 > *:not([hidden]) ~ *:not([hidden]) {
+  margin-top: 1rem; /* space-y-4 */
+}
+.spaceY2 > *:not([hidden]) ~ *:not([hidden]) {
+  margin-top: 0.5rem; /* space-y-2 */
+}
+
+
+/* Setting Item (in card) */
+.settingItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.settingItemInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* gap-3 */
+}
+.settingItemTextContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label Styles (can be shared) */
+.label {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: #111827; /* text-foreground */
+  display: block; /* for spacing */
+}
+.labelTextMuted {
+    font-size: 0.875rem;
+    color: #6b7280; /* text-muted-foreground */
+}
+
+
+/* Switch Styles */
+.switchContainer {
+  position: relative;
+  display: inline-block;
+  width: 44px; /* Adjust width */
+  height: 24px; /* Adjust height */
+}
+.switchInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switchSlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc; /* Off state */
+  transition: .4s;
+  border-radius: 24px; /* Make it round */
+}
+.switchSlider:before {
+  position: absolute;
+  content: "";
+  height: 20px; /* Knob height */
+  width: 20px; /* Knob width */
+  left: 2px; /* Knob position */
+  bottom: 2px; /* Knob position */
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+.switchInput:checked + .switchSlider {
+  background-color: #007bff; /* On state - primary color */
+}
+.switchInput:focus + .switchSlider {
+  box-shadow: 0 0 1px #007bff;
+}
+.switchInput:checked + .switchSlider:before {
+  transform: translateX(20px); /* Move knob to the right */
+}
+
+/* Select Styles */
+.selectContainer {
+  position: relative;
+  display: block; /* Or inline-block if preferred */
+}
+.selectElement {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-radius: 0.375rem; /* rounded-md */
+  background-color: #fff;
+  color: #111827;
+  appearance: none; /* Remove default arrow */
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20fill%3D%22none%22%20stroke%3D%22%236b7280%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1.25em 1.25em;
+  padding-right: 2.5rem; /* Make space for custom arrow */
+}
+.selectElement:focus {
+  outline: none;
+  border-color: #007bff; /* primary color focus */
+  box-shadow: 0 0 0 1px #007bff;
+}
+
+
+/* Quiet Hours Grid */
+.quietHoursGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr); /* Default to 1 column */
+  gap: 1rem; /* gap-4 */
+  padding-left: 2rem; /* pl-8 */
+}
+@media (min-width: 640px) { /* sm:grid-cols-2 or similar if original was responsive */
+  .quietHoursGrid {
+    grid-template-columns: repeat(2, 1fr); /* grid-cols-2 */
+  }
+}
+
+.actionsFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem; /* gap-4 */
+  margin-top: 1.5rem; /* Added for spacing */
+}
+
+/* Icon specific colors from the component */
+.iconBase {
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+}
+.iconArrow { /* h-4 w-4 */
+  height: 1rem;
+  width: 1rem;
+}
+
+.iconBlue { color: #3b82f6; }
+.iconPurple { color: #8b5cf6; }
+.iconGreen { color: #22c55e; }
+.iconYellow { color: #eab308; }
+.iconPink { color: #ec4899; }
+.iconGray { color: #6b7280; }
+.iconIndigo { color: #6366f1; }
+.iconOrange { color: #f97316; }

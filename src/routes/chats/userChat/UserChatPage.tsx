@@ -1,146 +1,74 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { HiOutlineArrowLeft,  HiOutlineCodeBracket, HiOutlinePaperClip, HiOutlineStar, HiOutlineEllipsisVertical, HiOutlineDocumentText } from "react-icons/hi2"; // Heroicons v2
-import {  FaPaperPlane } from "react-icons/fa"; // Font Awesome
+import { useMemo, useState, useEffect } from "react"; // useEffectを追加
+import {
+  HiOutlineArrowLeft,
+  HiOutlineCodeBracket,
+  HiOutlinePaperClip,
+  HiOutlineStar,
+  HiOutlineEllipsisVertical,
+  HiOutlineDocumentText,
+} from "react-icons/hi2"; // Heroicons v2
+import { FaPaperPlane } from "react-icons/fa"; // Font Awesome
+import { useChat } from "../../../hooks/useChat"; // useChatフックをインポート
+import { useCurrentUser } from "../../../hooks/useUser"; // useCurrentUserフックをインポート
+import styles from "./UserChatPage.module.css"; // CSSモジュールをインポート
+import { useParams } from "react-router-dom"; // react-router-domからuseParamsをインポート
 
-import styles from "./UserChatPage.module.css"
+export default function IndividualChatPage() {
+  const { id } = useParams();
+  const { currentUser } = useCurrentUser();
+  const [message, setMessage] = useState("");
 
-export default function IndividualChatPage({ params }: { params: { id: string } }) {
-  const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState([
-    {
-      id: "1",
-      sender: "mentor",
-      content: "こんにちは！React の学習でお困りのことがあるとお聞きしました。どのような点でお悩みでしょうか？",
-      timestamp: "14:30",
-      type: "text",
-    },
-    {
-      id: "2",
-      sender: "user",
-      content: "useEffect の依存配列について理解できていません。無限ループが発生してしまうことがあります。",
-      timestamp: "14:32",
-      type: "text",
-    },
-    {
-      id: "3",
-      sender: "mentor",
-      content: "useEffect の依存配列は重要なポイントですね。具体的にどのようなコードで問題が発生していますか？",
-      timestamp: "14:33",
-      type: "text",
-    },
-    {
-      id: "4",
-      sender: "user",
-      content: `useEffect(() => {
-  const fetchData = async () => {
-    const response = await fetch('/api/data');
-    const result = await response.json();
-    setData(result);
-  };
-  fetchData();
-}, []);`,
-      timestamp: "14:35",
-      type: "code",
-      language: "javascript",
-    },
-    {
-      id: "5",
-      sender: "mentor",
-      content:
-        "コードを見せていただき、ありがとうございます。このコード自体は問題ないように見えますが、無限ループが発生する原因はいくつか考えられます。",
-      timestamp: "14:37",
-      type: "text",
-    },
-    {
-      id: "6",
-      sender: "mentor",
-      content: `無限ループの主な原因：
 
-1. **Strict Mode の影響**: React 18 の開発環境では、コンポーネントが二回マウントされることがあります。
+  const { chats, sendMessage, allUsers, fetchChatHistory } = useChat();
+  
 
-2. **外部での状態更新**: コンポーネントの外部で何かが状態を更新している可能性があります。
 
-3. **依存配列の設定ミス**: 依存配列に含めるべき値が漏れている場合があります。
+  const receiverUser = useMemo(() => {
+    return allUsers.find((user) => user.user_id === id);
+  }, [allUsers, id]);
 
-まずは以下を確認してみてください：`,
-      timestamp: "14:38",
-      type: "text",
-    },
-    {
-      id: "7",
-      sender: "mentor",
-      content: `useEffect(() => {
-  let isMounted = true;
- 
-  const fetchData = async () => {
-    try {
-      const response = await fetch('/api/data');
-      const result = await response.json();
-      if (isMounted) {
-        setData(result);
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
+
+  useEffect(() => {
+    if (id && fetchChatHistory) {
+      fetchChatHistory(id);
     }
-  };
- 
-  fetchData();
- 
-  return () => {
-    isMounted = false;
-  };
-}, []);`,
-      timestamp: "14:40",
-      type: "code",
-      language: "javascript",
-    },
-  ])
+  }, [id, fetchChatHistory]);
 
-  // ドロップダウンメニューの開閉状態を管理するためのuseState
+  // ドロップダウンメニューの開閉状態を管理
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const mentor = {
-    id: params.id,
-    name: "田中さん",
-    rank: "S",
-    avatar: "/placeholder.svg?height=40&width=40",
-    specialty: "アルゴリズム、React専門",
-    isOnline: true,
-    rating: 4.8,
-    responseTime: "平均15分",
-  }
+  // チャットメッセージを整形して表示形式に変換
+  const formattedMessages = chats.map((chat) => ({
+    id: chat.chat_id,
+    // 現在のユーザーIDとメッセージの送信者IDを比較して、senderを"user"または"mentor"に決定
+    sender: chat.sender,
+    content: chat.message || chat.image || "", // メッセージ内容または画像
+    timestamp: new Date(chat.chat_at).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }), // タイムスタンプを整形
+    type: chat.type || "text",
+  }));
 
-  const sendMessage = () => {
-    if (message.trim()) {
-      const newMessage = {
-        id: Date.now().toString(),
-        sender: "user" as const,
-        content: message,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        type: "text" as const,
-      }
-      setMessages([...messages, newMessage])
-      setMessage("")
+  console.log("Formatted Messages:", formattedMessages); // デバッグ用
+  console.log("Receiver User:", chats); // デバッグ用
 
-      // メンターからの自動返信をシミュレート
-      setTimeout(() => {
-        const mentorReply = {
-          id: (Date.now() + 1).toString(),
-          sender: "mentor" as const,
-          content: "ありがとうございます。確認させていただきますね。",
-          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          type: "text" as const,
-        }
-        setMessages((prev) => [...prev, mentorReply])
-      }, 1000)
+  // メッセージ送信時の処理
+  const handleSendMessage = () => {
+    if (message.trim()) { // メッセージが空白でない場合
+      sendMessage({
+        message: message, // 送信するメッセージ
+        send_user_id: currentUser?.user_id || "", // 送信者のユーザーID
+        receiver_user_id: id, // 受信者のユーザーID
+      });
+      setMessage(""); // メッセージ入力フィールドをクリア
     }
-  }
+  };
 
   return (
     <div className={styles.container}>
-
       {/* メインコンテンツ */}
       <main className={styles.main}>
         {/* チャットヘッダー */}
@@ -148,47 +76,55 @@ export default function IndividualChatPage({ params }: { params: { id: string } 
           <div className={styles.chatHeaderContent}>
             <div className={styles.chatHeaderLeft}>
               <a href="/chats" className={styles.iconButton}>
-                <HiOutlineArrowLeft className={styles.iconSmall} />
+                <HiOutlineArrowLeft className={styles.iconSmall} /> {/* 戻るアイコン */}
               </a>
               <div className={styles.mentorInfoInHeader}>
                 <div className={styles.avatarWrapper}>
                   <div className={styles.avatarSmall}>
-                    <img src={mentor.avatar || "/placeholder.svg"} alt={mentor.name} className={styles.avatarImage} />
-                    <div className={styles.avatarFallback}>{mentor.name.charAt(0)}</div>
+                    <img
+                      src={receiverUser?.profile_image || "/placeholder.svg"}
+                      alt={receiverUser?.first_name}
+                      className={styles.avatarImage}
+                    />
+                    <div className={styles.avatarFallback}>
+                      {receiverUser?.first_name?.charAt(0)} {/* プロフィール画像のフォールバック */}
+                    </div>
                   </div>
-                  {mentor.isOnline && (
-                    <div className={styles.onlineIndicatorSmall} />
-                  )}
                 </div>
                 <div>
                   <div className={styles.mentorRankRow}>
-                    <h1 className={styles.mentorNameHeader}>{mentor.name}</h1>
-                    <div
-                      className={`${styles.mentorRank} ${
-                        mentor.rank === "S" ? styles.rankS : mentor.rank === "A" ? styles.rankA : styles.rankB
-                      }`}
-                    >
-                      {mentor.rank}
-                    </div>
+                    <h1 className={styles.mentorNameHeader}>
+                      {receiverUser?.first_name} {/* 相手のユーザー名 */}
+                    </h1>
                   </div>
-                  <p className={styles.mentorSpecialtyHeader}>{mentor.specialty}</p>
                 </div>
               </div>
             </div>
-            {/* ドロップダウンメニューの代わりに純粋なHTMLとCSSで実装 */}
+            {/* ドロップダウンメニュー */}
             <div className={styles.dropdownMenu}>
-              <button className={styles.iconButton} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                <HiOutlineEllipsisVertical className={styles.iconSmall} />
+              <button
+                className={styles.iconButton}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)} // ドロップダウンの開閉
+              >
+                <HiOutlineEllipsisVertical className={styles.iconSmall} /> {/* 縦三点リーダーアイコン */}
               </button>
-              {isDropdownOpen && (
+              {isDropdownOpen && ( // ドロップダウンが開いている場合のみ表示
                 <div className={styles.dropdownMenuContent}>
-                  <button className={styles.dropdownMenuItem} onClick={() => setIsDropdownOpen(false)}>
+                  <button
+                    className={styles.dropdownMenuItem}
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
                     <HiOutlineStar className={styles.dropdownMenuItemIcon} />
-                    メンターを評価
+                    メンターを評価 {/* メニューアイテム */}
                   </button>
-                  <button className={styles.dropdownMenuItem} onClick={() => setIsDropdownOpen(false)}>
-                    <HiOutlineDocumentText className={styles.dropdownMenuItemIcon} />
-                    チャット履歴をエクスポート
+                  <button
+                    className={styles.dropdownMenuItem}
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    <HiOutlineDocumentText
+                      className={styles.dropdownMenuItemIcon}
+                    />
+                    チャット履歴をエクスポート {/* メニューアイテム */}
                   </button>
                 </div>
               )}
@@ -201,43 +137,70 @@ export default function IndividualChatPage({ params }: { params: { id: string } 
           {/* チャットメッセージエリア */}
           <div className={styles.chatArea}>
             <div className={styles.messagesContainer}>
-              {messages.map((msg) => (
-                <div key={msg.id} className={`${styles.messageWrapper} ${msg.sender === "user" ? styles.messageUser : styles.messageMentor}`}>
-                  <div className={`${styles.messageBubbleContainer} ${msg.sender === "user" ? styles.messageBubbleUserOrder : styles.messageBubbleMentorOrder}`}>
-                    {msg.sender === "mentor" && (
+              {formattedMessages.map((msg) => ( // 整形されたメッセージをマップ
+                <div
+                  key={msg.id}
+                  className={`${styles.messageWrapper} ${
+                    msg.sender === currentUser?.first_name // 送信者によってスタイルを切り替え
+                      ? styles.messageUser
+                      : styles.messageMentor
+                  }`}
+                >
+                  <div
+                    className={`${styles.messageBubbleContainer} ${
+                      msg.sender === currentUser?.first_name 
+                        ? styles.messageBubbleUserOrder
+                        : styles.messageBubbleMentorOrder
+                    }`}
+                  >
+                    {msg.sender === receiverUser?.first_name && ( // 相手のメッセージの場合のみアバターと名前を表示
                       <div className={styles.mentorAvatarInMessage}>
                         <div className={styles.avatarMini}>
-                          <img src={mentor.avatar || "/placeholder.svg"} alt={mentor.name} className={styles.avatarImage} />
-                          <div className={styles.avatarFallbackMini}>{mentor.name.charAt(0)}</div>
+                          <img
+                            src={
+                              receiverUser?.profile_image || "/placeholder.svg"
+                            }
+                            alt={receiverUser?.first_name}
+                            className={styles.avatarImage}
+                          />
+                          <div className={styles.avatarFallbackMini}>
+                            {receiverUser?.first_name}
+                          </div>
                         </div>
-                        <span className={styles.mentorNameMini}>{mentor.name}</span>
+                        <span className={styles.mentorNameMini}>
+                          {receiverUser?.first_name}
+                        </span>
                       </div>
                     )}
                     <div
                       className={`${styles.messageBubble} ${
-                        msg.sender === "user"
+                        msg.sender === "user" // 送信者とタイプによってバブルのスタイルを切り替え
                           ? styles.messageBubblePrimary
                           : msg.type === "code"
                           ? styles.messageBubbleCode
                           : styles.messageBubbleMuted
                       }`}
                     >
-                      {msg.type === "code" ? (
+                      {msg.type === "code" ? ( // コードメッセージの場合
                         <div>
                           <div className={styles.codeHeader}>
                             <HiOutlineCodeBracket className={styles.codeIcon} />
-                            <span className={styles.codeLanguage}>{msg.language}</span>
+                            <span className={styles.codeLanguage}></span>
                           </div>
                           <pre className={styles.codeBlock}>
                             <code>{msg.content}</code>
                           </pre>
                         </div>
-                      ) : (
+                      ) : ( // テキストメッセージの場合
                         <p className={styles.messageText}>{msg.content}</p>
                       )}
                     </div>
-                    <div className={`${styles.messageTimestamp} ${msg.sender === "user" ? styles.messageTimestampUser : ""}`}>
-                      {msg.timestamp}
+                    <div
+                      className={`${styles.messageTimestamp} ${
+                        msg.sender === "user" ? styles.messageTimestampUser : ""
+                      }`}
+                    >
+                      {msg.timestamp} {/* タイムスタンプ */}
                     </div>
                   </div>
                 </div>
@@ -248,27 +211,31 @@ export default function IndividualChatPage({ params }: { params: { id: string } 
             <div className={styles.messageInputArea}>
               <div className={styles.messageInputWrapper}>
                 <button className={styles.outlineIconButton}>
-                  <HiOutlinePaperClip className={styles.iconSmall} />
+                  <HiOutlinePaperClip className={styles.iconSmall} /> {/* クリップアイコン */}
                 </button>
                 <button className={styles.outlineIconButton}>
-                  <HiOutlineCodeBracket className={styles.iconSmall} />
+                  <HiOutlineCodeBracket className={styles.iconSmall} /> {/* コードブラケットアイコン */}
                 </button>
-                {/* Textareaコンポーネントの代わりにtextareaタグを使用 */}
+                {/* メッセージ入力用のtextarea */}
                 <textarea
                   placeholder="メッセージを入力..."
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  onChange={(e) => setMessage(e.target.value)} // 入力値の更新
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault()
-                      sendMessage()
+                    if (e.key === "Enter" && !e.shiftKey) { // Enterキーが押され、Shiftキーが押されていない場合
+                      e.preventDefault(); // デフォルトの改行動作を防止
+                      handleSendMessage(); // メッセージを送信
                     }
                   }}
                   className={styles.messageTextarea}
-                  rows={1} // 初期行数を設定
+                  rows={1} // 初期行数
                 />
-                <button onClick={sendMessage} disabled={!message.trim()} className={styles.primaryButton}>
-                  <FaPaperPlane className={styles.iconSmall} />
+                <button
+                  onClick={handleSendMessage} // クリックでメッセージ送信
+                  disabled={!message.trim()} // メッセージが空白の場合は無効化
+                  className={styles.primaryButton}
+                >
+                  <FaPaperPlane className={styles.iconSmall} /> {/* 送信アイコン */}
                 </button>
               </div>
             </div>
@@ -276,29 +243,35 @@ export default function IndividualChatPage({ params }: { params: { id: string } 
 
           {/* 右サイドバー (メンター情報) */}
           <div className={styles.sidebar}>
-            {/* Cardコンポーネントの代わりにdivを使用 */}
             <div className={styles.card}>
               <div className={styles.cardHeader}>
-                <h2 className={styles.cardTitle}>メンター情報</h2>
+                <h2 className={styles.cardTitle}>メンター情報</h2> {/* サイドバーのタイトル */}
               </div>
               <div className={styles.cardContent}>
                 <div className={styles.mentorInfoBlock}>
                   <div className={styles.avatarLarge}>
-                    <img src={mentor.avatar || "/placeholder.svg"} alt={mentor.name} className={styles.avatarImage} />
-                    <div className={styles.avatarFallbackLarge}>{mentor.name.charAt(0)}</div>
+                    <img
+                      src={receiverUser?.profile_image || "/placeholder.svg"}
+                      alt={receiverUser?.first_name}
+                      className={styles.avatarImage}
+                    />
+                    <div className={styles.avatarFallbackLarge}>
+                      {receiverUser?.first_name?.charAt(0)}
+                    </div>
                   </div>
                   <div>
                     <div className={styles.mentorRankRow}>
-                      <h3 className={styles.mentorNameSidebar}>{mentor.name}</h3>
-                      <div
+                      <h3 className={styles.mentorNameSidebar}>
+                        {receiverUser?.first_name}
+                      </h3>
+                      {/* <div
                         className={`${styles.mentorRank} ${
-                          mentor.rank === "S" ? styles.rankS : mentor.rank === "A" ? styles.rankA : styles.rankB
+                          receiverUser?.rank.rank_name === "S" ? styles.rankS : receiverUser?.rank.rank_name === "A" ? styles.rankA : styles.rankB
                         }`}
                       >
-                        {mentor.rank}
-                      </div>
+                        {receiverUser?.rank?.rank_name}
+                      </div> */}
                     </div>
-                    <p className={styles.mentorSpecialtySidebar}>{mentor.specialty}</p>
                   </div>
                 </div>
                 <div className={styles.mentorDetails}>
@@ -306,12 +279,12 @@ export default function IndividualChatPage({ params }: { params: { id: string } 
                     <span className={styles.detailLabel}>評価</span>
                     <div className={styles.detailValue}>
                       <HiOutlineStar className={styles.starIcon} />
-                      <span className={styles.detailText}>{mentor.rating}</span>
+                      {/* 評価のプレースホルダー */}
                     </div>
                   </div>
                   <div className={styles.detailRow}>
                     <span className={styles.detailLabel}>返信時間</span>
-                    <span className={styles.detailTextMuted}>{mentor.responseTime}</span>
+                    {/* 返信時間のプレースホルダー */}
                   </div>
                   <div className={styles.detailRow}>
                     <span className={styles.detailLabel}>ステータス</span>
@@ -321,9 +294,11 @@ export default function IndividualChatPage({ params }: { params: { id: string } 
                     </div>
                   </div>
                 </div>
-                <button className={`${styles.outlineButton} ${styles.fullWidthButton}`}>
+                <button
+                  className={`${styles.outlineButton} ${styles.fullWidthButton}`}
+                >
                   <HiOutlineStar className={styles.buttonIcon} />
-                  メンターを評価
+                  メンターを評価 {/* メンター評価ボタン */}
                 </button>
               </div>
             </div>
@@ -331,5 +306,5 @@ export default function IndividualChatPage({ params }: { params: { id: string } 
         </div>
       </main>
     </div>
-  )
+  );
 }
