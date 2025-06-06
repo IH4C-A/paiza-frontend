@@ -26,7 +26,7 @@ export const SignupForm = () => {
       <form onSubmit={handleSubmit}>
         <div className={style.inputGrid}>
           <div>
-            <p className={style.inputLabel}>姓</p>
+            <label>姓</label>
             <input
               className={style.inputForm}
               type="text"
@@ -39,7 +39,7 @@ export const SignupForm = () => {
           </div>
 
           <div>
-            <p className={style.inputLabel}>名</p>
+            <label>名</label>
             <input
               className={style.inputForm}
               type="text"
@@ -52,7 +52,7 @@ export const SignupForm = () => {
           </div>
 
           <div className={style.inputFullWidth}>
-            <p className={style.inputLabel}>メールアドレス</p>
+            <label>メールアドレス</label>
             <input
               className={style.inputForm}
               type="email"
@@ -65,10 +65,11 @@ export const SignupForm = () => {
           </div>
 
           <div className={style.inputFullWidth}>
-            <p className={style.inputLabel}>パスワード</p>
+            <label>パスワード</label>
             <input
               className={style.inputForm}
               type="password"
+              placeholder="8文字以上、大文字・小文字・数字を含むパスワード"
               {...register("password")}
             />
             {errors.password && (
@@ -76,8 +77,34 @@ export const SignupForm = () => {
             )}
           </div>
 
+          <p>住所</p>
+
           <div className={style.inputFullWidth}>
-            <p className={style.inputLabel}>住所</p>
+            <label>都道府県</label>
+            <input
+              className={style.inputForm}
+              type="text"
+              {...register("adrress")}
+            />
+            {errors.adrress && (
+              <p className={style.errorMessage}>{errors.adrress.message}</p>
+            )}
+          </div>
+
+          <div className={style.inputFullWidth}>
+            <label>市区町村</label>
+            <input
+              className={style.inputForm}
+              type="text"
+              {...register("adrress")}
+            />
+            {errors.adrress && (
+              <p className={style.errorMessage}>{errors.adrress.message}</p>
+            )}
+          </div>
+
+          <div className={style.inputFullWidth}>
+            <label>番地・建物名</label>
             <input
               className={style.inputForm}
               type="text"
@@ -89,7 +116,7 @@ export const SignupForm = () => {
           </div>
 
           <div>
-            <p className={style.inputLabel}>性別</p>
+            <label>性別</label>
             <select className={style.inputForm} {...register("seibetu")}>
               <option value="">性別を選択してください</option>
               {genderOption.map((item) => (
@@ -104,7 +131,7 @@ export const SignupForm = () => {
           </div>
 
           <div>
-            <p className={style.inputLabel}>年齢</p>
+            <label>年齢</label>
             <input
               className={style.inputForm}
               type="number"
@@ -118,9 +145,12 @@ export const SignupForm = () => {
           </div>
 
           <div className={style.inputFullWidth}>
-            <p className={style.inputLabel}>職業</p>
-            <select className={style.inputForm} {...register("employment_status")}>
-              <option value="">現在の職業</option>
+            <label className={style.inputLabel}>職業</label>
+            <select
+              className={style.inputForm}
+              {...register("employment_status")}
+            >
+              <option value="現在の職業">現在の職業</option>
               {industryOption.map((item) => (
                 <option key={item.id} value={item.industry}>
                   {item.industry}
@@ -128,7 +158,9 @@ export const SignupForm = () => {
               ))}
             </select>
             {errors.employment_status && (
-              <p className={style.errorMessage}>{errors.employment_status.message}</p>
+              <p className={style.errorMessage}>
+                {errors.employment_status.message}
+              </p>
             )}
           </div>
 

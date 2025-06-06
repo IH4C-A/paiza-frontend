@@ -8,11 +8,16 @@
   width: 700px;
   padding: 40px 20px;
   border: 1px solid #aaa;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 .formTitle {
   font-size: 1.4rem;
   padding: 20px 0;
+}
+.inputWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 .inputGrid {
   display: grid;
@@ -22,9 +27,6 @@
 }
 .inputFullWidth {
   grid-column: 1 / -1;
-}
-.inputLabel {
-  padding: 5px 0;
 }
 .inputForm {
   width: 100%;
