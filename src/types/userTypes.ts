@@ -1,3 +1,5 @@
+import type { Rank } from "./rankType";
+
 export type User = {
     user_id: string;
     username: string | null;
@@ -10,6 +12,7 @@ export type User = {
     seibetu: string;
     adrress: string;
     employment_status: string;
+    rank: Rank;
 }
 
 export type UserregisterPayload = {

@@ -264,6 +264,13 @@ export default function IndividualChatPage() {
                       <h3 className={styles.mentorNameSidebar}>
                         {receiverUser?.first_name}
                       </h3>
+                      {/* <div
+                        className={`${styles.mentorRank} ${
+                          receiverUser?.rank.rank_name === "S" ? styles.rankS : receiverUser?.rank.rank_name === "A" ? styles.rankA : styles.rankB
+                        }`}
+                      >
+                        {receiverUser?.rank?.rank_name}
+                      </div> */}
                     </div>
                   </div>
                 </div>
