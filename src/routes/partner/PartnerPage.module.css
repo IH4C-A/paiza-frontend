@@ -316,7 +316,7 @@
 .formField { display: flex; flex-direction: column; gap: 0.5rem; } /* Shadcn: space-y-2 */
 .formLabel { font-size: 0.875rem; font-weight: 500; } /* Shadcn: text-sm font-medium (for label text) */
 .formInput, .formSelect { 
-  width: 100%;
+  width: auto;
   height: 2.5rem;
   padding: 0 0.75rem;
   border: 1px solid var(--input-border-color);
@@ -354,4 +354,31 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* Plant Preview */
+.plantPreviewContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-p-8);
+}
+
+.plantPreviewOuter {
+  position: relative;
+  margin-bottom: var(--spacing-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px; /* rounded-full */
+}
+
+.plantPreviewInner {
+  border-radius: 9999px; /* rounded-full */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem; /* text-4xl */
+  color: var(--background); /* Icon color inside colored circle */
 }
