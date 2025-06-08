@@ -1,0 +1,673 @@
+/* UchinoKoSetupPage.module.css */
+
+/* Custom CSS Variables (mimicking shadcn/ui's base colors and common values) */
+:root {
+  /* Colors */
+  --background: #ffffff; /* White */
+  --foreground: #0c0a09; /* Near black */
+  --muted-foreground: #6b7280; /* Gray-500 */
+  --muted-background-50: rgba(243, 244, 246, 0.5); /* Gray-100 with opacity */
+  --border: #e5e7eb; /* Gray-200 */
+  --primary: #22c55e; /* Green-500 */
+  --primary-foreground: #f8fafc; /* Near white */
+  --primary-10: rgba(34, 197, 94, 0.1); /* Green-500 with 10% opacity */
+  --green-50: #f0fdf4; /* Light green */
+  --blue-50: #eff6ff; /* Light blue */
+  --pink-500: #ec4899; /* Pink-500 */
+  --yellow-500: #facc15; /* Yellow-500 */
+  --gray-200: #e5e7eb; /* Gray-200 */
+
+  /* Other palette colors for customization */
+  --color-blue: #3b82f6; /* Blue-500 */
+  --color-orange: #f59e0b; /* Orange-400 */
+  --color-red: #ef4444; /* Red-500 */
+  --color-purple: #8b5cf6; /* Purple-500 */
+  --color-pink: #ec4899; /* Pink-500 */
+
+  /* Spacing */
+  --spacing-1: 0.25rem; /* 4px */
+  --spacing-2: 0.5rem; /* 8px */
+  --spacing-3: 0.75rem; /* 12px */
+  --spacing-4: 1rem; /* 16px */
+  --spacing-6: 1.5rem; /* 24px */
+  --spacing-8: 2rem; /* 32px */
+  --spacing-p-8: 2rem; /* 32px for p-8 */
+  --spacing-px-4: 1rem; /* 16px for px-4 */
+  --spacing-py-8: 2rem; /* 32px for py-8 */
+  --spacing-mb-4: 1rem; /* 16px for mb-4 */
+  --spacing-mb-8: 2rem; /* 32px for mb-8 */
+  --spacing-mt-1: 0.25rem; /* 4px for mt-1 */
+  --spacing-mt-2: 0.5rem; /* 8px for mt-2 */
+  --spacing-mt-8: 2rem; /* 32px for mt-8 */
+}
+
+/* General Layout */
+.container {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--background);
+}
+
+.headerContent {
+  display: flex;
+  height: 4rem; /* h-16 */
+  align-items: center;
+  justify-content: space-between;
+  padding-left: var(--spacing-px-4);
+  padding-right: var(--spacing-px-4);
+}
+
+.logoGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-6);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-weight: 700;
+  font-size: 1.25rem; /* text-xl */
+  text-decoration: none; /* Link default styling */
+  color: var(--foreground); /* Default text color */
+}
+
+.logoPrimary {
+  color: var(--primary);
+}
+
+.headerIcons {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  padding: 0.5rem; /* Consistent padding for icon buttons */
+  cursor: pointer;
+  border-radius: 0.375rem; /* rounded-md */
+  transition: background-color 0.2s ease;
+}
+
+.iconButton:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* Light hover effect */
+}
+
+.icon {
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+  color: var(--muted-foreground); /* Default icon color */
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Main Content Area */
+.mainContent {
+  flex: 1;
+  background: linear-gradient(to bottom right, var(--green-50), var(--blue-50));
+}
+
+.pageContainer {
+  padding-left: var(--spacing-px-4);
+  padding-right: var(--spacing-px-4);
+  padding-top: var(--spacing-py-8);
+  padding-bottom: var(--spacing-py-8);
+}
+
+.centeredContent {
+  max-width: 48rem; /* max-w-4xl */
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center; /* text-center */
+  margin-bottom: var(--spacing-mb-8);
+}
+
+.pageTitleGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-mb-4);
+}
+
+.heartIcon {
+  height: 2rem; /* h-8 */
+  width: 2rem; /* w-8 */
+  color: var(--pink-500);
+}
+
+.pageTitle {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700; /* font-bold */
+}
+
+.sparklesIcon {
+  height: 2rem; /* h-8 */
+  width: 2rem; /* w-8 */
+  color: var(--yellow-500);
+}
+
+.pageDescription {
+  color: var(--muted-foreground);
+}
+
+/* Progress Bar */
+.progressBarSection {
+  margin-bottom: var(--spacing-mb-8);
+}
+
+.progressBarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-2);
+}
+
+.progressBarStepText {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+}
+
+.progressBarCompletionText {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+}
+
+.progressBarTrack {
+  width: 100%;
+  background-color: var(--gray-200);
+  border-radius: 9999px; /* rounded-full */
+  height: 0.5rem; /* h-2 */
+}
+
+.progressBarFill {
+  background-color: var(--primary);
+  height: 0.5rem; /* h-2 */
+  border-radius: 9999px; /* rounded-full */
+  transition: width 0.3s ease-in-out; /* transition-all duration-300 */
+}
+
+/* Grid Layout for Steps and Preview */
+.gridContainer {
+  display: grid;
+  gap: var(--spacing-8);
+}
+
+@media (min-width: 768px) { /* md breakpoint */
+  .gridContainer {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* md:grid-cols-2 */
+  }
+}
+
+/* Card Styling */
+.card {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem; /* rounded-lg */
+  background-color: var(--background);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-sm equivalent */
+}
+
+.cardHeader {
+  padding: 1.5rem; /* p-6 */
+  border-bottom: 1px solid var(--border);
+}
+
+.cardTitle {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600; /* font-semibold */
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.cardDescription {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+}
+
+.cardContent {
+  padding: 1.5rem; /* p-6 */
+}
+
+.cardContentSpaceY {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4); /* space-y-4 */
+  padding: 1.5rem; /* p-6 */
+}
+
+.cardContentSpaceYLarge {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6); /* space-y-6 */
+  padding: 1.5rem; /* p-6 */
+}
+
+/* Step Number Badge */
+.stepNumber {
+  display: flex;
+  height: 2rem; /* h-8 */
+  width: 2rem; /* w-8 */
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+}
+
+/* Input Group */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.label {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: var(--foreground);
+}
+
+.input {
+  display: flex;
+  height: 2.5rem; /* h-10 */
+  width: auto;
+  border-radius: 0.375rem; /* rounded-md */
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  padding: 0.625rem 0.75rem; /* px-3 py-2 */
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem; /* leading-5 */
+  color: var(--foreground);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2); /* ring-2 primary/20 */
+}
+
+.input::placeholder {
+  color: var(--muted-foreground);
+}
+
+.mutedText {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+}
+
+/* Hint Box */
+.hintBox {
+  padding: var(--spacing-4);
+  background-color: var(--muted-background-50);
+  border-radius: 0.5rem; /* rounded-lg */
+}
+
+.hintTitle {
+  font-weight: 500; /* font-medium */
+  margin-bottom: var(--spacing-2);
+}
+
+.hintList {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  padding-left: 0; /* Remove default list padding */
+  list-style: none; /* Remove default list bullets */
+}
+
+/* Radio Group */
+.radioGroupSpaceY {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.radioItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+}
+
+.radioItemControl {
+  appearance: none;
+  width: 1rem; /* w-4 */
+  height: 1rem; /* h-4 */
+  border-radius: 9999px; /* rounded-full */
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  flex-shrink: 0; /* Prevent shrinking */
+  margin-top: var(--spacing-1); /* mt-1 */
+  cursor: pointer;
+  position: relative;
+}
+
+.radioItemControl:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.radioItemControl:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.5rem; /* Smaller circle for checkmark */
+  height: 0.5rem; /* Smaller circle for checkmark */
+  border-radius: 9999px;
+  background-color: var(--primary-foreground);
+}
+
+.radioItemControl:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2); /* ring-2 primary/20 */
+}
+
+.radioItemContent {
+  flex: 1;
+}
+
+.radioItemLabel {
+  display: block; /* Make label occupy full width */
+  cursor: pointer;
+}
+
+.radioItemIcon {
+  font-size: 1.5rem; /* text-2xl */
+  display: inline-block; /* Keep icon in line with text */
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.radioItemName {
+  font-weight: 500; /* font-medium */
+  font-size: 1rem; /* Base size */
+  vertical-align: middle;
+}
+
+.radioItemDescription {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+  margin-top: var(--spacing-1);
+}
+
+/* Trait Badges */
+.traitsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-1);
+  margin-top: var(--spacing-2);
+}
+
+.traitBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--primary-10);
+  padding-left: var(--spacing-2);
+  padding-right: var(--spacing-2);
+  padding-top: var(--spacing-1);
+  padding-bottom: var(--spacing-1);
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500; /* font-medium */
+  color: var(--primary);
+}
+
+/* Color Picker & Swatch */
+.colorPickerGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.colorInput {
+  width: 3rem; /* w-12 */
+  height: 3rem; /* h-12 */
+  border-radius: 0.25rem; /* rounded */
+  border: 1px solid var(--border);
+  cursor: pointer;
+  padding: 0;
+  -webkit-appearance: none; /* Remove default browser styling */
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.colorInput::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.colorInput::-webkit-color-swatch {
+  border: none;
+  border-radius: 0.25rem;
+}
+
+.colorPalette {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.colorSwatch {
+  width: 2rem; /* w-8 */
+  height: 2rem; /* h-8 */
+  border-radius: 9999px; /* rounded-full */
+  border: 2px solid white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.colorSwatch:hover {
+  transform: scale(1.1);
+}
+
+/* Slider */
+.slider {
+  width: 100%;
+  -webkit-appearance: none; /* Remove default browser styling */
+  appearance: none;
+  height: 0.25rem; /* track height */
+  background: var(--gray-200);
+  border-radius: 0.25rem;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+/* Thumb */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1rem; /* w-4 */
+  height: 1rem; /* h-4 */
+  border-radius: 9999px; /* rounded-full */
+  background: var(--primary);
+  cursor: grab;
+  margin-top: -0.375rem; /* Center thumb on track */
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+}
+
+.slider::-moz-range-thumb {
+  width: 1rem; /* w-4 */
+  height: 1rem; /* h-4 */
+  border-radius: 9999px; /* rounded-full */
+  background: var(--primary);
+  cursor: grab;
+  border: none; /* Remove default border */
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+}
+
+.sliderLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+}
+
+/* Plant Preview */
+.plantPreviewContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-p-8);
+}
+
+.plantPreviewOuter {
+  position: relative;
+  margin-bottom: var(--spacing-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px; /* rounded-full */
+}
+
+.plantPreviewInner {
+  border-radius: 9999px; /* rounded-full */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem; /* text-4xl */
+  color: var(--background); /* Icon color inside colored circle */
+}
+
+.plantName {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 500; /* font-medium */
+  margin-bottom: var(--spacing-1);
+}
+
+.plantPersonality {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+}
+
+.stickyCard {
+  position: sticky;
+  top: 6rem; /* top-24 */
+}
+
+/* Navigation Buttons */
+.navigationButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--spacing-mt-8);
+}
+
+.buttonGroup {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.buttonBase {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1rem; /* px-4 py-2.5, roughly h-10 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  border-radius: 0.375rem; /* rounded-md */
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  text-decoration: none; /* For Link component */
+  white-space: nowrap; /* Prevent text wrap */
+}
+
+.buttonPrimary {
+  composes: buttonBase;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border: 1px solid var(--primary);
+}
+
+.buttonPrimary:hover:not(:disabled) {
+  background-color: var(--green-600); /* Darker primary for hover */
+  border-color: var(--green-600);
+}
+
+.buttonOutline {
+  composes: buttonBase;
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+}
+
+.buttonOutline:hover:not(:disabled) {
+  background-color: var(--gray-100); /* Lighter background for hover */
+}
+
+.buttonDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.buttonIcon {
+  margin-left: var(--spacing-2);
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+}
+
+/* Ensure consistent button sizes for shadcn/ui Button replacements */
+.buttonBase {
+  height: 2.5rem; /* h-10 */
+  min-width: 2.5rem; /* for icon buttons if needed */
+}
+
+
+.infoMessage {
+  text-align: center;
+  margin-top: 1rem;
+  color: #3b82f6; /* Blue-500 */
+  font-weight: 500;
+}
+
+.errorMessage {
+  text-align: center;
+  margin-top: 1rem;
+  color: #ef4444; /* Red-500 */
+  font-weight: 500;
+}
+
+/* ボタンのdisabled状態のスタイルも改善 */
+.buttonPrimary:disabled,
+.buttonOutline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.buttonDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none; /* Linkコンポーネントがクリックできないようにする */
+}

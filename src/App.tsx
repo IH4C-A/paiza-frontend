@@ -15,6 +15,8 @@ import MentorsPage from "./routes/mentor/MentorPage";
 import ChatsPage from "./routes/chats/ChatsPage";
 import IndividualChatPage from "./routes/chats/userChat/UserChatPage";
 import GroupChatPage from "./routes/chats/groupChat/GroupChatPage";
+import UchinoKoSetupPage from "./routes/partner/setup/PartnerSetupPage";
+import PartnerPage from "./routes/partner/PartnerPage";
 
 function AppContent() {
   const location = useLocation();
@@ -37,6 +39,8 @@ function AppContent() {
         <Route path="/chats" element={<ChatsPage />} />
         <Route path="/chats/:id" element={<IndividualChatPage />} />
         <Route path="/group/:id" element={<GroupChatPage />}/>
+        <Route path="/partner/setup" element={<UchinoKoSetupPage />} />
+        <Route path="/partner" element={<PartnerPage />} />
       </Routes>
     </>
   );

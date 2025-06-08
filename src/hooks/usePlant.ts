@@ -72,10 +72,15 @@ export const usePlant = () => {
 export const useRegisterPlant = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const token = localStorage.getItem("token");
 
     const registerPlant = async (plantData: {
         growth_stage: string;
         mood: string;
+        plant_name: string;
+        color: string;
+        size: number;
+        motivation_style: string;
     }) => {
         setLoading(true);
         setError(null);
@@ -84,7 +89,7 @@ export const useRegisterPlant = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(plantData),
             });
