@@ -69,12 +69,6 @@ const Trash2Icon = ({ className, style }: { className?: string; style?: React.CS
   </svg>
 );
 
-const UserIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
-    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-    <circle cx="12" cy="7" r="4" />
-  </svg>
-);
 
 const UsersIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
@@ -427,53 +421,6 @@ export default function NotificationsPage() {
 
   return (
     <div className={styles.pageWrapper}>
-      <header className={styles.header}>
-        <div className={styles.headerContainer}>
-          <div className={styles.headerLeft}>
-            <a href="/" className={styles.logoLink}>
-              <span className={styles.logoTextPrimary}>Paiza</span> Nurture
-            </a>
-            <nav className={styles.nav}>
-              <a href="/problems" className={styles.navLink}>
-                問題
-              </a>
-              <a href="/mentors" className={styles.navLink}>
-                メンター
-              </a>
-              <a href="/questions" className={styles.navLink}>
-                質問掲示板
-              </a>
-              <a href="/learning" className={styles.navLink}>
-                学習
-              </a>
-              <a href="/ranking" className={styles.navLink}>
-                ランキング
-              </a>
-            </nav>
-          </div>
-          <div className={styles.headerRight}>
-            <button
-              type="button"
-              className={`${styles.button} ${styles.buttonVariantGhost} ${styles.buttonSizeIcon} ${styles.buttonRelative}`}
-              aria-label="通知"
-            >
-              <BellIcon className={styles.iconBase} />
-              {unreadCount > 0 && (
-                <span className={styles.buttonIconIndicator} />
-              )}
-              <span className={styles.srOnly}>通知</span>
-            </button>
-            <button
-              type="button"
-              className={`${styles.button} ${styles.buttonVariantGhost} ${styles.buttonSizeIcon}`}
-              aria-label="プロフィール"
-            >
-              <UserIcon className={styles.iconBase} />
-              <span className={styles.srOnly}>プロフィール</span>
-            </button>
-          </div>
-        </div>
-      </header>
       <main className={styles.mainContent}>
         <div className={styles.mainContainer}>
           <div className={styles.titleSection}>
