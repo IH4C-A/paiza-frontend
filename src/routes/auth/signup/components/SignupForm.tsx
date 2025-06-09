@@ -2,7 +2,7 @@ import useSignup from "../../../../hooks/useSignup";
 import style from "./SignupForm.module.css";
 
 export const SignupForm = () => {
-  const { register, handleSubmit, errors } = useSignup();
+  const { register, handleSubmit, searchAddress, errors } = useSignup();
 
   const genderOption = [
     { id: 1, gender: "男性" },
@@ -77,34 +77,30 @@ export const SignupForm = () => {
             )}
           </div>
 
-          <p>住所</p>
-
           <div className={style.inputFullWidth}>
-            <label>都道府県</label>
-            <input
-              className={style.inputForm}
-              type="text"
-              {...register("adrress")}
-            />
+            <label>郵便番号</label>
+            <div className={style.addressSearch}>
+              <input
+                className={style.addressNumberInput}
+                type="text"
+                {...register("address_number")}
+              />
+              <div>
+                <input
+                  className={style.addressSearchButton}
+                  type="button"
+                  value="検索"
+                  onClick={searchAddress}
+                />
+              </div>
+            </div>
             {errors.adrress && (
               <p className={style.errorMessage}>{errors.adrress.message}</p>
             )}
           </div>
 
           <div className={style.inputFullWidth}>
-            <label>市区町村</label>
-            <input
-              className={style.inputForm}
-              type="text"
-              {...register("adrress")}
-            />
-            {errors.adrress && (
-              <p className={style.errorMessage}>{errors.adrress.message}</p>
-            )}
-          </div>
-
-          <div className={style.inputFullWidth}>
-            <label>番地・建物名</label>
+            <label>住所</label>
             <input
               className={style.inputForm}
               type="text"
