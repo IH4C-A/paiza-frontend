@@ -17,6 +17,9 @@ import IndividualChatPage from "./routes/chats/userChat/UserChatPage";
 import GroupChatPage from "./routes/chats/groupChat/GroupChatPage";
 import UchinoKoSetupPage from "./routes/partner/setup/PartnerSetupPage";
 import PartnerPage from "./routes/partner/PartnerPage";
+import MentorApplyPage from "./routes/mentor/apply/MentorApplyPage";
+import NotificationsPage from "./routes/notification/NotificationPage";
+import NotificationSettingsPage from "./routes/notification/NotificationSettingsPage";
 
 function AppContent() {
   const location = useLocation();
@@ -41,6 +44,9 @@ function AppContent() {
         <Route path="/group/:id" element={<GroupChatPage />}/>
         <Route path="/partner/setup" element={<UchinoKoSetupPage />} />
         <Route path="/partner" element={<PartnerPage />} />
+        <Route path="/mentor/apply/:id" element={<MentorApplyPage />} />
+        <Route path="/notification" element={<NotificationsPage />} />
+        <Route path="/notifications/settings" element={<NotificationSettingsPage />} />
       </Routes>
     </>
   );
