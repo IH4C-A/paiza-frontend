@@ -1,6 +1,5 @@
 import { FaFilter, FaSearch } from "react-icons/fa";
 import styles from "./SkillCheckPage.module.css";
-
 const problems = [
   {
     title: "Reactコンポーネント設計",
@@ -23,11 +22,10 @@ const problems = [
   {
     title: "レスポンシブデザインの実装",
     description: "UI/UX",
-    detail:
-      "モバイルフレンドリーなWebページを設計する問題。メディアクエリとフレックスボックスを使用したレスポンシブデザインを学びます。",
+    detail: "モバイルフレンドリーなWebページを設計する問題。メディアクエリとフレックスボックスを使用したレスポンシブデザインを学びます。",
     tags: ["CSS", "レスポンシブ", "デザイン"],
     rank: "B",
-    rankColor: "#facc15",
+    rankColor: "#facc15"
   },
   {
     title: "データベース正規化",
@@ -81,6 +79,7 @@ export default function SkillCheckPage() {
               </div>
               <button className={styles.outlineButton}>
                 <FaFilter className={styles.iconSm} />
+
                 <span className="sr-only">フィルター</span>
               </button>
             </div>
@@ -119,6 +118,7 @@ export default function SkillCheckPage() {
             </div>
           ))}
         </div>
+
       </main>
     </div>
   );
