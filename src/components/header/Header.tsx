@@ -20,13 +20,13 @@ export const Header = () => {
           メンター
         </a>
         {plant ? (
-        <a className={style.navigationLink} href="/partner">
-          うちのコ
-        </a>
+          <a className={style.navigationLink} href="/partner">
+            うちのコ
+          </a>
         ) : (
-        <a className={style.navigationLink} href="/partner/setup">
-          うちのコ
-        </a>
+          <a className={style.navigationLink} href="/partner/setup">
+            うちのコ
+          </a>
         )}
         <a className={style.navigationLink} href="/skillcheck">
           スキルチェック

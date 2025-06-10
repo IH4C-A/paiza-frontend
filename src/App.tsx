@@ -21,6 +21,7 @@ import MentorApplyPage from "./routes/mentor/apply/MentorApplyPage";
 import NotificationsPage from "./routes/notification/NotificationPage";
 import NotificationSettingsPage from "./routes/notification/NotificationSettingsPage";
 import TopPage from "./routes/top/TopPage";
+import Mypage from "./routes/mypage/Mypage";
 
 function AppContent() {
   const location = useLocation();
@@ -52,6 +53,7 @@ function AppContent() {
           path="/notifications/settings"
           element={<NotificationSettingsPage />}
         />
+        <Route path="/mypage" element={<Mypage />} />
       </Routes>
     </>
   );
