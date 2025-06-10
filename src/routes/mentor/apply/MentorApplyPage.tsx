@@ -8,6 +8,7 @@ import { FaArrowLeft, FaStar, FaUsers, FaMessage, FaPaperPlane } from "react-ico
 
 // CSSモジュールをインポート
 import styles from "./MentorApplyPage.module.css"
+import { useMentorRequest } from "../../../hooks"
 
 // useToastのモック（UIライブラリのToastを使わないため）
 const useToast = () => {
@@ -53,6 +54,7 @@ export default function MentorApplyPage() {
   const { toast } = useToast()
   const [message, setMessage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { requestMentor } = useMentorRequest();
 
   const mentorId = Number.parseInt(params.id as string)
   const mentor = mentorData[mentorId as keyof typeof mentorData]
@@ -84,8 +86,13 @@ export default function MentorApplyPage() {
 
     setIsSubmitting(true)
 
+    const request = {
+      mentor_id: String(mentorId),
+      message,
+    }
+
     // 実際はAPIに送信
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await requestMentor(request);
 
     toast({
       title: "申請を送信しました",

@@ -253,7 +253,7 @@ export default function MentorListPage() {
                     </a>
                     {/* Buttonコンポーネントの代わりにLinkタグを使用 */}
                     <a
-                      href={`/mentors/apply/${mentor.id}`}
+                      href={`/mentor/apply/${mentor.id}`}
                       className={`${styles.buttonBase} ${styles.buttonPrimary} ${styles.buttonSm} ${styles.buttonFlex1} ${mentor.status === "busy" ? styles.buttonDisabled : ""}`}
                       aria-disabled={mentor.status === "busy"} // アクセシビリティのために追加
                     >
