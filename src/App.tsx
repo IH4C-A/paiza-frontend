@@ -20,6 +20,7 @@ import PartnerPage from "./routes/partner/PartnerPage";
 import MentorApplyPage from "./routes/mentor/apply/MentorApplyPage";
 import NotificationsPage from "./routes/notification/NotificationPage";
 import NotificationSettingsPage from "./routes/notification/NotificationSettingsPage";
+import TopPage from "./routes/top/TopPage";
 
 function AppContent() {
   const location = useLocation();
@@ -32,6 +33,7 @@ function AppContent() {
     <>
       {!hideHeader && <Header />}
       <Routes>
+        <Route path="/" element={<TopPage />} />
         <Route path="/article" element={<ArticlesListPage />} />
         <Route path="/article/:id" element={<ArticleDetailPage />} />
         <Route path="/article/new" element={<MarkdownEditor />} />
@@ -41,12 +43,15 @@ function AppContent() {
         <Route path="/mentor" element={<MentorsPage />} />
         <Route path="/chats" element={<ChatsPage />} />
         <Route path="/chats/:id" element={<IndividualChatPage />} />
-        <Route path="/group/:id" element={<GroupChatPage />}/>
+        <Route path="/group/:id" element={<GroupChatPage />} />
         <Route path="/partner/setup" element={<UchinoKoSetupPage />} />
         <Route path="/partner" element={<PartnerPage />} />
         <Route path="/mentor/apply/:id" element={<MentorApplyPage />} />
         <Route path="/notification" element={<NotificationsPage />} />
-        <Route path="/notifications/settings" element={<NotificationSettingsPage />} />
+        <Route
+          path="/notifications/settings"
+          element={<NotificationSettingsPage />}
+        />
       </Routes>
     </>
   );
