@@ -1,122 +1,82 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from './QuestionsPage.module.css';
+import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./QuestionsPage.module.css";
+import { useBoards } from "../../hooks/useBoard";
+import { FaFilter, FaPlus, FaSearch } from "react-icons/fa";
+import { useCategories } from "../../hooks";
 
-// --- インターフェース定義 ---
-interface Question {
-  id: string;
-  title: string;
-  tags: string[];
-  authorRank: 'A' | 'B';
-  snippet: string;
-  authorName: string;
-  timestamp: string;
-  answerCount: number;
-  viewCount: number;
-  category: 'algorithm' | 'web' | 'design' | 'exam' | 'general';
-}
 
-// --- サンプルデータ ---
-const allQuestions: Question[] = [
-  {
-    id: '1',
-    title: 'ReactのuseEffectで無限ループが発生する原因について',
-    tags: ['React', 'JavaScript', 'useEffect'],
-    authorRank: 'B',
-    snippet: 'ReactでuseEffectを使っているのですが、無限ループが発生してしまいます。依存配列には空の配列を指定しているのですが、それでも無限ループが発生します。どのような原因が考えられるでしょうか？',
-    authorName: '田中太郎',
-    timestamp: '2時間前',
-    answerCount: 3,
-    viewCount: 42,
-    category: 'web',
-  },
-  {
-    id: '2',
-    title: '二分探索木の実装で削除操作がうまくいきません',
-    tags: ['アルゴリズム', '二分探索木', 'Python'],
-    authorRank: 'B',
-    snippet: '二分探索木の実装で、ノードの削除操作がうまくいきません。特に、子ノードが2つある場合の処理で問題が発生しています。以下のコードを見ていただけますか？',
-    authorName: '佐藤花子',
-    timestamp: '5時間前',
-    answerCount: 1,
-    viewCount: 28,
-    category: 'algorithm',
-  },
-  {
-    id: '3',
-    title: 'レスポンシブデザインでのフレックスボックスとグリッドの使い分け',
-    tags: ['CSS', 'レスポンシブ', 'UI/UX'],
-    authorRank: 'A',
-    snippet: 'レスポンシブデザインを実装する際に、フレックスボックスとCSSグリッドをどのように使い分けるべきでしょうか？それぞれの利点と欠点、適切な使用シーンについて教えてください。',
-    authorName: '鈴木一郎',
-    timestamp: '1日前',
-    answerCount: 5,
-    viewCount: 112,
-    category: 'design',
-  },
-  {
-    id: '4',
-    title: '情報処理試験の午前問題の効率的な学習方法',
-    tags: ['情報処理試験', '学習法', '資格'],
-    authorRank: 'A',
-    snippet: '応用情報技術者試験の午前問題がなかなか安定しません。皆さんはどのように対策されていますか？おすすめの参考書や学習サイトがあれば教えていただきたいです。',
-    authorName: '高橋 優子',
-    timestamp: '3日前',
-    answerCount: 0,
-    viewCount: 98,
-    category: 'exam',
-  },
-];
-
-const TABS = [
-    { value: 'all', label: 'すべて' },
-    { value: 'algorithm', label: 'アルゴリズム' },
-    { value: 'web', label: 'Webフレームワーク' },
-    { value: 'design', label: 'UI/UX' },
-    { value: 'exam', label: '情報処理試験' },
-];
 
 // --- メインコンポーネント ---
 export default function QuestionsPage() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('all');
-  const [sortOrder, setSortOrder] = useState('latest');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState("all");
+  const [sortOrder, setSortOrder] = useState("latest");
+  const [searchTerm, setSearchTerm] = useState("");
+  const { boards } = useBoards();
+  const { categories } = useCategories();
+
+    // 表示するカテゴリタブを動的に生成
+  const categoryTabs = useMemo(() => {
+    // まず "すべて" タブを追加
+    const allTab = { value: 'all', label: 'すべて' };
+    // バックエンドから取得したカテゴリをマップしてタブ形式に変換
+    const dynamicTabs = categories.map(cat => ({
+      value: cat.category_name,
+      label: cat.category_name,
+    }));
+    // "すべて" タブと動的タブを結合
+    return [allTab, ...dynamicTabs];
+  }, [categories]);
 
   // フィルタリングとソーティングロジック
   const displayedQuestions = useMemo(() => {
-    let processedQuestions = [...allQuestions];
-
-    if (activeTab !== 'all') {
-      processedQuestions = processedQuestions.filter(q => q.category === activeTab);
-    }
+    let processedQuestions = boards;
+    console.log(processedQuestions);
 
     if (searchTerm) {
       const lowercasedTerm = searchTerm.toLowerCase();
-      processedQuestions = processedQuestions.filter(q => 
-        q.title.toLowerCase().includes(lowercasedTerm) || 
-        q.snippet.toLowerCase().includes(lowercasedTerm) ||
-        q.tags.some(tag => tag.toLowerCase().includes(lowercasedTerm))
+      processedQuestions = processedQuestions.filter(
+        (q) =>
+          q.title.toLowerCase().includes(lowercasedTerm) ||
+          q.content.toLowerCase().includes(lowercasedTerm)
+      );
+    }
+
+    // activeTab によるフィルタリングロジック
+    if (activeTab !== 'all') {
+      processedQuestions = processedQuestions.filter(q =>
+        // q.categories はボードに紐づくカテゴリの配列
+        // activeTab (category_code) と一致するカテゴリがあるかチェック
+        Array.isArray(q.categories) && q.categories.some(cat => cat.category_name === activeTab)
       );
     }
 
     switch (sortOrder) {
-      case 'popular':
-        processedQuestions.sort((a, b) => (b.answerCount + b.viewCount) - (a.answerCount + a.viewCount));
+      case "popular":
+        // ここに人気順のソートロジックを実装 (例: コメント数や閲覧数など)
         break;
-      case 'unanswered':
-        processedQuestions = processedQuestions.filter(q => q.answerCount === 0);
+      case "unanswered":
+        // ここに未回答のフィルタリングロジックを実装 (例: q.comment_count === 0)
+        processedQuestions = processedQuestions.filter(
+          (q) => q.comment_count === 0
+        );
         break;
-      case 'latest':
+      case "latest":
       default:
+        // 新着順 (created_at) でソート
+        processedQuestions.sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
         break;
     }
-    
+
     return processedQuestions;
-  }, [activeTab, sortOrder, searchTerm]);
+  }, [boards, activeTab, sortOrder, searchTerm]); // 依存配列に boards を追加
 
   const handleAskQuestionClick = () => {
-    navigate('/question/new');
+    navigate("/question/new");
   };
 
   return (
@@ -132,41 +92,46 @@ export default function QuestionsPage() {
             </div>
             <div className={styles.actionsContainer}>
               <div className={styles.searchInputContainer}>
-                <img src="/icons/search.svg" alt="" className={styles.searchInputIcon} />
-                <input 
-                  type="search" 
-                  placeholder="質問を検索..." 
+                <FaSearch className={styles.searchInputIcon} />
+                <input
+                  type="search"
+                  placeholder="質問を検索..."
                   className={styles.searchInput}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <button className={styles.iconButton} aria-label="フィルター">
-                <img src="/icons/filter.svg" alt="Filter" />
+                <FaFilter />
                 <span className={styles.srOnly}>フィルター</span>
               </button>
-              <button onClick={handleAskQuestionClick} className={styles.askQuestionButton}>
-                <img src="/icons/plus.svg" alt="" /> 質問する
+              <button
+                onClick={handleAskQuestionClick}
+                className={styles.askQuestionButton}
+              >
+                <FaPlus /> 質問する
               </button>
             </div>
           </div>
-          
+
           <div className={styles.filtersContainer}>
             <div className={styles.tabsContainer}>
               <div className={styles.tabsList}>
-                {TABS.map(tab => (
-                    <button
-                        key={tab.value}
-                        className={`${styles.tabTrigger} ${activeTab === tab.value ? styles.tabTriggerActive : ''}`}
-                        onClick={() => setActiveTab(tab.value)}
-                    >
-                        {tab.label}
-                    </button>
+                {categoryTabs.map((tab) => (
+                  <button
+                    key={tab.value}
+                    className={`${styles.tabTrigger} ${
+                      activeTab === tab.value ? styles.tabTriggerActive : ""
+                    }`}
+                    onClick={() => setActiveTab(tab.value)}
+                  >
+                    {tab.label}
+                  </button>
                 ))}
               </div>
             </div>
             <div className={styles.sortContainer}>
-              <select 
+              <select
                 className={styles.selectControl}
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value)}
@@ -180,36 +145,75 @@ export default function QuestionsPage() {
 
           <div className={styles.questionsGrid}>
             {displayedQuestions.length > 0 ? (
-              displayedQuestions.map(q => (
-                <div key={q.id} className={styles.card}>
+              displayedQuestions.map((q) => (
+                <div key={q.board_id} className={styles.card}>
                   <div className={styles.cardHeader}>
                     <div className={styles.cardHeaderTop}>
                       <div>
                         <h2 className={styles.cardTitle}>
-                          <a href={`/question/${q.id}`}>{q.title}</a>
+                          <a href={`/question/${q.board_id}`}>{q.title}</a>
                         </h2>
                         <div className={styles.cardTags}>
-                          {q.tags.map(tag => (
-                            <span key={tag} className={styles.tag}>{tag}</span>
-                          ))}
+                          {/* カテゴリは常に配列と仮定して map する */}
+                          {Array.isArray(q.categories) &&
+                            q.categories.map((tag) => (
+                              <span
+                                key={tag.category_id}
+                                className={styles.tag}
+                              >
+                                {tag.category_name}
+                              </span>
+                            ))}
                         </div>
                       </div>
-                      <div className={`${styles.rankBadge} ${q.authorRank === 'A' ? styles.rankBadgeA : styles.rankBadgeB}`}>
-                        {q.authorRank}
-                      </div>
+                      {(() => {
+                        let displayRank = null;
+                        if (q.user_id && Array.isArray(q.user_id.rank) && q.user_id.rank.length > 0) {
+                          const mentorRank = q.user_id.rank.find(
+                            (r) => r.rank_code === "mentor"
+                          );
+                          displayRank = mentorRank || q.user_id.rank[0];
+                        }
+                        return (
+                          <div
+                            className={`${styles.rankBadge} ${
+                              displayRank?.rank_name === "A"
+                                ? styles.rankBadgeA
+                                : styles.rankBadgeB
+                            }`}
+                          >
+                            {displayRank ? (
+                              <span key={displayRank.rank_id}>
+                                {displayRank.rank_name}
+                              </span>
+                            ) : (
+                              <span></span>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
                   <div className={styles.cardContent}>
-                    <p className={styles.cardSnippet}>{q.snippet}</p>
+                    <p className={styles.cardSnippet}>{q.content}</p>
                   </div>
                   <div className={styles.cardFooter}>
                     <div className={styles.cardFooterInfo}>
-                      <span>{q.authorName}</span>
-                      <span>{q.timestamp}</span>
+                      {/* ユーザー名を表示 */}
+                      <span>{q.user_id?.username}</span>{" "}
+                      {/* オプショナルチェイニングで安全にアクセス */}
+                      {/* 投稿日時をLocaleStringで表示 */}
+                      <span>
+                        {q.created_at
+                          ? new Date(q.created_at).toLocaleString()
+                          : ""}
+                      </span>
                     </div>
                     <div className={styles.cardFooterStats}>
-                      <span>回答 {q.answerCount}件</span>
-                      <span>閲覧 {q.viewCount}回</span>
+                      <span>回答 {q.comment_count}件</span>{" "}
+                      {/* コメント数を表示 */}
+                      <span>閲覧 10回</span>{" "}
+                      {/* 閲覧数は現在データにないので仮の値 */}
                     </div>
                   </div>
                 </div>
