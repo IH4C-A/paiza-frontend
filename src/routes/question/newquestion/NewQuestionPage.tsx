@@ -2,6 +2,8 @@ import React, { useState } from "react";
 // useNavigate を react-router-dom からインポート
 import { useNavigate } from "react-router-dom";
 import styles from "./NewQuestionPage.module.css";
+import { useCategories } from "../../../hooks/useCategory";
+import { useCreateBoard } from "../../../hooks/useBoard";
 
 export default function NewQuestionPage() {
   // useNavigateフックを呼び出す
@@ -9,33 +11,55 @@ export default function NewQuestionPage() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [category, setCategory] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
+  const [selectedCategoryCode, setSelectedCategoryCode] = useState<string>("");
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
 
-  const addTag = () => {
-    if (tagInput.trim() && !tags.includes(tagInput.trim()) && tags.length < 5) {
-      setTags([...tags, tagInput.trim()]);
-      setTagInput("");
-    }
-  };
+  const { categories } = useCategories();
+  const { createBoard } = useCreateBoard();
 
-  const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
+  const handleCategoryClick = (id: string) => {
+    setSelectedCategoryIds((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
   };
+  // ユニークな category_code を取得
+  const categoryCodes = Array.from(
+    new Set(categories.map((c) => c.category_code))
+  );
 
-  const handleTagKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault();
-      addTag();
-    }
-  };
+  // 表示対象のカテゴリだけ絞り込む
+  const filteredCategories = categories.filter(
+    (c) => c.category_code === selectedCategoryCode
+  );
 
   // キャンセルボタンがクリックされたときの処理
   const handleCancelClick = () => {
     // '/question' にページ遷移する
-    navigate('/question');
+    navigate("/question");
   };
+
+  const handleCreateClick = () => {
+    const newBoard = {
+      title,
+      content,
+      status: "on",
+      categories: selectedCategoryIds
+    };
+    createBoard(newBoard)
+      .then(() => {
+        alert("質問を投稿しました！");
+        setTitle("");
+        setSelectedCategoryIds([]);
+        setContent("");
+        setSelectedCategoryCode("");
+        navigate("/question")
+      })
+      .catch((error) => {
+        console.error("質問の投稿に失敗しました:", error);
+        alert("質問の投稿に失敗しました");
+      })
+
+  }
 
   return (
     <div className={styles.pageContainer}>
@@ -51,7 +75,9 @@ export default function NewQuestionPage() {
             <div className={styles.card}>
               <div className={styles.cardHeader}>
                 <h2 className={styles.cardTitle}>質問内容</h2>
-                <p className={styles.cardDescription}>質問のタイトルと詳細を入力してください</p>
+                <p className={styles.cardDescription}>
+                  質問のタイトルと詳細を入力してください
+                </p>
               </div>
               <div className={styles.cardContent}>
                 <div className={styles.formField}>
@@ -66,82 +92,72 @@ export default function NewQuestionPage() {
                     className={styles.formInput}
                   />
                 </div>
-                <div className={styles.formField}>
-                  <label htmlFor="category" className={styles.formLabel}>
-                    カテゴリ
-                  </label>
-                  <select
-                    id="category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className={styles.formSelect}
-                  >
-                    <option value="" disabled>カテゴリを選択</option>
-                    <option value="algorithm">アルゴリズム</option>
-                    <option value="web">Webフレームワーク</option>
-                    <option value="design">UI/UX</option>
-                    <option value="exam">情報処理試験</option>
-                    <option value="other">その他</option>
-                  </select>
-                </div>
-                <div className={styles.formField}>
-                  <label htmlFor="tags" className={styles.formLabel}>
-                    タグ（最大5つ）
-                  </label>
-                  <div className={styles.tagsDisplayContainer}>
-                    {tags.map((tag) => (
-                      <div key={tag} className={styles.tagItem}>
-                        <span>{tag}</span>
-                        <button
-                          type="button"
-                          onClick={() => removeTag(tag)}
-                          className={styles.removeTagButton}
-                        >
-                          <img src="/icons/x.svg" alt={`Remove ${tag}`} />
-                          <span className={styles.srOnly}>Remove {tag}</span>
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                  <div className={styles.tagInputContainer}>
-                    <input
-                      id="tags"
-                      placeholder="タグを入力してEnterキーを押してください"
-                      value={tagInput}
-                      onChange={(e) => setTagInput(e.target.value)}
-                      onKeyDown={handleTagKeyDown}
-                      className={`${styles.formInput} ${styles.tagInput}`}
-                    />
-                    <button type="button" onClick={addTag} className={styles.addButton}>
-                      追加
+
+                {/* ▼ category_code 切替ボタン */}
+                <div style={{ marginBottom: "8px" }}>
+                  {categoryCodes.map((code) => (
+                    <button
+                      key={code}
+                      onClick={() => setSelectedCategoryCode(code)}
+                      className={`${styles.codeButton} ${
+                        selectedCategoryCode === code
+                          ? styles.codeButtonActive
+                          : ""
+                      }`}
+                    >
+                      {code}
                     </button>
-                  </div>
+                  ))}
+                </div>
+
+                {/* ▼ category_name バッジ（複数選択） */}
+                <div style={{ marginBottom: "16px" }}>
+                  {filteredCategories.map((cat) => {
+                    const isSelected = selectedCategoryIds.includes(
+                      cat.category_id
+                    );
+                    return (
+                      <span
+                        key={cat.category_id}
+                        className={`${styles.tagChip} ${
+                          isSelected ? styles.selected : ""
+                        }`}
+                        onClick={() => handleCategoryClick(cat.category_id)}
+                      >
+                        {cat.category_name}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             </div>
-            
+
             <div className={styles.card}>
-                <div className={styles.cardHeader}>
-                    <h2 className={styles.cardTitle}>質問の詳細</h2>
-                    <p className={styles.cardDescription}>マークダウン形式で記述できますが、ここではプレーンテキストとして扱われます。</p>
-                </div>
-                <div className={styles.cardContent}>
-                    <textarea
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        placeholder="質問の詳細を入力してください..."
-                        className={styles.formTextarea}
-                    />
-                </div>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>質問の詳細</h2>
+                <p className={styles.cardDescription}>
+                  マークダウン形式で記述できますが、ここではプレーンテキストとして扱われます。
+                </p>
+              </div>
+              <div className={styles.cardContent}>
+                <textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="質問の詳細を入力してください..."
+                  className={styles.formTextarea}
+                />
+              </div>
             </div>
 
             <div className={styles.actionsContainer}>
-              <button type="button" onClick={handleCancelClick} className={styles.formButtonOutline}>
+              <button
+                type="button"
+                onClick={handleCancelClick}
+                className={styles.formButtonOutline}
+              >
                 キャンセル
               </button>
-              <button className={styles.formButtonPrimary}>
-                質問を投稿
-              </button>
+              <button className={styles.formButtonPrimary} onClick={handleCreateClick}>質問を投稿</button>
             </div>
           </div>
         </div>

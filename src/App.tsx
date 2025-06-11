@@ -22,6 +22,9 @@ import NotificationsPage from "./routes/notification/NotificationPage";
 import NotificationSettingsPage from "./routes/notification/NotificationSettingsPage";
 import TopPage from "./routes/top/TopPage";
 import Mypage from "./routes/mypage/Mypage";
+import NewQuestionPage from "./routes/question/newquestion/NewQuestionPage";
+import QuestionsPage from "./routes/question/QuestionsPage";
+import QuestionDetailPage from "./routes/question/id/QuestionDetailPage";
 
 function AppContent() {
   const location = useLocation();
@@ -54,6 +57,9 @@ function AppContent() {
           element={<NotificationSettingsPage />}
         />
         <Route path="/mypage" element={<Mypage />} />
+        <Route path="/question/new" element={<NewQuestionPage />} />
+        <Route path="/question" element={<QuestionsPage />} />
+        <Route path="/question/:id" element={<QuestionDetailPage />} />
       </Routes>
     </>
   );

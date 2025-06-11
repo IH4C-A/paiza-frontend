@@ -44,18 +44,18 @@ export const useCreateComment = () => {
 
     const createComment = async (commentData: {
         content: string;
-        boardId: string
+        boardId: string | null;
     }) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`http://localhost:5000/comments`, {
+            const response = await fetch('http://localhost:5000/comment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem("token")}`,
                 },
-                body: JSON.stringify({ commentData }),
+                body: JSON.stringify(commentData),
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
