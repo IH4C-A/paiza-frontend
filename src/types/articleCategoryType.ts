@@ -1,7 +1,8 @@
+
 export type ArticleCategory = {
-    article_category_id: string;
-    article_id: string;
     category_id: string;
+    category_name: string;
+    category_code: string;
 }
 
 export type ArticleCategoryAll = {

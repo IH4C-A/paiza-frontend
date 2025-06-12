@@ -139,3 +139,8 @@
   font-size: var(--icon-size-sm); /* 16px */
   color: var(--text-muted);
 }
+
+.likeItem {
+  font-size: var(--icon-size-sm);
+  color: violet;
+}

@@ -12,7 +12,7 @@ export type User = {
     seibetu: string;
     adrress: string;
     employment_status: string;
-    rank: Rank;
+    ranks: Rank[];
 }
 
 export type UserregisterPayload = {
@@ -36,4 +36,5 @@ export type UserLoginPayload = {
 export type Loginuser = {
     user_id: string;
     first_name: string;
+    rank: Rank;
 }
