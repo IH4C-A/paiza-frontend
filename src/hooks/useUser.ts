@@ -1,6 +1,6 @@
 // Userモデルのバックつなぎ合わせ
 import { useState, useEffect } from "react";
-import type { Loginuser, User, UserLoginPayload } from "../types/userTypes";
+import type { User, UserLoginPayload } from "../types/userTypes";
 
 export const useUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -140,7 +140,7 @@ export const useRegister = () => {
 // ログインユーザー取得
 export const useCurrentUser = () => {
   const token = localStorage.getItem("token");
-  const [currentUser, setCurrentUser] = useState<Loginuser | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

@@ -71,7 +71,7 @@ export const useArticleLike = () => {
 
 // いいね数取得
 export const useArticleLikesCount = (article_id: string) => {
-    const [articleLikesCount, setArticleLikesCount] = useState<ArticleLikesCount[]>([]);
+    const [articleLikesCount, setArticleLikesCount] = useState<ArticleLikesCount | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -89,7 +89,7 @@ export const useArticleLikesCount = (article_id: string) => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            const data: ArticleLikesCount[] = await response.json();
+            const data: ArticleLikesCount = await response.json();
             setArticleLikesCount(data);
         } catch (error) {
             console.error('Error fetching article likes count:', error);

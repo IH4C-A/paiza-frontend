@@ -42,6 +42,8 @@ export default function QuestionDetailPage() {
 
   const { createComment } = useCreateComment();
 
+  console.log(board)
+
   const handleCommentClick = () => {
     const commentData = {
       content: newAnswer,
@@ -95,8 +97,8 @@ export default function QuestionDetailPage() {
                   <div className={styles.authorDetails}>
                     <div className={styles.authorRankContainer}>
                       <span className={styles.authorName}>{board?.user_id.username}</span>
-                      <div className={`${styles.rankBadge} ${getRankClass(board?.user_id.rank)}`}>
-                        {board?.user_id.rank.rank_name}
+                      <div className={`${styles.rankBadge} ${getRankClass(board?.user_id.ranks?.[0])}`}>
+                        {board?.user_id.ranks?.[0].rank_name}
                       </div>
                     </div>
                     <p className={styles.timestamp}>{board?.created_at ? board.created_at.toLocaleString() : ""}</p>
@@ -128,8 +130,8 @@ export default function QuestionDetailPage() {
                     <div className={styles.authorDetails}>
                       <div className={styles.authorRankContainer}>
                         <span className={styles.authorName}>{answer.user_id.username}</span>
-                        <div className={`${styles.rankBadge} ${getRankClass(answer.user_id.rank)}`}>
-                          {answer.user_id.rank.rank_name}
+                        <div className={`${styles.rankBadge} ${getRankClass(answer.user_id.ranks?.[0])}`}>
+                          {answer.user_id.ranks?.[0]?.rank_name}
                         </div>
                       </div>
                       <p className={styles.timestamp}>{answer.created_at}</p>

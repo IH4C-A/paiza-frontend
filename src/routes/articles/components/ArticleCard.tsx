@@ -3,6 +3,7 @@ import styles from "./ArticleCard.module.css";
 import type { Article } from "../../../types/articleType";
 import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useArticleLikesCount } from "../../../hooks";
 
 const ArticleCard: React.FC<Article> = ({
   article_id,
@@ -13,6 +14,7 @@ const ArticleCard: React.FC<Article> = ({
   user,
 }) => {
   const navigate = useNavigate();
+  const { articleLikesCount } = useArticleLikesCount(article_id);
 
   const handleClick = () => {
     navigate(`/article/${article_id}`);
@@ -24,7 +26,7 @@ const ArticleCard: React.FC<Article> = ({
           <div className={styles.authorAvatar}>{user.username}</div>
           <div>
             <p className={styles.authorName}>{user.username}</p>
-            <p className={styles.authorUsername}>@{user.username}</p>
+            <p className={styles.authorUsername}>@{user.user_id}</p>
             <span className={styles.articleDate}>
               {created_at instanceof Date
                 ? created_at.toLocaleString()
@@ -51,8 +53,8 @@ const ArticleCard: React.FC<Article> = ({
           </div>
           <div className={styles.articleStats}>
             <div className={styles.statItem}>
-              <FaHeart className={styles.statIcon} />
-              <span>0</span>
+              <FaHeart className={articleLikesCount?.like ? `${styles.likeItem}` : `${styles.statIcon}`} />
+              <span>{articleLikesCount?.like_count}</span>
             </div>
           </div>
         </div>

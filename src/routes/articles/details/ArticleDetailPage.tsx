@@ -2,12 +2,10 @@
 "use client"
 
 import {  useParams } from "react-router-dom" // Next.jsのuseParamsを使用
-
 import { FaHeart, FaBookmark, FaShareNodes, FaArrowLeft, FaThumbsUp } from "react-icons/fa6" // またはfaなど
-
 // Markdownレンダラーコンポーネント (別途定義)
 import MarkdownRenderer from "../components/MarkdownRenderer"
-import { useArticle } from '../../../hooks';
+import { useArticle, useArticleLike } from '../../../hooks';
 // CSSモジュールをインポート
 import styles from './ArticleDetail.module.css'; // Assuming you have a CSS module for styles
 
@@ -16,11 +14,15 @@ import styles from './ArticleDetail.module.css'; // Assuming you have a CSS modu
 export default function ArticlePage() {
   const { id } = useParams();
   const { article } = useArticle(id || '');
+  const { addArticleLike } = useArticleLike();
 
   if (!article) return <div>記事が見つかりませんでした。</div>;
 
-
-
+  const handleLike = () => {
+    if (article) {
+      addArticleLike(article.article_id);
+    } 
+  }
   return (
     <div className={styles.container}>
       <div className={styles.main}>
@@ -45,7 +47,7 @@ export default function ArticlePage() {
                 </div>
                 <div>
                   <p className={styles.authorName}>{article.user.username}</p>
-                  <p className={styles.authorUsername}>@{article.user.username}</p>
+                  <p className={styles.authorUsername}>@{article.user.user_id}</p>
                   <p className={styles.articleDate}>
                     {article.created_at instanceof Date ? article.created_at.toLocaleString() : article.created_at} に投稿
                   </p>
@@ -53,9 +55,8 @@ export default function ArticlePage() {
               </div>
 
               <div className={styles.actionButtons}>
-                <button type="button" className={styles.actionButton}>
+                <button type="button" className={styles.actionButton} onClick={handleLike}>
                   <FaHeart className={styles.actionButtonIcon} /> {/* react-iconsのHeartを使用 */}
-
                 </button>
                 <button type="button" className={styles.actionButton}>
                   <FaBookmark className={styles.actionButtonIcon} /> {/* react-iconsのBookmarkを使用 */}

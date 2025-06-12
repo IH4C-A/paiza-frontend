@@ -290,9 +290,12 @@
 
 .petVisual {
   position: relative;
-  width: 10rem;
-  height: 10rem;
   margin-bottom: 1rem;
+  height: 10rem; 
+  width: 10rem;  
+  display: flex;
+  align-items: center; 
+  justify-content: center;
 }
 
 .petBase {
@@ -409,4 +412,31 @@
   font-size: 0.875rem;
   color: #6b7280;
   margin: 0;
+}
+
+/* Plant Preview */
+.plantPreviewContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-p-8);
+}
+
+.plantPreviewOuter {
+  position: relative;
+  margin-bottom: var(--spacing-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px; /* rounded-full */
+}
+
+.plantPreviewInner {
+  border-radius: 9999px; /* rounded-full */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem; /* text-4xl */
+  color: var(--background); /* Icon color inside colored circle */
 }

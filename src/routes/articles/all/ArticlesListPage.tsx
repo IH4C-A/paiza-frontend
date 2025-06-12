@@ -7,7 +7,7 @@ import { FaHeart } from "react-icons/fa"; // FaMessageCircle は FaMessage に�
 import ArticleCard from "../components/ArticleCard";
 import { useArticlesWithCategories } from "../../../hooks/useArticle";
 import type { Article } from "../../../types/articleType";
-
+import { useArticleCategories } from "../../../hooks";
 // CSSモジュールをインポート
 import styles from "./ArticleList.module.css";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,9 @@ export default function HomePage() {
   const [filterTag, setFilterTag] = useState(""); // タグフィルター用
   const [page, setPage] = useState(1);
   const articlesPerPage = 5;
+  const { articleCategories } = useArticleCategories();
 
+  console.log(articleCategories)
   const { articles } = useArticlesWithCategories();
   const uniqueTags = [
     ...new Set(
@@ -234,18 +236,9 @@ export default function HomePage() {
               </div>
               <div className={styles.sidebarContent}>
                 <div className={styles.popularTags}>
-                  {[
-                    "React",
-                    "JavaScript",
-                    "TypeScript",
-                    "Next.js",
-                    "Vue.js",
-                    "Python",
-                    "Go",
-                    "Docker",
-                  ].map((tag) => (
-                    <span key={tag} className={styles.popularTag}>
-                      {tag}
+                  {articleCategories?.map((tag) => (
+                    <span key={tag.category_id} className={styles.popularTag}>
+                      {tag.category_name}
                     </span>
                   ))}
                 </div>
