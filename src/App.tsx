@@ -26,6 +26,7 @@ import SkillCheckPage from "./routes/skillcheck/SkillCheckPage";
 import QuestionsPage from "./routes/question/QuestionsPage";
 import QuestionDetailPage from "./routes/question/id/QuestionDetailPage";
 import NewQuestionPage from "./routes/question/newquestion/NewQuestionPage";
+import ProblemDetailPage from "./routes/skillcheck/id/ProblemDetailPage";
 
 function AppContent() {
   const location = useLocation();
@@ -62,6 +63,8 @@ function AppContent() {
         <Route path="/question/:id" element={<QuestionDetailPage />} />
         <Route path="/question/new" element={<NewQuestionPage />} />
         <Route path="/skillcheck" element={<SkillCheckPage />} />
+        <Route path="/skillcheck/:id" element={<ProblemDetailPage />} />
+        <Route path="/chats" element={<ChatsPage />} />
       </Routes>
     </>
   );

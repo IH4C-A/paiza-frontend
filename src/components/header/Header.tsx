@@ -31,6 +31,12 @@ export const Header = () => {
         <a className={style.navigationLink} href="/skillcheck">
           スキルチェック
         </a>
+        <a className={style.navigationLink} href="/article">
+          技術記事
+        </a>
+        <a className={style.navigationLink} href="/chats">
+          チャット
+        </a>
       </div>
       <div className={style.navigationList}>
         <a className={style.navigationLink} href="/notification">
