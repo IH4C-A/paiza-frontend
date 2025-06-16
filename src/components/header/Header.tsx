@@ -2,6 +2,7 @@ import { FaBell } from "react-icons/fa";
 import style from "./Header.module.css";
 import { useCurrentUser } from "../../hooks/useUser";
 import { usePlant } from "../../hooks/usePlant";
+import type { Rank } from "../../types/rankType";
 
 export const Header = () => {
   const { currentUser } = useCurrentUser();
@@ -19,6 +20,13 @@ export const Header = () => {
         <a className={style.navigationLink} href="/mentor">
           メンター
         </a>
+        {currentUser?.ranks?.some((rank: Rank) => rank.rank_code === "mentor") ? (
+        <a className={style.navigationLink} href="/mentor/applications">
+          メンティー申請
+        </a>
+        ) : (
+          <div></div>
+        )}
         {plant ? (
           <a className={style.navigationLink} href="/partner">
             うちのコ

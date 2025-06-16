@@ -32,7 +32,7 @@ export const useUsers = () => {
 };
 
 // ユーザー単体取得
-export const useUser = (userId: string) => {
+export const useUser = (id: string) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export const useUser = (userId: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:5000/user/${userId}`);
+      const response = await fetch(`http://localhost:5000/users/${id}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -57,7 +57,7 @@ export const useUser = (userId: string) => {
 
   useEffect(() => {
     fetchUser();
-  }, [userId]);
+  }, [id]);
 
   return { user, loading, error, refetch: fetchUser };
 };

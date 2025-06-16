@@ -408,10 +408,19 @@
   margin: 0 0 0.25rem;
 }
 
+.mentorSpecialtyList {
+  display: flex;
+  flex-wrap: wrap; /* 折り返しも可能に */
+  gap: 0.5rem; /* 要素間のスペース */
+}
+
 .mentorSpecialty {
   font-size: 0.875rem;
   color: #6b7280;
   margin: 0;
+  padding: 0.25rem 0.5rem;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem;
 }
 
 /* Plant Preview */

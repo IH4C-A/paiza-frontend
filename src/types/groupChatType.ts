@@ -28,5 +28,5 @@ export type GroupChats = {
     category: Category | null;
     last_message: string | null;
     unread_count: number;
-    memberCount: number;
+    member_count: number;
 }

@@ -4,11 +4,11 @@ import type React from "react"
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 // lucide-reactの代わりにreact-icons/faからアイコンをインポート
-import { FaArrowLeft, FaStar, FaUsers, FaMessage, FaPaperPlane } from "react-icons/fa6" // FaMessage, FaPaperPlaneはFa6（新しいバージョン）にあります。必要に応じてfaやmdなど他のアイコンセットを選択してください。
+import { FaArrowLeft, FaStar, FaUsers, FaMessage, FaPaperPlane, FaUser } from "react-icons/fa6" // FaMessage, FaPaperPlaneはFa6（新しいバージョン）にあります。必要に応じてfaやmdなど他のアイコンセットを選択してください。
 
 // CSSモジュールをインポート
 import styles from "./MentorApplyPage.module.css"
-import { useMentorRequest } from "../../../hooks"
+import { useMentorRequest, useUser } from "../../../hooks"
 
 // useToastのモック（UIライブラリのToastを使わないため）
 const useToast = () => {
@@ -21,45 +21,19 @@ const useToast = () => {
   };
 };
 
-// モックデータ（実際はAPIから取得）
-const mentorData = {
-  1: {
-    id: 1,
-    name: "田中 太郎",
-    avatar: "/placeholder.svg?height=80&width=80",
-    rank: "S",
-    introduction:
-      "10年以上のWebエンジニア経験を持ち、React/Next.jsを中心としたフロントエンド開発が得意です。初心者から上級者まで丁寧に指導します。",
-    categories: ["React", "JavaScript", "TypeScript", "Next.js"],
-    rating: 4.9,
-    reviewCount: 156,
-    menteeCount: 23,
-    responseTime: "平均2時間以内",
-    experience: "10年以上",
-    company: "株式会社テックイノベーション",
-    mentoringSince: "2020年4月",
-    specialties: [
-      "フロントエンド開発の基礎から応用まで",
-      "React/Next.jsを使ったモダンWeb開発",
-      "TypeScriptによる型安全な開発",
-      "パフォーマンス最適化",
-      "コードレビューとベストプラクティス",
-    ],
-  },
-}
 
 export default function MentorApplyPage() {
-  const params = useParams()
+  const { id } = useParams()
   const router = useNavigate()
   const { toast } = useToast()
   const [message, setMessage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { requestMentor } = useMentorRequest();
+  const { user } = useUser(id || "");
 
-  const mentorId = Number.parseInt(params.id as string)
-  const mentor = mentorData[mentorId as keyof typeof mentorData]
 
-  if (!mentor) {
+  console.log(user)
+  if (!user) {
     return (
       <div className={styles.notFoundContainer}>
         <div className={styles.notFoundContent}>
@@ -87,7 +61,7 @@ export default function MentorApplyPage() {
     setIsSubmitting(true)
 
     const request = {
-      mentor_id: String(mentorId),
+      mentor_id: user.user_id,
       message,
     }
 
@@ -100,7 +74,7 @@ export default function MentorApplyPage() {
     })
 
     setIsSubmitting(false)
-    router("/mentors/list")
+    router("/mentor")
   }
 
   return (
@@ -127,25 +101,28 @@ export default function MentorApplyPage() {
                   <div className={styles.mentorHeader}>
                     <div className={styles.avatarWrapper}>
                       <div className={styles.avatar}>
-                        <img src={mentor.avatar || "/placeholder.svg"} alt={mentor.name} className={styles.avatarImage} />
-                        {!mentor.avatar && <div className={styles.avatarFallback}>{mentor.name.slice(0, 2)}</div>}
+                        {user.profile_image ? (
+                        <img src={user.profile_image || "/placeholder.svg"} alt={user.first_name} className={styles.avatarImage} />
+                        ) : (
+                        <FaUser className={styles.avatarFallback}></FaUser>
+                        )}
                       </div>
                       <div className={styles.badgeAbsolute}>
                         <span
-                          className={`${styles.badgeBase} ${mentor.rank === "S" ? styles.badgeDestructive : styles.badgeSecondary} ${styles.rankBadge}`}
+                          className={`${styles.badgeBase} ${user.ranks?.[1]?.rank_name === "S" ? styles.badgeDestructive : styles.badgeSecondary} ${styles.rankBadge}`}
                         >
-                          {mentor.rank}
+                          {user.ranks?.[1].rank_name}
                         </span>
                       </div>
                     </div>
                     <div>
-                      <h3 className={styles.mentorName}>{mentor.name}</h3>
+                      <h3 className={styles.mentorName}>{user.first_name}</h3>
                       <div className={styles.ratingSection}>
                         <div className={styles.ratingStars}>
                           <FaStar className={styles.starIcon} /> {/* StarアイコンをFaStarに変更 */}
-                          <span className={styles.ratingText}>{mentor.rating}</span>
+                          {/* <span className={styles.ratingText}>{mentor.rating}</span> */}
                         </div>
-                        <span className={styles.reviewCount}>({mentor.reviewCount}件)</span>
+                        {/* <span className={styles.reviewCount}>({mentor.reviewCount}件)</span> */}
                       </div>
                     </div>
                   </div>
@@ -154,9 +131,9 @@ export default function MentorApplyPage() {
                   <div>
                     <h4 className={styles.subHeading}>得意分野</h4>
                     <div className={styles.categoryBadges}>
-                      {mentor.categories.map((category) => (
-                        <span key={category} className={`${styles.badgeBase} ${styles.badgeOutline} ${styles.categoryBadge}`}>
-                          {category}
+                      {user.categories.map((category) => (
+                        <span key={category.category_id} className={`${styles.badgeBase} ${styles.badgeOutline} ${styles.categoryBadge}`}>
+                          {category.category_name}
                         </span>
                       ))}
                     </div>
@@ -168,12 +145,12 @@ export default function MentorApplyPage() {
                     <div className={styles.detailItem}>
                       <FaUsers className={styles.detailIcon} /> {/* UsersアイコンをFaUsersに変更 */}
                       <span className={styles.detailLabel}>指導中:</span>
-                      <span className={styles.detailValue}>{mentor.menteeCount}人</span>
+                      {/* <span className={styles.detailValue}>{mentor.menteeCount}人</span> */}
                     </div>
                     <div className={styles.detailItem}>
                       <FaMessage className={styles.detailIcon} /> {/* MessageCircleアイコンをFaMessageに変更 */}
                       <span className={styles.detailLabel}>返信:</span>
-                      <span className={styles.detailValue}>{mentor.responseTime}</span>
+                      {/* <span className={styles.detailValue}>{mentor.responseTime}</span> */}
                     </div>
                   </div>
 
@@ -182,12 +159,12 @@ export default function MentorApplyPage() {
                   <div>
                     <h4 className={styles.subHeading}>指導内容</h4>
                     <ul className={styles.specialtiesList}>
-                      {mentor.specialties.map((specialty, index) => (
+                      {/* {mentor.specialties.map((specialty, index) => (
                         <li key={index} className={styles.specialtyItem}>
                           <span className={styles.specialtyBullet}>•</span>
                           <span>{specialty}</span>
                         </li>
-                      ))}
+                      ))} */}
                     </ul>
                   </div>
                 </div>
