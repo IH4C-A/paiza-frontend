@@ -1,3 +1,4 @@
+import type { Category } from "./categoryType";
 import type { Rank } from "./rankType";
 
 export type User = {
@@ -13,6 +14,7 @@ export type User = {
     adrress: string;
     employment_status: string;
     ranks: Rank[];
+    categories: Category[];
 }
 
 export type UserregisterPayload = {

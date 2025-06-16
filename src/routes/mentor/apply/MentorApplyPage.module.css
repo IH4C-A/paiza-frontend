@@ -63,82 +63,7 @@
 }
 
 
-/* --- Header --- */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  border-bottom: 1px solid var(--border);
-  background-color: var(--background);
-}
 
-.headerContent {
-  display: flex;
-  height: var(--h-16);
-  align-items: center;
-  justify-content: space-between;
-  padding-left: var(--px-4);
-  padding-right: var(--px-4);
-  max-width: 96rem; /* equivalent to max-w-7xl if it was used */
-  margin: 0 auto;
-}
-
-.headerLeft {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-6);
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-2);
-  font-weight: 700;
-  font-size: 1.25rem; /* text-xl */
-  color: var(--foreground);
-  text-decoration: none;
-}
-
-.logoPrimary {
-  color: var(--primary);
-}
-
-.mainNav {
-  display: none; /* hidden */
-  gap: var(--gap-6);
-}
-
-@media (min-width: 768px) { /* md breakpoint */
-  .mainNav {
-    display: flex;
-  }
-}
-
-.navLinkMuted,
-.navLinkActive {
-  font-size: 0.875rem; /* text-sm */
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.2s ease-in-out;
-}
-
-.navLinkMuted {
-  color: var(--muted-foreground);
-}
-
-.navLinkMuted:hover {
-  color: var(--foreground);
-}
-
-.navLinkActive {
-  color: var(--foreground); /* current link color */
-}
-
-.headerRight {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-4);
-}
 
 /* --- Common Button Styles (replacing @/components/ui/button) --- */
 .buttonBase {
@@ -242,7 +167,7 @@
   padding-right: var(--px-4);
   padding-top: var(--py-6);
   padding-bottom: var(--py-6);
-  max-width: 55rem; /* max-w-4xl */
+  max-width: 80rem;
   margin: 0 auto;
 }
 

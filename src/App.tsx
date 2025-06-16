@@ -27,6 +27,7 @@ import QuestionsPage from "./routes/question/QuestionsPage";
 import QuestionDetailPage from "./routes/question/id/QuestionDetailPage";
 import NewQuestionPage from "./routes/question/newquestion/NewQuestionPage";
 import ProblemDetailPage from "./routes/skillcheck/id/ProblemDetailPage";
+import MentorApplicationsPage from "./routes/mentor/applications/MentorApplicationsPage";
 
 function AppContent() {
   const location = useLocation();
@@ -65,6 +66,7 @@ function AppContent() {
         <Route path="/skillcheck" element={<SkillCheckPage />} />
         <Route path="/skillcheck/:id" element={<ProblemDetailPage />} />
         <Route path="/chats" element={<ChatsPage />} />
+        <Route path="/mentor/applications" element={<MentorApplicationsPage />} />
       </Routes>
     </>
   );

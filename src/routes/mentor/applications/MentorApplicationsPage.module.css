@@ -1,0 +1,566 @@
+/* src/app/mentor/apply/MentorApplicationsPage.module.css */
+
+/* 基本的なリセットと変数 */
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --muted-foreground: #64748b;
+  --muted-background: #f1f5f9;
+  --primary: #0ea5e9; /* Sky 500 */
+  --border: #e2e8f0;
+  --card-background: #ffffff;
+  --card-foreground: #0f172a;
+  --secondary-background: #e2e8f0;
+  --secondary-foreground: #0f172a;
+  --destructive-background: #ef4444;
+  --destructive-foreground: #ffffff;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --input-border: #e2e8f0;
+  --input-background: #ffffff;
+  --input-focus-ring: #0ea5e9;
+
+  /* Status Colors */
+  --status-pending-text: #d97706; /* text-yellow-600 */
+  --status-pending-border: #d97706;
+  --status-approved-text: #16a34a; /* text-green-600 */
+  --status-approved-border: #16a34a;
+  --status-rejected-text: #dc2626; /* text-red-600 */
+  --status-rejected-border: #dc2626;
+
+  /* Urgency Colors */
+  --urgency-high-bg: #dc2626; /* bg-red-600 */
+  --urgency-high-text: #ffffff;
+  --urgency-normal-bg: #e2e8f0; /* bg-slate-200 */
+  --urgency-normal-text: #0f172a;
+  --urgency-low-border: #e2e8f0;
+  --urgency-low-text: #0f172a;
+  --select-rank-width: 7.5rem;
+}
+
+/* Base Layout */
+.pageContainer {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+
+.iconButton {
+  background-color: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.iconButton:hover {
+  background-color: var(--muted-background);
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background-color: var(--primary);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Main Content Area */
+.mainContent {
+  flex: 1;
+}
+
+.container {
+  max-width: 100%; /* Adjust as needed for specific breakpoints */
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.sectionHeader {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: -0.025em;
+}
+
+.sectionDescription {
+  color: var(--muted-foreground);
+  margin-top: 8px;
+}
+
+/* Filters & Sort */
+.filterSortContainer {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .filterSortContainer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.tabsList {
+  display: flex;
+  background-color: var(--muted-background);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.tabTrigger {
+  position: relative;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+
+.tabTrigger:hover {
+  color: var(--foreground);
+}
+
+.tabTriggerActive {
+  color: var(--foreground);
+  background-color: var(--background);
+  box-shadow: var(--shadow-sm);
+}
+
+.tabBadge {
+  margin-left: 8px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary-background);
+  color: var(--secondary-foreground);
+}
+
+/* --- Select (replacing @/components/ui/select) --- */
+.selectBase {
+  display: flex;
+  height: var(--input-height); /* h-10 */
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-default);
+  padding: 0.5rem 0.75rem; /* px-3 py-2 */
+  font-size: 0.875rem; /* text-sm */
+  color: var(--foreground);
+  cursor: pointer;
+  -webkit-appearance: none; /* remove default arrow */
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3e%3cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'%3e%3c/path%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
+.selectBase:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+.selectControl {
+  composes: selectBase;
+  width: var(--select-rank-width);
+
+}
+
+.selectWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selectIcon {
+  height: 16px;
+  width: 16px;
+  color: var(--muted-foreground);
+}
+
+.selectTrigger { /* w-[140px] を想定 */
+  display: inline-flex;
+  height: 40px; /* h-10 */
+  padding: 0 14px; /* px-4 */
+  font-size: 14px; /* text-sm */
+  line-height: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 6px; /* rounded-md */
+  background-color: var(--input-background);
+  color: var(--foreground);
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  width: 140px; /* w-[140px] */
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.selectTrigger:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--input-focus-ring);
+  border-color: var(--input-focus-ring);
+}
+
+.selectValue {
+  flex: 1;
+  text-align: left;
+}
+
+/* Card List */
+.cardSpaceY > * + * { /* space-y-4 */
+  margin-top: 16px;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--card-background);
+  color: var(--card-foreground);
+}
+
+.cardHeader {
+  padding: 16px;
+}
+
+.flexBetweenStart {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.applicantInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar {
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative; /* For image positioning */
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--muted-background);
+  color: var(--muted-foreground);
+  font-size: 14px;
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.applicantRankBadge {
+  font-size: 12px;
+  border: 1px solid currentColor;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background-color: transparent;
+  color: var(--secondary-foreground); /* Default for outline */
+}
+
+.applicantLevel {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  font-weight: normal;
+}
+
+.appliedAtInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.iconSmall {
+  height: 16px;
+  width: 16px;
+  color: var(--muted-foreground);
+}
+
+.appliedAtText {
+  font-size: 14px;
+  color: var(--muted-foreground);
+}
+
+.statusBadgeWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusBadge {
+  font-size: 12px;
+  border: 1px solid currentColor;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background-color: transparent;
+}
+
+.statusBadgePending {
+  color: var(--status-pending-text);
+  border-color: var(--status-pending-border);
+}
+.statusBadgeApproved {
+  color: var(--status-approved-text);
+  border-color: var(--status-approved-border);
+}
+.statusBadgeRejected {
+  color: var(--status-rejected-text);
+  border-color: var(--status-rejected-border);
+}
+
+.cardContent {
+  padding: 16px;
+  padding-top: 0;
+}
+
+.sectionHeadingSm {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.categoryBadgeContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.categoryBadge {
+  font-size: 12px;
+  background-color: var(--secondary-background);
+  color: var(--secondary-foreground);
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.messageContainer {
+  font-size: 14px;
+  color: var(--muted-foreground);
+  background-color: var(--muted-background);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.actionButtonsContainer {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+/* Button Base Styles */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px; /* size="sm" */
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out, color 0.2s ease-in-out;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.buttonOutline {
+  background-color: transparent;
+  border-color: var(--border);
+  color: var(--foreground);
+}
+.buttonOutline:hover {
+  background-color: var(--muted-background);
+}
+
+.buttonPrimary {
+  background-color: var(--primary);
+  color: var(--foreground); /* Text color on primary button */
+}
+.buttonPrimary:hover {
+  opacity: 0.9;
+}
+
+/* Dialog Styles (Basic) */
+.dialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50; /* Ensure it's on top */
+}
+
+.dialogContent {
+  background-color: var(--background);
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: var(--shadow-sm);
+  z-index: 51;
+  position: relative;
+}
+
+.dialogHeader {
+  margin-bottom: 16px;
+}
+
+.dialogTitle {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.dialogDescription {
+  color: var(--muted-foreground);
+  font-size: 14px;
+}
+
+.dialogSpaceY > * + * {
+  margin-top: 16px;
+}
+
+.formLabel {
+  font-size: 14px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.textarea {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  background-color: var(--input-background);
+  color: var(--foreground);
+  min-height: 80px;
+  resize: vertical;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.textarea:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--input-focus-ring);
+  border-color: var(--input-focus-ring);
+}
+
+.dialogFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  margin-top: 24px;
+}
+
+.urgencyBadge {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  display: inline-flex; /* For vertical alignment */
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.urgencyBadgeHigh {
+  background-color: var(--urgency-high-bg);
+  color: var(--urgency-high-text);
+}
+.urgencyBadgeNormal {
+  background-color: var(--urgency-normal-bg);
+  color: var(--urgency-normal-text);
+}
+.urgencyBadgeLow {
+  border: 1px solid var(--urgency-low-border);
+  background-color: transparent;
+  color: var(--urgency-low-text);
+}
+
+.noApplications {
+  text-align: center;
+  padding-top: 48px;
+}
+
+.noApplicationsIcon {
+  height: 48px;
+  width: 48px;
+  color: var(--muted-foreground);
+  margin: 0 auto 16px;
+}
+
+.noApplicationsTitle {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.noApplicationsDescription {
+  color: var(--muted-foreground);
+}

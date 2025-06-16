@@ -3,14 +3,17 @@ import styles from "./Mypage.module.css";
 import { FaCode } from "react-icons/fa";
 import { FiCode } from "react-icons/fi";
 import { useCurrentUser } from "../../hooks/useUser";
-import { usePlant } from "../../hooks";
+import { usePlant, useMentorships } from "../../hooks";
 import { plantTypes } from "../../types/plantType";
 import UserCategoryGate from "../../components/modal/UserCategoryGate";
+import { useNavigate } from "react-router-dom";
 
 export default function Mypage() {
   const [activeTab, setActiveTab] = useState("all");
   const { currentUser } = useCurrentUser();
   const { plant } = usePlant();
+  const navigate = useNavigate();
+  const { candidateMentors } = useMentorships();
 
   console.log(currentUser?.ranks?.[0]?.rank_name);
 
@@ -23,6 +26,9 @@ export default function Mypage() {
     ) : null;
   };
 
+  const handleClick = () => {
+    navigate("/question");
+  };
   const getPlantPreview = () => {
     const selectedType = plantTypes.find(
       (type) => type.id === plant?.growth_stage
@@ -54,7 +60,7 @@ export default function Mypage() {
 
   return (
     <>
-    <UserCategoryGate />
+      <UserCategoryGate />
       <div className={styles.container}>
         <main className={styles.main}>
           <div className={styles.mainContent}>
@@ -62,11 +68,13 @@ export default function Mypage() {
               <div className={styles.dashboardHeader}>
                 <h1 className={styles.title}>{currentUser?.first_name} さん</h1>
                 <div className={styles.rank}>
-                  <span className={styles.rankText}>
-                    ランク: {currentUser?.ranks?.[0]?.rank_name}
-                  </span>
+                  <span className={styles.rankText}>ランク(学生):</span>
                   <div className={styles.rankBadge}>
                     {currentUser?.ranks?.[0]?.rank_name}
+                  </div>
+                  <span className={styles.rankText}>ランク(メンター):</span>
+                  <div className={styles.rankBadge}>
+                    {currentUser?.ranks?.[1]?.rank_name}
                   </div>
                 </div>
               </div>
@@ -365,56 +373,40 @@ export default function Mypage() {
                   <p className={styles.cardDescription}>質問や相談ができます</p>
                 </div>
                 <div className={styles.cardContent}>
-                  <div className={styles.mentorList}>
-                    <div className={styles.mentorItem}>
-                      <div className={styles.mentorAvatar}>
-                        <div
-                          className={`${styles.mentorBadge} ${styles.rankS}`}
-                        >
-                          S
+                  {candidateMentors.slice(0, 3).map((mentor) => (
+                    <div className={styles.mentorList}>
+                      <div className={styles.mentorItem}>
+                        <div className={styles.mentorAvatar}>
+                          <div
+                            className={`${styles.mentorBadge} ${styles.rankS}`}
+                          >
+                            {mentor.ranks?.[1].rank_name}
+                          </div>
+                        </div>
+                        <div className={styles.mentorInfo}>
+                          <h4 className={styles.mentorName}>
+                            {mentor.first_name}さん
+                          </h4>
+                          <div className={styles.mentorSpecialtyList}>
+                            {mentor.categories.map((category) => (
+                              <p
+                                key={category.category_id}
+                                className={styles.mentorSpecialty}
+                              >
+                                {category.category_name}
+                              </p>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                      <div className={styles.mentorInfo}>
-                        <h4 className={styles.mentorName}>田中さん</h4>
-                        <p className={styles.mentorSpecialty}>
-                          アルゴリズム、React専門
-                        </p>
-                      </div>
                     </div>
-                    <div className={styles.mentorItem}>
-                      <div className={styles.mentorAvatar}>
-                        <div
-                          className={`${styles.mentorBadge} ${styles.rankA}`}
-                        >
-                          A
-                        </div>
-                      </div>
-                      <div className={styles.mentorInfo}>
-                        <h4 className={styles.mentorName}>佐藤さん</h4>
-                        <p className={styles.mentorSpecialty}>
-                          UI/UX、Vue.js専門
-                        </p>
-                      </div>
-                    </div>
-                    <div className={styles.mentorItem}>
-                      <div className={styles.mentorAvatar}>
-                        <div
-                          className={`${styles.mentorBadge} ${styles.rankA}`}
-                        >
-                          A
-                        </div>
-                      </div>
-                      <div className={styles.mentorInfo}>
-                        <h4 className={styles.mentorName}>鈴木さん</h4>
-                        <p className={styles.mentorSpecialty}>
-                          情報処理試験、DB専門
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
                 <div className={styles.cardFooter}>
-                  <button className={styles.primaryButton}>
+                  <button
+                    className={styles.primaryButton}
+                    onClick={handleClick}
+                  >
                     メンターに質問する
                   </button>
                 </div>
