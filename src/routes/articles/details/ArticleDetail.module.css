@@ -153,6 +153,11 @@
   background-color: #f3f4f6;
 }
 
+
+.actionButtonDeleteIcon {
+  font-size: var(--icon-size-sm);
+  color: violet;
+}
 .tagList {
   display: flex;
   flex-wrap: wrap;

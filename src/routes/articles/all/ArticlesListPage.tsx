@@ -21,7 +21,7 @@ export default function HomePage() {
   const articlesPerPage = 5;
   const { articleCategories } = useArticleCategories();
 
-  console.log(articleCategories)
+  console.log(articleCategories);
   const { articles } = useArticlesWithCategories();
   const uniqueTags = [
     ...new Set(
@@ -58,7 +58,9 @@ export default function HomePage() {
           article.user?.username
             ?.toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
-          article.user.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          article.user.username
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
           article.categories.some((cat) =>
             cat.category_name.toLowerCase().includes(searchQuery.toLowerCase())
           )
@@ -74,7 +76,7 @@ export default function HomePage() {
 
     // フィルターボタン（ここでは簡易的にトレンド順にソートする例）
     if (filterType === "trending") {
-      return articles
+      return articles;
     }
     // "following" のロジックはユーザーデータやAPIが必要なので、ここでは実装をスキップします。
 
@@ -94,7 +96,6 @@ export default function HomePage() {
 
   return (
     <div className={styles.container}>
-
       <div className={styles.main}>
         <div className={styles.content}>
           {/* Main Content Area */}
@@ -164,7 +165,7 @@ export default function HomePage() {
 
             <div className={styles.articleList}>
               {filteredArticles.map((article) => (
-                <ArticleCard key={article.article_id}{...article} />
+                <ArticleCard key={article.article_id} {...article} />
               ))}
             </div>
 
@@ -244,18 +245,16 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-
             <div className={styles.sidebarCard}>
               <div className={styles.sidebarHeader}>
                 <h3 className={styles.sidebarTitle}>トレンド記事</h3>
               </div>
               <div className={styles.sidebarContent}>
                 <div className={styles.trendList}>
-                  {articles.slice(0, 3).map(
-                    (
-                      article,
-                      index // mockArticlesを使用
-                    ) => (
+                  {[...articles]
+                    .sort((a, b) => b.like_count - a.like_count) // いいね数の降順でソート
+                    .slice(0, 3)
+                    .map((article, index) => (
                       <div
                         key={article.article_id}
                         className={styles.trendItem}
@@ -274,12 +273,13 @@ export default function HomePage() {
                           </a>
                           <div className={styles.trendStats}>
                             <FaHeart className={styles.trendStatIcon} />
-                            <span className={styles.trendLikes}>10</span>
+                            <span className={styles.trendLikes}>
+                              {article.like_count}
+                            </span>
                           </div>
                         </div>
                       </div>
-                    )
-                  )}
+                    ))}
                 </div>
               </div>
             </div>
