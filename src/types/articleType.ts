@@ -9,5 +9,7 @@ export type Article = {
     categories: Category[];
     created_at: Date;
     updated_at: Date;
+    like_count: number;
+    is_liked_by_user: string;
 }
 

@@ -5,7 +5,7 @@ import {  useParams } from "react-router-dom" // Next.jsのuseParamsを使用
 import { FaHeart, FaBookmark, FaShareNodes, FaArrowLeft, FaThumbsUp } from "react-icons/fa6" // またはfaなど
 // Markdownレンダラーコンポーネント (別途定義)
 import MarkdownRenderer from "../components/MarkdownRenderer"
-import { useArticle, useArticleLike } from '../../../hooks';
+import { useArticle, useArticleLike, useUnlikeArticle, useArticleLikeStatus } from '../../../hooks';
 // CSSモジュールをインポート
 import styles from './ArticleDetail.module.css'; // Assuming you have a CSS module for styles
 
@@ -15,12 +15,20 @@ export default function ArticlePage() {
   const { id } = useParams();
   const { article } = useArticle(id || '');
   const { addArticleLike } = useArticleLike();
+  const { unlikeArticle } = useUnlikeArticle();
+  const { likeStatus } = useArticleLikeStatus(id || '');
 
   if (!article) return <div>記事が見つかりませんでした。</div>;
 
   const handleLike = () => {
     if (article) {
       addArticleLike(article.article_id);
+    } 
+  }
+
+  const handleUnLike = () => {
+    if (article) {
+      unlikeArticle(article.article_id);
     } 
   }
   return (
@@ -55,9 +63,15 @@ export default function ArticlePage() {
               </div>
 
               <div className={styles.actionButtons}>
+                {likeStatus?.liked == false ? (
                 <button type="button" className={styles.actionButton} onClick={handleLike}>
                   <FaHeart className={styles.actionButtonIcon} /> {/* react-iconsのHeartを使用 */}
                 </button>
+                ) : (
+                <button type="button" className={styles.actionButton} onClick={handleUnLike}>
+                  <FaHeart className={styles.actionButtonDeleteIcon} /> {/* react-iconsのHeartを使用 */}
+                </button>
+                )}
                 <button type="button" className={styles.actionButton}>
                   <FaBookmark className={styles.actionButtonIcon} /> {/* react-iconsのBookmarkを使用 */}
                   
@@ -86,10 +100,18 @@ export default function ArticlePage() {
           <div className={styles.articleFooter}>
             <div className={styles.footerActions}>
               <div className={styles.footerLeft}>
-                <button type="button" className={styles.actionButton}>
+                
+                {likeStatus?.liked == false ? (
+                <button type="button" className={styles.actionButton} onClick={handleLike}>
                   <FaThumbsUp className={styles.actionButtonIcon} /> {/* react-iconsのThumbsUpを使用 */}
                   いいね 
                 </button>
+                ) : (
+                <button type="button" className={styles.actionButton} onClick={handleUnLike}>
+                  <FaThumbsUp className={styles.actionButtonDeleteIcon} /> {/* react-iconsのThumbsUpを使用 */}
+                  いいね 
+                </button>
+                )}
                 <button type="button" className={styles.actionButton}>
                   <FaBookmark className={styles.actionButtonIcon} /> {/* react-iconsのBookmarkを使用 */}
                   ストック

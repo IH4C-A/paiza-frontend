@@ -260,3 +260,39 @@ export const useApproveMentorshipRequest = () => {
 
   return { approveRequest, loading, error, success };
 };
+
+export const useRejectMentorshipRequest = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const token = localStorage.getItem("token");
+
+  const rejectRequest = async (request_id: string) => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/mentorship/request/${request_id}/reject`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData?.error || "拒否に失敗しました");
+      }
+
+      setSuccess(true);
+    } catch (err) {
+      console.error("拒否エラー:", err);
+      setError(err instanceof Error ? err.message : "不明なエラー");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { rejectRequest, loading, error, success };
+};

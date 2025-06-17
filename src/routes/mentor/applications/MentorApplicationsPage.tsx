@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { FaCheck, FaTimes, FaRegClock, FaRegCommentDots, FaRegCalendarAlt, FaFilter } from "react-icons/fa"
-import { useReceivedMentorRequests, useApproveMentorshipRequest } from "../../../hooks";
+import { useReceivedMentorRequests, useApproveMentorshipRequest, useRejectMentorshipRequest } from "../../../hooks";
 
 import styles from './MentorApplicationsPage.module.css';
 
@@ -27,6 +27,7 @@ export default function MentorApplicationsPage() {
   const [currentApplicationId, setCurrentApplicationId] = useState<string | null>(null);
   const { requests } = useReceivedMentorRequests();
   const { approveRequest } = useApproveMentorshipRequest();
+  const { rejectRequest } = useRejectMentorshipRequest();
 
   console.log(requests)
 
@@ -56,8 +57,8 @@ export default function MentorApplicationsPage() {
     setReplyMessage(""); 
   }
 
-  const handleReject = () => {
-    // ここで実際にAPIコールを行う
+  const handleReject = (request_id: string) => {
+    rejectRequest(request_id);
     toast({
       title: "申請を拒否しました",
       description: "申請者に通知が送信されました。",
@@ -222,7 +223,7 @@ export default function MentorApplicationsPage() {
                         </button>
                         <button
                           className={`${styles.button} ${styles.buttonOutline} flex-1`} // flex-1 はTailwind
-                          onClick={() => handleReject()}
+                          onClick={() => handleReject(application.request_id)}
                         >
                           <FaTimes className="h-4 w-4 mr-2" />
                           拒否

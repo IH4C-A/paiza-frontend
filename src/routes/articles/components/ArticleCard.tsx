@@ -3,7 +3,6 @@ import styles from "./ArticleCard.module.css";
 import type { Article } from "../../../types/articleType";
 import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useArticleLikesCount } from "../../../hooks";
 
 const ArticleCard: React.FC<Article> = ({
   article_id,
@@ -12,9 +11,10 @@ const ArticleCard: React.FC<Article> = ({
   categories,
   created_at,
   user,
+  like_count,
+  is_liked_by_user,
 }) => {
   const navigate = useNavigate();
-  const { articleLikesCount } = useArticleLikesCount(article_id);
 
   const handleClick = () => {
     navigate(`/article/${article_id}`);
@@ -53,8 +53,8 @@ const ArticleCard: React.FC<Article> = ({
           </div>
           <div className={styles.articleStats}>
             <div className={styles.statItem}>
-              <FaHeart className={articleLikesCount?.like ? `${styles.likeItem}` : `${styles.statIcon}`} />
-              <span>{articleLikesCount?.like_count}</span>
+              <FaHeart className={is_liked_by_user ? `${styles.likeItem}` : `${styles.statIcon}`} />
+              <span>{like_count}</span>
             </div>
           </div>
         </div>
