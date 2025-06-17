@@ -20,12 +20,14 @@ export const Header = () => {
         <a className={style.navigationLink} href="/mentor">
           メンター
         </a>
-        {currentUser?.ranks?.some((rank: Rank) => rank.rank_code === "mentor") ? (
-        <a className={style.navigationLink} href="/mentor/applications">
-          メンティー申請
-        </a>
+        {currentUser?.ranks?.some(
+          (rank: Rank) => rank.rank_code === "mentor"
+        ) ? (
+          <a className={style.navigationLink} href="/mentor/applications">
+            メンティー申請
+          </a>
         ) : (
-          <div></div>
+          <div className={style.hidden}></div>
         )}
         {plant ? (
           <a className={style.navigationLink} href="/partner">
