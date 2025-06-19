@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 // import { ... } from "lucide-react"; // lucide-react のインポートを削除
 
 import styles from "./NotificationPage.module.css";
-
+import { useNotifications } from "../../hooks";
+import type { Notification } from "../../types/notificationType";
 // SVG Icon Components (Inline)
 const BellIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
@@ -105,119 +106,9 @@ const HeartIcon = ({ className, style }: { className?: string; style?: React.CSS
 );
 
 
-interface Notification {
-  id: string;
-  type: string;
-  title: string;
-  message: string;
-  detail: string;
-  timestamp: string;
-  isRead: boolean;
-  priority: "high" | "medium" | "low";
-  avatar: string | null;
-  actionUrl?: string;
-}
-
 export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: "1",
-      type: "mentor_reply",
-      title: "メンターからの返信",
-      message: "田中さんがあなたの質問に回答しました",
-      detail: "useEffectの依存配列について詳しく説明しました。",
-      timestamp: "2分前",
-      isRead: false,
-      priority: "high",
-      avatar: "/placeholder.svg?height=40&width=40", 
-      actionUrl: "/mentors/chat/1",
-    },
-    {
-      id: "2",
-      type: "group_mention",
-      title: "グループチャットでメンション",
-      message: "React初心者の会であなたがメンションされました",
-      detail: "@あなた この問題についてどう思いますか？",
-      timestamp: "15分前",
-      isRead: false,
-      priority: "medium",
-      avatar: "/placeholder.svg?height=40&width=40",
-      actionUrl: "/mentors/groups/1",
-    },
-    {
-      id: "3",
-      type: "Youtube",
-      title: "質問への回答",
-      message: "あなたの質問に新しい回答が投稿されました",
-      detail: "「Reactのuseeffectで無限ループが発生する原因について」に回答がありました。",
-      timestamp: "1時間前",
-      isRead: true,
-      priority: "medium",
-      avatar: "/placeholder.svg?height=40&width=40",
-      actionUrl: "/questions/1",
-    },
-    {
-      id: "4",
-      type: "achievement",
-      title: "学習達成",
-      message: "React基礎講座を完了しました！",
-      detail: "おめでとうございます！次は中級講座に挑戦してみましょう。",
-      timestamp: "3時間前",
-      isRead: true,
-      priority: "low",
-      avatar: null,
-      actionUrl: "/learning/react-basics",
-    },
-    {
-      id: "5",
-      type: "uchino_ko",
-      title: "うちのコからのメッセージ",
-      message: "モリモリがレベルアップしました！",
-      detail: "今日の学習お疲れ様！一緒に成長できて嬉しいよ♪",
-      timestamp: "5時間前",
-      isRead: false,
-      priority: "low",
-      avatar: null,
-      actionUrl: "/uchino-ko",
-    },
-    {
-      id: "6",
-      type: "system",
-      title: "システムお知らせ",
-      message: "新しい問題が追加されました",
-      detail: "UI/UXカテゴリに「アクセシビリティ対応」の問題が追加されました。",
-      timestamp: "1日前",
-      isRead: true,
-      priority: "low",
-      avatar: null,
-      actionUrl: "/problems",
-    },
-    {
-      id: "7",
-      type: "course_update",
-      title: "講座更新",
-      message: "受講中の講座が更新されました",
-      detail: "「データ構造とアルゴリズム」に新しいレッスンが追加されました。",
-      timestamp: "2日前",
-      isRead: true,
-      priority: "medium",
-      avatar: null,
-      actionUrl: "/learning/data-structures",
-    },
-    {
-      id: "8",
-      type: "mentor_rating",
-      title: "メンター評価のお願い",
-      message: "田中さんとのチャットの評価をお願いします",
-      detail: "より良いサービス提供のため、メンターの評価にご協力ください。",
-      timestamp: "3日前",
-      isRead: false,
-      priority: "low",
-      avatar: "/placeholder.svg?height=40&width=40",
-      actionUrl: "/mentors/chat/1",
-    },
-  ]);
-
+  const [notification, setNotifications] = useState<Notification[]>([]);
+  const { notifications } = useNotifications();
   const [activeTab, setActiveTab] = useState<"all" | "unread" | "read">("all");
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [notificationMenuOpen, setNotificationMenuOpen] = useState<string | null>(null);
@@ -284,7 +175,7 @@ export default function NotificationsPage() {
   const toggleReadStatus = (id: string) => {
     setNotifications(
       notifications.map((notif) =>
-        notif.id === id ? { ...notif, isRead: !notif.isRead } : notif
+        notif.notification_id === id ? { ...notif, isRead: !notif.is_read } : notif
       )
     );
     setNotificationMenuOpen(null);
@@ -297,13 +188,13 @@ export default function NotificationsPage() {
   };
 
   const deleteNotification = (id: string) => {
-    setNotifications(notifications.filter((notif) => notif.id !== id));
+    setNotifications(notifications.filter((notif) => notif.notification_id !== id));
     setNotificationMenuOpen(null);
   };
 
-  const unreadCount = notifications.filter((notif) => !notif.isRead).length;
-  const unreadNotifications = notifications.filter((notif) => !notif.isRead);
-  const readNotifications = notifications.filter((notif) => notif.isRead);
+  const unreadCount = notifications.filter((notif) => !notif.is_read).length;
+  const unreadNotifications = notifications.filter((notif) => !notif.is_read);
+  const readNotifications = notifications.filter((notif) => notif.is_read);
 
   const displayedNotifications = () => {
     switch (activeTab) {
@@ -319,18 +210,18 @@ export default function NotificationsPage() {
 
   const renderNotificationCard = (notification: Notification) => (
     <div
-      key={notification.id}
+      key={notification.notification_id}
       className={`${styles.card} ${getPriorityClass(notification.priority)} ${
-        !notification.isRead ? styles.cardUnreadBg : ""
+        !notification.is_read ? styles.cardUnreadBg : ""
       }`}
     >
       <div className={styles.cardContent}>
         <div className={styles.notificationItem}>
           <div className={styles.notificationAvatarContainer}>
-            {notification.avatar ? (
+            {notification.user_id.profile_image ? (
               <div className={styles.avatar}>
                 <img
-                  src={notification.avatar || "/placeholder.svg"} 
+                  src={notification.user_id.profile_image || "/placeholder.svg"} 
                   alt="Avatar"
                   className={styles.avatarImage}
                 />
@@ -348,7 +239,7 @@ export default function NotificationsPage() {
                   <h3 className={styles.notificationTitle}>
                     {notification.title}
                   </h3>
-                  {!notification.isRead && (
+                  {!notification.is_read && (
                     <div className={styles.notificationUnreadDot} />
                   )}
                 </div>
@@ -361,13 +252,15 @@ export default function NotificationsPage() {
               </div>
               <div className={styles.notificationMeta}>
                 <span className={styles.notificationTimestamp}>
-                  {notification.timestamp}
+                  {notification.created_at instanceof Date
+                    ? notification.created_at.toLocaleString()
+                    : notification.created_at}
                 </span>
-                <div className={styles.dropdown} ref={el => { if (el) notificationMenuRefs.current[notification.id] = el; }}>
+                <div className={styles.dropdown} ref={el => { if (el) notificationMenuRefs.current[notification.notification_id] = el; }}>
                   <button
                     type="button"
                     className={`${styles.button} ${styles.buttonVariantGhost} ${styles.buttonSizeIconSmall}`}
-                    onClick={() => setNotificationMenuOpen(notificationMenuOpen === notification.id ? null : notification.id)}
+                    onClick={() => setNotificationMenuOpen(notificationMenuOpen === notification.notification_id ? null : notification.notification_id)}
                   >
                     <span className={styles.srOnly}>メニュー</span>
                     <div className={styles.menuButtonDotsContainer}>
@@ -376,24 +269,24 @@ export default function NotificationsPage() {
                         <div className={styles.menuButtonDot}></div>
                     </div>
                   </button>
-                  {notificationMenuOpen === notification.id && (
+                  {notificationMenuOpen === notification.notification_id && (
                     <div className={styles.dropdownContent}>
                       <button
                         type="button"
                         className={styles.dropdownItem}
-                        onClick={() => toggleReadStatus(notification.id)}
+                        onClick={() => toggleReadStatus(notification.notification_id)}
                       >
-                        {notification.isRead ? (
+                        {notification.is_read ? (
                           <BellOffIcon className={styles.dropdownItemIcon} />
                         ) : (
                           <CheckIcon className={styles.dropdownItemIcon} />
                         )}
-                        {notification.isRead ? "未読にする" : "既読にする"}
+                        {notification.is_read ? "未読にする" : "既読にする"}
                       </button>
                       <button
                         type="button"
                         className={styles.dropdownItem}
-                        onClick={() => deleteNotification(notification.id)}
+                        onClick={() => deleteNotification(notification.notification_id)}
                       >
                         <Trash2Icon className={styles.dropdownItemIcon} />
                         削除
@@ -481,7 +374,7 @@ export default function NotificationsPage() {
                 className={`${styles.tabsTrigger} ${activeTab === "all" ? styles.tabsTriggerActive : ""}`}
                 onClick={() => setActiveTab("all")}
               >
-                すべて ({notifications.length})
+                すべて ({notification.length})
               </button>
               <button
                 type="button"
