@@ -1,0 +1,230 @@
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Variables (Using the established green theme) */
+:root {
+  --primary-color: #93b636; 
+  --primary-hover-color: #b0d93e;
+  --primary-foreground-color: #ffffff; 
+  --card-background-color: #fff; 
+  --border-color: #e2e8f0; 
+  --text-color: #1a202c; 
+  --muted-color: #718096; 
+  --muted-background-color: #f1f5f9;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+  --input-border-color: #cbd5e0; 
+  --yellow-400: #facc15;
+  --blue-50: #eff6ff; --blue-200: #bfdbfe; --blue-700: #1d4ed8;
+  --green-50: #f0fdf4; --green-200: #bbf7d0; --green-700: #15803d;
+  --red-50: #fef2f2; --red-200: #fecaca; --red-600: #dc2626; --red-700: #b91c1c;
+  --secondary-color: #e2e8f0;
+}
+
+/* Page Layout */
+.pageContainer {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: #f8fafc;
+}
+.mainContent { flex: 1; }
+.container {
+  max-width: 896px; /* max-w-4xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem 1rem; 
+}
+
+/* Back Button & General Button Styles */
+.backButtonContainer {
+  margin-bottom: 1.5rem;
+}
+.backButton {
+  background: none; border: none; padding: 0.5rem;
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  font-size: 0.875rem; font-weight: 500; cursor: pointer;
+  border-radius: 0.375rem;
+}
+.backButton:hover { background-color: var(--muted-background-color); }
+.backButton img { height: 1rem; width: 1rem; }
+
+/* Layout Grid */
+.contentGrid {
+  display: grid;
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
+  .contentGrid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+.leftColumn { display: flex; flex-direction: column; gap: 1.5rem; }
+.rightColumn { display: flex; flex-direction: column; gap: 1.5rem; }
+
+/* Card & Badge Styles (common) */
+.card {
+  background-color: var(--card-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+}
+.cardHeader { padding: 1rem 1.25rem; }
+.cardTitle { font-size: 1.25rem; font-weight: 600; margin: 0; }
+.cardDescription { font-size: 0.875rem; color: var(--muted-color); }
+.cardContent { padding: 1.25rem; }
+.badge {
+  display: inline-flex; align-items: center; border-radius: 9999px;
+  border: 1px solid; padding: 0.125rem 0.625rem; font-size: 0.75rem; font-weight: 500;
+}
+.statusBadgeUpcoming { background-color: var(--blue-50); color: var(--blue-700); border-color: var(--blue-200); }
+.statusBadgeCompleted { background-color: var(--green-50); color: var(--green-700); border-color: var(--green-200); }
+.statusBadgeCancelled { background-color: var(--red-50); color: var(--red-700); border-color: var(--red-200); }
+.rankBadge {
+  height: 1.25rem; width: 1.25rem; padding: 0; justify-content: center; font-weight: bold;
+}
+.rankBadgeS { background-color: var(--red-500); color: #fff; border: none; }
+.rankBadgeA { background-color: var(--secondary-color); color: var(--text-color); border: none; }
+
+/* Main Meeting Card */
+.meetingCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.meetingTitleContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.meetingTitle { font-size: 1.5rem; }
+.meetingDescription { color: var(--muted-color); }
+.dropdownContainer { position: relative; }
+.iconButton {
+  background: transparent; border: none; padding: 0.5rem;
+  border-radius: 0.375rem; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+}
+.iconButton:hover { background-color: var(--muted-background-color); }
+.iconButton img { height: 1rem; width: 1rem; }
+.dropdownMenu {
+  position: absolute; top: 100%; right: 0; z-index: 10;
+  margin-top: 0.25rem; width: 180px; background-color: var(--card-background-color);
+  border: 1px solid var(--border-color); border-radius: 0.375rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 0.25rem;
+}
+.dropdownMenuItem {
+  display: flex; align-items: center; gap: 0.5rem; width: 100%;
+  padding: 0.5rem; text-align: left; font-size: 0.875rem;
+  border-radius: 0.25rem; text-decoration: none; color: var(--text-color);
+  background: none; border: none; cursor: pointer;
+}
+.dropdownMenuItem img { height: 1rem; width: 1rem; }
+.dropdownMenuItem:hover { background-color: var(--muted-background-color); }
+.dropdownMenuItemDanger { color: var(--red-600); }
+.dropdownMenuItemDanger:hover { color: var(--red-600); background-color: var(--red-50); }
+.mainCardContent { display: flex; flex-direction: column; gap: 1rem; }
+.contentBlock h3 { font-weight: 500; margin-bottom: 0.5rem; }
+.contentBlock p { color: var(--muted-color); }
+.notesBlock { padding: 0.75rem; background-color: var(--muted-background-color); border-radius: 0.375rem; }
+.notesBlock p { font-size: 0.875rem; }
+.checklist { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
+.checklistItem { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.875rem; }
+.checklistItem span:first-child { color: var(--green-600); font-weight: bold; }
+
+/* Feedback Card */
+.feedbackCardContent { display: flex; flex-direction: column; gap: 1rem; }
+.feedbackBlock p:first-child { font-weight: 500; margin-bottom: 0.5rem; }
+.feedbackBlock .feedbackText {
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  background-color: var(--muted-background-color);
+}
+.ratingContainer { display: flex; align-items: center; gap: 0.25rem; }
+.ratingContainer img { height: 1rem; width: 1rem; }
+.starFilled { color: var(--yellow-400); }
+.starEmpty { color: var(--border-color); }
+
+/* Mentor Info Card */
+.mentorCardContent { display: flex; flex-direction: column; gap: 1rem; }
+.mentorCardHeader { display: flex; align-items: flex-start; gap: 1rem; }
+.avatar { height: 3rem; width: 3rem; border-radius: 9999px; background-color: #eee; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 9999px; }
+.mentorNameContainer { display: flex; align-items: center; gap: 0.5rem; }
+.mentorName { font-weight: 500; }
+.mentorRating { display: flex; align-items: center; gap: 0.25rem; margin-top: 0.25rem; }
+.mentorRating img { height: 0.75rem; width: 0.75rem; }
+.mentorButtons { display: flex; gap: 0.5rem; }
+.mentorButton {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.5rem; border: 1px solid var(--border-color);
+  background-color: transparent; border-radius: 0.375rem; cursor: pointer;
+  font-weight: 500; text-decoration: none; color: var(--text-color);
+}
+.mentorButton:hover { background-color: var(--muted-background-color); }
+
+/* Meeting Details Card */
+.detailsList { display: flex; flex-direction: column; gap: 0.75rem; }
+.detailItem { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
+.detailItem img { height: 1rem; width: 1rem; color: var(--muted-color); }
+
+/* Join Meeting Card */
+.joinButton {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.75rem; background-color: var(--primary-color);
+  color: var(--primary-foreground-color); border: none; border-radius: 0.375rem;
+  font-weight: 500; text-decoration: none; cursor: pointer;
+}
+.joinButton:hover { background-color: var(--primary-hover-color); }
+.joinButton img { height: 1rem; width: 1rem; }
+.joinHelpText { font-size: 0.75rem; color: var(--muted-color); text-align: center; margin-top: 0.5rem; }
+
+/* Alert Box */
+.alert {
+  padding: 1rem; border-radius: 0.375rem; border-left-width: 4px;
+  background-color: var(--muted-background-color); border-color: var(--muted-color);
+  display: flex; gap: 0.75rem;
+}
+.alert img { height: 1rem; width: 1rem; color: var(--muted-color); }
+.alertTitle { font-weight: 500; }
+.alertDescription { font-size: 0.875rem; color: var(--muted-color); margin-top: 0.25rem; }
+
+/* Dialog (Modal) Styles */
+.dialogOverlay {
+  position: fixed; inset: 0; z-index: 50;
+  background-color: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+}
+.dialogContent {
+  background-color: var(--card-background-color);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.dialogHeader { margin-bottom: 1rem; }
+.dialogTitle { font-size: 1.25rem; font-weight: 600; }
+.dialogDescription { font-size: 0.875rem; color: var(--muted-color); margin-top: 0.5rem; }
+.dialogBody { display: flex; flex-direction: column; gap: 1rem; margin: 1rem 0; }
+.formLabel { font-size: 0.875rem; font-weight: 500; }
+.formTextarea {
+  width: 100%; min-height: 80px; padding: 0.5rem 0.75rem;
+  border: 1px solid var(--input-border-color); border-radius: 0.375rem;
+}
+.ratingSelector { display: flex; align-items: center; gap: 0.25rem; }
+.ratingStarButton { background: none; border: none; cursor: pointer; padding: 0; height: 2rem; width: 2rem; }
+.ratingStarButton img { height: 100%; width: 100%; }
+.dialogFooter { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem; }
+.dialogButton { padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500; cursor: pointer; }
+.dialogButtonOutline { border: 1px solid var(--border-color); background-color: transparent; }
+.dialogButtonOutline:hover { background-color: var(--muted-background-color); }
+.dialogButtonDestructive { border: 1px solid var(--red-500); background-color: var(--red-500); color: #fff; }
+.dialogButtonDestructive:hover { background-color: #c00; }
+.dialogButtonPrimary { border: 1px solid var(--primary-color); background-color: var(--primary-color); color: #fff; }
+.dialogButtonPrimary:hover:not(:disabled) { background-color: var(--primary-hover-color); }
+.dialogButton:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
