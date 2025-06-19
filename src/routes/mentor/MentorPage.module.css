@@ -660,3 +660,52 @@
 .noMentorsText {
   color: var(--muted-foreground);
 }
+
+/* 新しいタブセクションの追加 */
+.mentorTabsSection {
+  margin-bottom: 24px; /* mb-6 */
+}
+
+.mentorTabsList {
+  display: flex;
+  background-color: var(--muted-background); /* bg-muted */
+  border-radius: 8px; /* rounded-md */
+  padding: 4px; /* p-1 */
+  width: fit-content; /* w-fit */
+}
+
+.mentorTabTrigger {
+  position: relative;
+  padding: 8px 12px; /* px-3 py-1 */
+  font-size: 14px; /* text-sm */
+  font-weight: 500;
+  color: var(--muted-foreground);
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border-radius: 6px; /* rounded-sm */
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  flex: 1; /* w-full if needed, or flex-1 for equal width */
+  text-align: center;
+}
+
+.mentorTabTrigger:hover {
+  color: var(--foreground);
+}
+
+.mentorTabTriggerActive {
+  color: var(--foreground);
+  background-color: var(--background);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ... (既存の他のスタイルは変更なし) ... */
+
+/* 必要に応じて既存のスタイルを調整 */
+.pageHeader {
+  margin-bottom: 24px; /* 既存のmb-6はそのまま */
+}
+
+.searchFilterSection {
+  margin-bottom: 24px; /* mb-6 */
+}

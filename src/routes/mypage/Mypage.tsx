@@ -15,7 +15,7 @@ export default function Mypage() {
   const navigate = useNavigate();
   const { candidateMentors } = useMentorships();
 
-  console.log(currentUser?.ranks?.[0]?.rank_name);
+  console.log(plant);
 
   const TabsContent: React.FC<{ value: string; children: React.ReactNode }> = ({
     value,
@@ -56,6 +56,14 @@ export default function Mypage() {
         </div>
       </div>
     );
+  };
+
+  const handlePlantClick = () => {
+    if (plant) {
+      navigate("/partner");
+    } else {
+      navigate("/partner/setup")
+    }
   };
 
   return (
@@ -338,18 +346,26 @@ export default function Mypage() {
                   <div className={styles.petContainer}>
                     <div className={styles.petVisual}>{getPlantPreview()}</div>
                     <h4 className={styles.petName}>{plant?.plant_name}</h4>
-                    <p className={styles.petLevel}>レベル: 5</p>
+                    <p className={styles.petLevel}>
+                      レベル: {plant?.growth_milestones?.level ?? 0}
+                    </p>
                     <div className={styles.progressItem}>
                       <div className={styles.progressHeader}>
                         <span className={styles.progressLabel}>成長度</span>
-                        <span className={styles.progressValue}>45%</span>
+                        <span className={styles.progressValue}>
+                          {plant?.growth_milestones?.milestone ?? 0}%
+                        </span>
                       </div>
                       <div
                         className={`${styles.progressBar} ${styles.petProgress}`}
                       >
                         <div
                           className={styles.progressFill}
-                          style={{ width: "45%" }}
+                          style={{
+                            width: `${
+                              plant?.growth_milestones?.milestone ?? 0
+                            }%`,
+                          }}
                         />
                       </div>
                     </div>
@@ -361,7 +377,10 @@ export default function Mypage() {
                   </div>
                 </div>
                 <div className={styles.cardFooter}>
-                  <button className={styles.outlineButton}>
+                  <button
+                    className={styles.outlineButton}
+                    onClick={handlePlantClick}
+                  >
                     うちのコと話す
                   </button>
                 </div>

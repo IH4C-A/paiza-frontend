@@ -4,8 +4,10 @@ import DOMPurify from "dompurify";
 import styles from "./ArticlesPage.module.css";
 import { useRegisterArticle } from "../../../hooks/useArticle";
 import { useCategories } from "../../../hooks/useCategory";
+import { useNavigate } from "react-router-dom";
 
 const MarkdownEditor: React.FC = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [selectedCategoryCode, setSelectedCategoryCode] = useState<string>("");
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
@@ -36,6 +38,7 @@ const MarkdownEditor: React.FC = () => {
         setTitle("");
         setSelectedCategoryIds([]);
         setMarkdown("");
+        navigate("/article")
       })
       .catch((error) => {
         console.error("記事の保存に失敗しました:", error);

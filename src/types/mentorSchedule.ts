@@ -12,12 +12,13 @@ export type MentorSchedule = {
     created_at: string;
     updated_at: string;
     cancel_reason?: string;
+    meeting_link?: string;
 }
 
 export type MentorNotes = {
     note_id: string;
     mentorship: Mentorship;
-    user_id: User;
+    user: User;
     type: string;
     content: string;
     created_at: string;
@@ -25,8 +26,8 @@ export type MentorNotes = {
 
 export type MentorFeedback = {
     feedback_id: string;
-    mentorship_id: Mentorship;
-    user_id: User;
+    mentorship: Mentorship;
+    user: User;
     rating: number;
     comment: string;
     created_at: string;

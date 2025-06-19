@@ -1,3 +1,5 @@
+import type { User } from "./userTypes";
+
 export type Notification = {
     notification_id: string;
     type: string;
@@ -8,6 +10,7 @@ export type Notification = {
     created_at: Date;
     priority: string;
     actionUrl?: string;
+    user_id: User;
 }
 
 export type Unread = {
