@@ -28,6 +28,8 @@ import QuestionDetailPage from "./routes/question/id/QuestionDetailPage";
 import NewQuestionPage from "./routes/question/newquestion/NewQuestionPage";
 import ProblemDetailPage from "./routes/skillcheck/id/ProblemDetailPage";
 import MentorApplicationsPage from "./routes/mentor/applications/MentorApplicationsPage";
+import MentorSchedulePage from "./routes/mentor/schedule/MentorSchedulePage";
+import NewSchedulePage from "./routes/mentor/schedule/new/NewSchedulePage";
 
 function AppContent() {
   const location = useLocation();
@@ -48,6 +50,12 @@ function AppContent() {
         <Route path="/auth/signin" element={<SigninPage />} />
         <Route path="/auth/signup" element={<SignupPage />} />
         <Route path="/mentor" element={<MentorsPage />} />
+        <Route
+          path="/mentor/applications"
+          element={<MentorApplicationsPage />}
+        />
+        <Route path="/mentor/schedule" element={<MentorSchedulePage />} />
+        <Route path="/mentor/schedule/new" element={<NewSchedulePage />} />
         <Route path="/chats" element={<ChatsPage />} />
         <Route path="/chats/:id" element={<IndividualChatPage />} />
         <Route path="/group/:id" element={<GroupChatPage />} />
@@ -66,7 +74,6 @@ function AppContent() {
         <Route path="/skillcheck" element={<SkillCheckPage />} />
         <Route path="/skillcheck/:id" element={<ProblemDetailPage />} />
         <Route path="/chats" element={<ChatsPage />} />
-        <Route path="/mentor/applications" element={<MentorApplicationsPage />} />
       </Routes>
     </>
   );
