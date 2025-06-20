@@ -71,17 +71,18 @@ export const useCreateBoard = () => {
         title: string;
         content: string;
         status: string;
+        categories?: string[];
     }) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('http://localhost:5000/boards', {
+            const response = await fetch('http://localhost:5000/board', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`,
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify(newBoard),
+                body: JSON.stringify(newBoard)
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');

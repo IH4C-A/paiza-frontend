@@ -1,119 +1,291 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // ✅ 追加
-import ArticleCard from '../components/ArticleCard';
-import { useArticlesWithCategories } from '../../../hooks/useArticle';
-import type { Article } from '../../../types/articleType';
+// HomePage.jsx
+"use client";
 
-const ArticlesListPage: React.FC = () => {
-  const [search, setSearch] = useState('');
-  const [filterTag, setFilterTag] = useState('');
+import React, { useState, useMemo } from "react";
+// react-iconsから必要なアイコンをインポート
+import { FaHeart } from "react-icons/fa"; // FaMessageCircle は FaMessage に変更, FaPenTool は FaPencilAlt に変更 (Font Awesome 5/6)
+import ArticleCard from "../components/ArticleCard";
+import { useArticlesWithCategories } from "../../../hooks/useArticle";
+import type { Article } from "../../../types/articleType";
+import { useArticleCategories } from "../../../hooks";
+// CSSモジュールをインポート
+import styles from "./ArticleList.module.css";
+import { useNavigate } from "react-router-dom";
+
+// HomePageコンポーネント本体
+export default function HomePage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState("all"); // 'all', 'following', 'trending'
+  const [filterTag, setFilterTag] = useState(""); // タグフィルター用
   const [page, setPage] = useState(1);
   const articlesPerPage = 5;
+  const { articleCategories } = useArticleCategories();
 
+  console.log(articleCategories);
   const { articles } = useArticlesWithCategories();
-  const navigate = useNavigate(); // ✅ 追加
-
-  const uniqueTags = [...new Set(
-    articles.flatMap((article: Article) =>
-      article.categories.map((cat) => cat.category_name)
-    )
-  )];
+  const uniqueTags = [
+    ...new Set(
+      articles.flatMap((article: Article) =>
+        article.categories.map((cat) => cat.category_name)
+      )
+    ),
+  ];
 
   const filteredArticles = articles
-    .filter((article: Article) =>
-      article.title.toLowerCase().includes(search.toLowerCase()) ||
-      article.categories.some((tag) =>
-        tag.category_name.toLowerCase().includes(search.toLowerCase())
-      )
+
+    .filter(
+      (article: Article) =>
+        article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article.categories.some((tag) =>
+          tag.category_name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
     )
+
     .filter((article: Article) =>
       filterTag
         ? article.categories.some((tag) => tag.category_name === filterTag)
         : true
     );
 
-  const paginatedArticles = filteredArticles.slice(
+  const filteredAndSortedArticles = useMemo(() => {
+    let currentArticles = articles;
+
+    // 検索フィルター
+    if (searchQuery) {
+      currentArticles = currentArticles.filter(
+        (article) =>
+          article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          article.user?.username
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          article.user.username
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          article.categories.some((cat) =>
+            cat.category_name.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+      );
+    }
+
+    // タグフィルター
+    if (filterTag) {
+      currentArticles = currentArticles.filter((article) =>
+        article.categories.some((cat) => cat.category_name === filterTag)
+      );
+    }
+
+    // フィルターボタン（ここでは簡易的にトレンド順にソートする例）
+    if (filterType === "trending") {
+      return articles;
+    }
+    // "following" のロジックはユーザーデータやAPIが必要なので、ここでは実装をスキップします。
+
+    return currentArticles;
+  }, [searchQuery, filterTag, filterType]);
+
+  const paginatedArticles = filteredAndSortedArticles.slice(
     (page - 1) * articlesPerPage,
     page * articlesPerPage
   );
 
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/article/new");
+  };
+
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '24px' }}>
-      <h1>技術記事一覧</h1>
+    <div className={styles.container}>
+      <div className={styles.main}>
+        <div className={styles.content}>
+          {/* Main Content Area */}
+          <main className={styles.mainContentArea}>
+            <div className={styles.topSection}>
+              <h1 className={styles.pageTitle}>新着記事</h1>
+              <div className={styles.filterButtons}>
+                <button
+                  className={`${styles.filterButton} ${
+                    filterType === "all" ? styles.filterButtonActive : ""
+                  }`}
+                  onClick={() => setFilterType("all")}
+                >
+                  すべて
+                </button>
+                <button
+                  className={`${styles.filterButton} ${
+                    filterType === "following" ? styles.filterButtonActive : ""
+                  }`}
+                  onClick={() => setFilterType("following")}
+                >
+                  フォロー中
+                </button>
+                <button
+                  className={`${styles.filterButton} ${
+                    filterType === "trending" ? styles.filterButtonActive : ""
+                  }`}
+                  onClick={() => setFilterType("trending")}
+                >
+                  トレンド
+                </button>
 
-      {/* ✅ 投稿ページ遷移ボタン */}
-      <div style={{ marginBottom: '16px', textAlign: 'right' }}>
-        <button
-          onClick={() => navigate('/article/new')}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-          }}
-        >
-          ＋ 新しい技術記事を投稿
-        </button>
-      </div>
+                <button className={styles.writeButton} onClick={handleClick}>
+                  投稿
+                </button>
+              </div>
 
-      <input
-        type="text"
-        placeholder="記事検索..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={{ padding: '8px', width: '100%', marginBottom: '16px' }}
-      />
+              {/* 検索入力フィールド */}
+              <input
+                type="text"
+                placeholder="記事を検索..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={styles.searchInput}
+              />
 
-      <div style={{ marginBottom: '16px' }}>
-        <strong>タグフィルター:</strong>
-        {uniqueTags.map((tag, idx) => (
-          <button
-            key={idx}
-            onClick={() => setFilterTag(tag === filterTag ? '' : tag)}
-            style={{
-              marginLeft: '8px',
-              marginTop: '8px',
-              padding: '4px 8px',
-              background: tag === filterTag ? '#2c963f' : '#eee',
-              color: tag === filterTag ? '#fff' : '#333',
-              border: 'none',
-              borderRadius: '12px',
-              cursor: 'pointer',
-            }}
-          >
-            #{tag}
-          </button>
-        ))}
-      </div>
+              {/* タグフィルターボタン */}
+              <div className={styles.tagFilterSection}>
+                <strong className={styles.tagFilterLabel}>
+                  タグフィルター:
+                </strong>
+                <div className={styles.uniqueTagList}>
+                  {uniqueTags.map((tag, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setFilterTag(tag === filterTag ? "" : tag)}
+                      className={`${styles.filterTagButton} ${
+                        tag === filterTag ? styles.filterTagButtonActive : ""
+                      }`}
+                    >
+                      #{tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
 
-      {paginatedArticles.map((article) => (
-        <ArticleCard key={article.article_id} {...article} />
-      ))}
+            <div className={styles.articleList}>
+              {filteredArticles.map((article) => (
+                <ArticleCard key={article.article_id} {...article} />
+              ))}
+            </div>
 
-      <div style={{ marginTop: '16px' }}>
-        <button
-          onClick={() => setPage((p) => Math.max(p - 1, 1))}
-          disabled={page === 1}
-          style={{ marginRight: '8px' }}
-        >
-          前へ
-        </button>
-        <button
-          onClick={() =>
-            setPage((p) =>
-              p * articlesPerPage < filteredArticles.length ? p + 1 : p
-            )
-          }
-          disabled={page * articlesPerPage >= filteredArticles.length}
-        >
-          次へ
-        </button>
-        <span style={{ marginLeft: '16px' }}>ページ: {page}</span>
+            {/* Pagination */}
+            <div className={styles.pagination}>
+              <button
+                onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                disabled={page === 1}
+                className={`${styles.paginationButton} ${
+                  page === 1 ? styles.paginationButtonDisabled : ""
+                }`}
+              >
+                前へ
+              </button>
+
+              {Array.from(
+                {
+                  length: Math.ceil(
+                    filteredAndSortedArticles.length / articlesPerPage
+                  ),
+                },
+                (_, i) => i + 1
+              ).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`${styles.paginationButton} ${
+                    p === page ? styles.paginationButtonActive : ""
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+
+              <button
+                onClick={() =>
+                  setPage((p) =>
+                    p * articlesPerPage < filteredAndSortedArticles.length
+                      ? p + 1
+                      : p
+                  )
+                }
+                disabled={
+                  page * articlesPerPage >= filteredAndSortedArticles.length
+                }
+                className={`${styles.paginationButton} ${
+                  page * articlesPerPage >= filteredAndSortedArticles.length
+                    ? styles.paginationButtonDisabled
+                    : ""
+                }`}
+              >
+                次へ
+              </button>
+            </div>
+
+            {paginatedArticles.length === 0 && (
+              <div className={styles.noArticlesFound}>
+                <p>条件に一致する記事が見つかりませんでした。</p>
+                <p>検索条件やフィルターを変更してお試しください。</p>
+              </div>
+            )}
+          </main>
+
+          {/* Sidebar */}
+          <aside className={styles.sidebar}>
+            <div className={styles.sidebarCard}>
+              <div className={styles.sidebarHeader}>
+                <h3 className={styles.sidebarTitle}>人気のタグ</h3>
+              </div>
+              <div className={styles.sidebarContent}>
+                <div className={styles.popularTags}>
+                  {articleCategories?.map((tag) => (
+                    <span key={tag.category_id} className={styles.popularTag}>
+                      {tag.category_name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className={styles.sidebarCard}>
+              <div className={styles.sidebarHeader}>
+                <h3 className={styles.sidebarTitle}>トレンド記事</h3>
+              </div>
+              <div className={styles.sidebarContent}>
+                <div className={styles.trendList}>
+                  {[...articles]
+                    .sort((a, b) => b.like_count - a.like_count) // いいね数の降順でソート
+                    .slice(0, 3)
+                    .map((article, index) => (
+                      <div
+                        key={article.article_id}
+                        className={styles.trendItem}
+                      >
+                        <span className={styles.trendNumber}>{index + 1}</span>
+                        <div>
+                          <a
+                            href={`/articles/${article.article_id}`}
+                            className={styles.trendTitleLink}
+                          >
+                            <h4
+                              className={`${styles.trendTitle} ${styles.lineClamp2}`}
+                            >
+                              {article.title}
+                            </h4>
+                          </a>
+                          <div className={styles.trendStats}>
+                            <FaHeart className={styles.trendStatIcon} />
+                            <span className={styles.trendLikes}>
+                              {article.like_count}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );
-};
-
-export default ArticlesListPage;
+}

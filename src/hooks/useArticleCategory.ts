@@ -33,7 +33,7 @@ export const useArticleCategories = () => {
 
 // category_idを指定して記事カテゴリーを取得するカスタムフック
 export const useArticleCategoryByCategoryId = (categoryId: string) => {
-    const [articleCategories, setArticleCategories] = useState<ArticleCategory[]>([]);
+    const [articleCategories, setArticleCategories] = useState<ArticleCategoryAll[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 

@@ -1,121 +1,100 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-// lucide-reactの代わりにreact-icons/fa6からアイコンをインポート
-import {  FaStar, FaUsers, FaMessage } from "react-icons/fa6" // FaMessageはFa6にあります
+import { useState } from "react";
+// react-icons/fa6からアイコンをインポート
+import { FaStar, FaUsers, FaMessage } from "react-icons/fa6"; // FaMessageはFa6にあります
 
 // CSSモジュールをインポート
-import styles from "./MentorPage.module.css"
-import { FaSearch } from "react-icons/fa"
+import styles from "./MentorPage.module.css";
+import { FaSearch } from "react-icons/fa";
+import { useCategories, useMentorships } from "../../hooks";
+import type { Rank } from "../../types/rankType";
+import type { Mentorship } from "../../types/mentorshipType";
+import type { User } from "../../types/userTypes";
+import type { Category } from "../../types/categoryType";
 
-const mentors = [
-  {
-    id: 1,
-    name: "田中 太郎",
-    avatar: "/placeholder.svg?height=80&width=80",
-    rank: "S",
-    introduction:
-      "10年以上のWebエンジニア経験を持ち、React/Next.jsを中心としたフロントエンド開発が得意です。初心者から上級者まで丁寧に指導します。",
-    categories: ["React", "JavaScript", "TypeScript", "Next.js"],
-    rating: 4.9,
-    reviewCount: 156,
-    menteeCount: 23,
-    responseTime: "平均2時間以内",
-    status: "available",
-  },
-  {
-    id: 2,
-    name: "佐藤 花子",
-    avatar: "/placeholder.svg?height=80&width=80",
-    rank: "A",
-    introduction:
-      "UI/UXデザイナーとして5年の経験があります。デザインシステムの構築やユーザビリティ向上のお手伝いをします。",
-    categories: ["UI/UX", "Figma", "デザインシステム", "ユーザビリティ"],
-    rating: 4.8,
-    reviewCount: 89,
-    menteeCount: 15,
-    responseTime: "平均4時間以内",
-    status: "available",
-  },
-  {
-    id: 3,
-    name: "鈴木 一郎",
-    avatar: "/placeholder.svg?height=80&width=80",
-    rank: "S",
-    introduction: "機械学習エンジニアとして8年の経験。Python、TensorFlow、PyTorchを使ったAI開発を専門としています。",
-    categories: ["Python", "機械学習", "AI", "データサイエンス"],
-    rating: 4.7,
-    reviewCount: 203,
-    menteeCount: 31,
-    responseTime: "平均3時間以内",
-    status: "busy",
-  },
-  {
-    id: 4,
-    name: "高橋 美咲",
-    avatar: "/placeholder.svg?height=80&width=80",
-    rank: "A",
-    introduction: "バックエンドエンジニアとして6年の経験。Node.js、Go、AWSを使ったサーバーサイド開発が得意です。",
-    categories: ["Node.js", "Go", "AWS", "データベース"],
-    rating: 4.6,
-    reviewCount: 124,
-    menteeCount: 18,
-    responseTime: "平均5時間以内",
-    status: "available",
-  },
-]
+// ★新しいタブの種類を定義
+type MentorListTab = "myMentors" | "recommended";
 
-const categories = [
-  "すべて",
-  "React",
-  "JavaScript",
-  "TypeScript",
-  "Python",
-  "Go",
-  "Node.js",
-  "UI/UX",
-  "機械学習",
-  "AWS",
-  "データベース",
-  "Next.js",
-  "Figma",
-]
+function getMentorUser(obj: Mentorship | User): User {
+  return "mentor" in obj ? obj.mentor : obj;
+}
 
 export default function MentorListPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("すべて")
-  const [selectedRank, setSelectedRank] = useState("すべて")
-  const [sortBy, setSortBy] = useState("rating")
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("すべて");
+  const [selectedRank, setSelectedRank] = useState("すべて");
+  const [sortBy, setSortBy] = useState("rating");
+  // ★新しいステート: アクティブなタブを管理
+  const [activeTab, setActiveTab] = useState<MentorListTab>("recommended"); // デフォルトは「おすすめメンター」
 
-  const filteredMentors = mentors.filter((mentor) => {
+  const { categories } = useCategories();
+  // useMentorships から両方のリストを取得
+  const { mentorships, candidateMentors } = useMentorships();
+
+  console.log("My Mentorships:", mentorships); // 自分のメンター（契約中など）
+  console.log("Candidate Mentors:", candidateMentors); // おすすめメンター候補
+
+  // ★表示するメンターリストを activeTab に応じて切り替える
+  const currentMentorList =
+    activeTab === "myMentors" ? mentorships : candidateMentors;
+
+  const filteredMentors = currentMentorList.filter((mentor) => {
+    // 型ガード: Mentorshipかどうかを判定
+    const mentorObj = "mentor" in mentor ? mentor.mentor : mentor;
+
+    const mentorName = mentorObj.first_name?.toLowerCase() || "";
+    const mentorCategories = mentorObj.categories || [];
+    const mentorRanks = mentorObj.ranks || [];
+
     const matchesSearch =
-      mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      mentor.introduction.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      mentor.categories.some((cat) => cat.toLowerCase().includes(searchQuery.toLowerCase()))
+      mentorName.includes(searchQuery.toLowerCase()) ||
+      mentorCategories.some((cat) => {
+        const categoryName = typeof cat === "string" ? cat : cat.category_name;
+        return categoryName?.toLowerCase().includes(searchQuery.toLowerCase());
+      });
 
-    const matchesCategory = selectedCategory === "すべて" || mentor.categories.includes(selectedCategory)
+    const matchesCategory =
+      selectedCategory === "すべて" ||
+      mentorCategories.some((cat) => {
+        const categoryName = typeof cat === "string" ? cat : cat.category_name;
+        return categoryName === selectedCategory;
+      });
 
-    const matchesRank = selectedRank === "すべて" || mentor.rank === selectedRank
+    const matchesRank =
+      selectedRank === "すべて" ||
+      mentorRanks.some((r: Rank) => r.rank_name === selectedRank);
 
-    return matchesSearch && matchesCategory && matchesRank
-  })
+    return matchesSearch && matchesCategory && matchesRank;
+  });
 
   const sortedMentors = [...filteredMentors].sort((a, b) => {
-    switch (sortBy) {
-      case "rating":
-        return b.rating - a.rating
-      case "reviews":
-        return b.reviewCount - a.reviewCount
-      case "mentees":
-        return b.menteeCount - a.menteeCount
-      default:
-        return 0
+    // Mentorship 型かどうかを判定し、User オブジェクトを取得
+    const aUser = "mentor" in a ? a.mentor : a;
+    const bUser = "mentor" in b ? b.mentor : b;
+
+    const aRankId = Number(aUser.ranks?.[0]?.rank_id ?? 0);
+    const bRankId = Number(bUser.ranks?.[0]?.rank_id ?? 0);
+
+    if (sortBy === "rating") {
+      return bRankId - aRankId;
     }
-  })
+
+    if (sortBy === "reviews") {
+      // 仮：レビュー数が未実装のためスキップ
+      return 0;
+    }
+
+    if (sortBy === "mentees") {
+      // 仮：メンティー数が未実装のためスキップ
+      return 0;
+    }
+
+    return 0;
+  });
 
   return (
     <div className={styles.container}>
-
       <main className={styles.main}>
         <div className={styles.pageContainer}>
           <div className={styles.pageHeader}>
@@ -125,12 +104,35 @@ export default function MentorListPage() {
             </p>
           </div>
 
+          {/* ★新しいタブセクションの追加★ */}
+          <div className={styles.mentorTabsSection}>
+            <div className={styles.mentorTabsList}>
+              <button
+                className={`${styles.mentorTabTrigger} ${
+                  activeTab === "recommended"
+                    ? styles.mentorTabTriggerActive
+                    : ""
+                }`}
+                onClick={() => setActiveTab("recommended")}
+              >
+                おすすめ一覧
+              </button>
+              <button
+                className={`${styles.mentorTabTrigger} ${
+                  activeTab === "myMentors" ? styles.mentorTabTriggerActive : ""
+                }`}
+                onClick={() => setActiveTab("myMentors")}
+              >
+                メンター一覧
+              </button>
+            </div>
+          </div>
+
           {/* 検索・フィルター */}
           <div className={styles.searchFilterSection}>
             <div className={styles.searchFilterControls}>
               <div className={styles.searchInputWrapper}>
-                <FaSearch className={styles.searchIcon} /> {/* SearchアイコンをFaSearchに変更 */}
-                {/* Inputコンポーネントの代わりにinputタグを使用 */}
+                <FaSearch className={styles.searchIcon} />{" "}
                 <input
                   type="text"
                   placeholder="メンター名、スキル、キーワードで検索..."
@@ -140,22 +142,36 @@ export default function MentorListPage() {
                 />
               </div>
               <div className={styles.filterDropdowns}>
-                {/* Selectコンポーネントの代わりにselectタグを使用 */}
-                <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className={styles.selectCategory}>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className={styles.selectCategory}
+                >
+                  {/* "すべて" オプションを追加 */}
+                  <option value="すべて">すべて</option>
                   {categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
+                    <option
+                      key={category.category_id}
+                      value={category.category_name}
+                    >
+                      {category.category_name}
                     </option>
                   ))}
                 </select>
-                {/* Selectコンポーネントの代わりにselectタグを使用 */}
-                <select value={selectedRank} onChange={(e) => setSelectedRank(e.target.value)} className={styles.selectRank}>
+                <select
+                  value={selectedRank}
+                  onChange={(e) => setSelectedRank(e.target.value)}
+                  className={styles.selectRank}
+                >
                   <option value="すべて">すべて</option>
                   <option value="S">Sランク</option>
                   <option value="A">Aランク</option>
                 </select>
-                {/* Selectコンポーネントの代わりにselectタグを使用 */}
-                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={styles.selectSortBy}>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className={styles.selectSortBy}
+                >
                   <option value="rating">評価順</option>
                   <option value="reviews">レビュー数順</option>
                   <option value="mentees">指導人数順</option>
@@ -166,113 +182,156 @@ export default function MentorListPage() {
 
           {/* 検索結果 */}
           <div className={styles.resultsSummary}>
-            <p className={styles.resultsCount}>{sortedMentors.length}件のメンターが見つかりました</p>
+            <p className={styles.resultsCount}>
+              {filteredMentors.length}件のメンターが見つかりました
+            </p>
           </div>
 
           {/* メンターカード一覧 */}
           <div className={styles.mentorCardsGrid}>
-            {sortedMentors.map((mentor) => (
-              // Cardコンポーネントの代わりにdivタグを使用
-              <div key={mentor.id} className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <div className={styles.mentorHeader}>
-                    <div className={styles.avatarWrapper}>
-                      {/* Avatarコンポーネントの代わりにimgタグとdivタグを使用 */}
-                      <div className={styles.avatar}>
-                        <img src={mentor.avatar || "/placeholder.svg"} alt={mentor.name} className={styles.avatarImage} />
-                        {!mentor.avatar && <div className={styles.avatarFallback}>{mentor.name.slice(0, 2)}</div>}
-                      </div>
-                      <div className={styles.badgeAbsolute}>
-                        {/* Badgeコンポーネントの代わりにspanタグを使用 */}
-                        <span
-                          className={`${styles.badgeBase} ${mentor.rank === "S" ? styles.badgeDestructive : styles.badgeSecondary} ${styles.rankBadge}`}
-                        >
-                          {mentor.rank}
-                        </span>
-                      </div>
-                    </div>
-                    <div className={styles.mentorMeta}>
-                      {/* CardTitleの代わりにh3タグを使用 */}
-                      <h3 className={styles.mentorName}>{mentor.name}</h3>
-                      <div className={styles.mentorStats}>
-                        <div className={styles.rating}>
-                          <FaStar className={styles.starIcon} /> {/* StarアイコンをFaStarに変更 */}
-                          <span className={styles.ratingText}>{mentor.rating}</span>
+            {filteredMentors.map((mentorRaw) => {
+              const mentor = getMentorUser(mentorRaw);
+
+              return (
+                <div key={mentor.user_id} className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <div className={styles.mentorHeader}>
+                      <div className={styles.avatarWrapper}>
+                        <div className={styles.avatar}>
+                          <img
+                            src={mentor.profile_image || "/placeholder.svg"}
+                            alt={mentor.first_name}
+                            className={styles.avatarImage}
+                          />
+                          {!mentor.profile_image && (
+                            <div className={styles.avatarFallback}>
+                              {mentor.first_name.slice(0, 2)}
+                            </div>
+                          )}
                         </div>
-                        <span className={styles.reviewCount}>({mentor.reviewCount}件)</span>
-                        <div
-                          className={`${styles.statusDot} ${
-                            mentor.status === "available" ? styles.statusDotAvailable : styles.statusDotBusy
-                          }`}
-                        />
+                        <div className={styles.badgeAbsolute}>
+                          {mentor.ranks && mentor.ranks.length > 0 && (
+                            <span
+                              className={`${styles.badgeBase} ${
+                                mentor.ranks[0].rank_name === "S"
+                                  ? styles.badgeDestructive
+                                  : styles.badgeSecondary
+                              } ${styles.rankBadge}`}
+                            >
+                              {mentor.ranks[0].rank_name}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className={styles.mentorMeta}>
+                        <h3 className={styles.mentorName}>
+                          {mentor.first_name}
+                        </h3>
+                        <div className={styles.mentorStats}>
+                          <div className={styles.rating}>
+                            <FaStar className={styles.starIcon} />
+                            <span className={styles.ratingText}>4.5</span>
+                          </div>
+                          <div
+                            className={`${styles.statusDot} ${
+                              mentor.employment_status === "available"
+                                ? styles.statusDotAvailable
+                                : styles.statusDotBusy
+                            }`}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className={styles.cardContent}>
-                  <p className={styles.introductionText}>{mentor.introduction}</p>
+                  <div className={styles.cardContent}>
+                    <div>
+                      <h4 className={styles.subHeading}>得意分野</h4>
+                      <div className={styles.categoryBadges}>
+                        {mentor.categories.slice(0, 4).map((category: Category) => (
+                          <span
+                            key={
+                              typeof category === "string"
+                                ? category
+                                : category.category_id
+                            }
+                            className={`${styles.badgeBase} ${styles.badgeOutline} ${styles.badgeXs}`}
+                          >
+                            {typeof category === "string"
+                              ? category
+                              : category.category_name}
+                          </span>
+                        ))}
+                        {mentor.categories.length > 4 && (
+                          <span
+                            className={`${styles.badgeBase} ${styles.badgeOutline} ${styles.badgeXs}`}
+                          >
+                            +{mentor.categories.length - 4}
+                          </span>
+                        )}
+                      </div>
+                    </div>
 
-                  <div>
-                    <h4 className={styles.subHeading}>得意分野</h4>
-                    <div className={styles.categoryBadges}>
-                      {mentor.categories.slice(0, 4).map((category) => (
-                        // Badgeコンポーネントの代わりにspanタグを使用
-                        <span key={category} className={`${styles.badgeBase} ${styles.badgeOutline} ${styles.badgeXs}`}>
-                          {category}
+                    <div className={styles.separator} />
+
+                    <div className={styles.mentorDetails}>
+                      <div className={styles.detailItem}>
+                        <FaUsers className={styles.detailIcon} />
+                        <span className={styles.detailLabel}>指導中:</span>
+                        <span className={styles.detailValue}>5人</span>
+                      </div>
+                      <div className={styles.detailItem}>
+                        <FaMessage className={styles.detailIcon} />
+                        <span className={styles.detailLabel}>返信:</span>
+                        <span
+                          className={`${styles.detailValue} ${styles.responseTimeText}`}
+                        >
+                          平均1時間以内
                         </span>
-                      ))}
-                      {mentor.categories.length > 4 && (
-                        <span className={`${styles.badgeBase} ${styles.badgeOutline} ${styles.badgeXs}`}>
-                          +{mentor.categories.length - 4}
-                        </span>
-                      )}
+                      </div>
                     </div>
                   </div>
-
-                  {/* Separatorコンポーネントの代わりにdivタグを使用 */}
-                  <div className={styles.separator} />
-
-                  <div className={styles.mentorDetails}>
-                    <div className={styles.detailItem}>
-                      <FaUsers className={styles.detailIcon} /> {/* UsersアイコンをFaUsersに変更 */}
-                      <span className={styles.detailLabel}>指導中:</span>
-                      <span className={styles.detailValue}>{mentor.menteeCount}人</span>
-                    </div>
-                    <div className={styles.detailItem}>
-                      <FaMessage className={styles.detailIcon} /> {/* MessageCircleアイコンをFaMessageに変更 */}
-                      <span className={styles.detailLabel}>返信:</span>
-                      <span className={`${styles.detailValue} ${styles.responseTimeText}`}>{mentor.responseTime}</span>
+                  <div className={styles.cardFooter}>
+                    <div className={styles.buttonGroup}>
+                      <a
+                        href={`/profile/${mentor.user_id}`}
+                        className={`${styles.buttonBase} ${styles.buttonOutline} ${styles.buttonSm} ${styles.buttonFlex1}`}
+                      >
+                        プロフィール
+                      </a>
+                      <a
+                        href={`/mentor/apply/${mentor.user_id}`}
+                        className={`${styles.buttonBase} ${
+                          styles.buttonPrimary
+                        } ${styles.buttonSm} ${styles.buttonFlex1} ${
+                          mentor.employment_status === "busy"
+                            ? styles.buttonDisabled
+                            : ""
+                        }`}
+                        aria-disabled={mentor.employment_status === "busy"}
+                      >
+                        {mentor.employment_status === "busy"
+                          ? "受付停止中"
+                          : "申請する"}
+                      </a>
                     </div>
                   </div>
                 </div>
-                <div className={styles.cardFooter}>
-                  <div className={styles.buttonGroup}>
-                    {/* Buttonコンポーネントの代わりにbuttonタグを使用 */}
-                    <a href={`/profile/${mentor.id}`} className={`${styles.buttonBase} ${styles.buttonOutline} ${styles.buttonSm} ${styles.buttonFlex1}`}>
-                      プロフィール
-                    </a>
-                    {/* Buttonコンポーネントの代わりにLinkタグを使用 */}
-                    <a
-                      href={`/mentors/apply/${mentor.id}`}
-                      className={`${styles.buttonBase} ${styles.buttonPrimary} ${styles.buttonSm} ${styles.buttonFlex1} ${mentor.status === "busy" ? styles.buttonDisabled : ""}`}
-                      aria-disabled={mentor.status === "busy"} // アクセシビリティのために追加
-                    >
-                      {mentor.status === "busy" ? "受付停止中" : "申請する"}
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {sortedMentors.length === 0 && (
             <div className={styles.noMentorsFound}>
-              <p className={styles.noMentorsText}>条件に一致するメンターが見つかりませんでした。</p>
-              <p className={styles.noMentorsText}>検索条件を変更してお試しください。</p>
+              <p className={styles.noMentorsText}>
+                条件に一致するメンターが見つかりませんでした。
+              </p>
+              <p className={styles.noMentorsText}>
+                検索条件を変更してお試しください。
+              </p>
             </div>
           )}
         </div>
       </main>
     </div>
-  )
+  );
 }

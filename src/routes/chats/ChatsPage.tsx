@@ -10,6 +10,7 @@ import { useMyGroupChats } from "../../hooks/useGroupChat";
 import type { ChatUsers } from "../../types/chatsType";
 import type { User } from "../../types/userTypes";
 import { useCreateGroupChat } from "../../hooks/useGroupChat";
+import { useMentorships } from "../../hooks";
 
 export default function ChatsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,6 +19,7 @@ export default function ChatsPage() {
   const { chatHistory } = useChatHistory();
   const { myGroupChats } = useMyGroupChats();
   const { createGroupChat } = useCreateGroupChat();
+  const { candidateMentors } = useMentorships();
 
 
 
@@ -168,7 +170,7 @@ export default function ChatsPage() {
                             <div className={styles.chatMeta}>
                               <div className={styles.memberCount}>
                                 <HiOutlineUserGroup className={styles.memberCountIcon} />
-                                <span className={styles.memberCountText}>{chat.memberCount}</span>
+                                <span className={styles.memberCountText}>{chat.member_count}</span>
                               </div>
                               <span className={styles.timestamp}>{chat.created_at instanceof Date ? chat.created_at.toLocaleString() : chat.created_at}</span>
                               {chat.unread_count > 0 && (
@@ -233,7 +235,7 @@ export default function ChatsPage() {
                 </div>
                 <p className={styles.modalDescription}>相談したいメンターを選択してください。</p>
                 <div className={styles.mentorSelectionList}>
-                  {users.map(mentor => (
+                  {candidateMentors.map(mentor => (
                     <a href={`/chats/${mentor.user_id}`} key={mentor.user_id} className={styles.mentorSelectionItem} onClick={closeModal}>
                       <div className={styles.avatarWrapper}>
                         <div className={styles.avatarMini}>

@@ -53,7 +53,7 @@ export const useRegisterUserCategory = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ categoryids })
+                body: JSON.stringify({categoryids})
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');

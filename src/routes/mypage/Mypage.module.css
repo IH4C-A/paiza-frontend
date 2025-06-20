@@ -1,0 +1,451 @@
+/* Home.module.css */
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+}
+
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .mainContent {
+    grid-template-columns: 1fr 300px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mainContent {
+    grid-template-columns: 1fr 350px;
+  }
+}
+
+.leftColumn {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.dashboardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: -0.025em;
+}
+
+.rank {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rankText {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.rankBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #eab308;
+  color: white;
+  font-weight: bold;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tabsList {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem;
+}
+
+.tabsTrigger {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #6b7280;
+}
+
+.tabsTrigger:hover {
+  background-color: #e5e7eb;
+}
+
+.tabsTrigger.active {
+  background-color: white;
+  color: #1f2937;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tabsContent {
+  margin-top: 1rem;
+}
+
+.card {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.cardHeader {
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.cardDescription {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.cardFooter {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.cardGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.problemList {
+  display: grid;
+  gap: 1rem;
+}
+
+.problemItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.problemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.problemIcon .icon {
+  color: #3b82f6;
+}
+
+.problemContent {
+  flex: 1;
+}
+
+.problemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.problemTitle {
+  font-weight: 500;
+  margin: 0;
+}
+
+.difficultyB {
+  font-size: 0.875rem;
+  color: #eab308;
+  font-weight: 500;
+}
+
+.problemDescription {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.progressList {
+  display: grid;
+  gap: 1rem;
+}
+
+.progressItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progressHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progressLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.progressValue {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.progressBar {
+  width: 100%;
+  height: 0.5rem;
+  background-color: #e5e7eb;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #93b636;
+  border-radius: 0.25rem;
+  transition: width 0.3s ease;
+}
+
+.primaryButton {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: #93b636;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.primaryButton:hover {
+  opacity: 0.7;
+}
+
+.outlineButton {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  color: #93b636;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.outlineButton:hover {
+  background-color: #f3f4f6;
+}
+
+.rightColumn {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.petContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1rem;
+}
+
+.petVisual {
+  position: relative;
+  margin-bottom: 1rem;
+  height: 10rem; 
+  width: 10rem;  
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+}
+
+.petBase {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 4rem;
+  height: 4rem;
+  background-color: rgba(59, 130, 246, 0.1);
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.petBody {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  width: 6rem;
+  height: 8rem;
+  background-color: #22c55e;
+  border-radius: 3rem 3rem 0 0;
+  transform: translateX(-50%);
+}
+
+.petHead {
+  position: absolute;
+  bottom: 8rem;
+  left: 50%;
+  width: 4rem;
+  height: 2rem;
+  background-color: #16a34a;
+  border-radius: 2rem 2rem 0 0;
+  transform: translateX(-50%);
+}
+
+.petName {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0 0 0.25rem;
+}
+
+.petLevel {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0 0 1rem;
+}
+
+.petProgress {
+  height: 0.5rem;
+}
+
+.petMessage {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+.petMessage p {
+  margin: 0;
+}
+
+.mentorList {
+  display: grid;
+  gap: 1rem;
+}
+
+.mentorItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mentorAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+
+.mentorBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+}
+
+.rankS {
+  background-color: #dc2626;
+}
+
+.rankA {
+  background-color: #ea580c;
+}
+
+.mentorInfo {
+  flex: 1;
+}
+
+.mentorName {
+  font-weight: 500;
+  margin: 0 0 0.25rem;
+}
+
+.mentorSpecialtyList {
+  display: flex;
+  flex-wrap: wrap; /* 折り返しも可能に */
+  gap: 0.5rem; /* 要素間のスペース */
+}
+
+.mentorSpecialty {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem;
+}
+
+/* Plant Preview */
+.plantPreviewContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-p-8);
+}
+
+.plantPreviewOuter {
+  position: relative;
+  margin-bottom: var(--spacing-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px; /* rounded-full */
+}
+
+.plantPreviewInner {
+  border-radius: 9999px; /* rounded-full */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem; /* text-4xl */
+  color: var(--background); /* Icon color inside colored circle */
+}

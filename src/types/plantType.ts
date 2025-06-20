@@ -1,3 +1,17 @@
+export type logs_data = {
+  log_id: string;
+  log_message: string;
+  created_at: string;
+}
+
+export type MileStone = {
+  milestone_id: string;
+  milestone: number;
+  level: number;
+  achieved_at: string;
+  logs: logs_data[];
+}
+
 export type Plant = {
     plant_id: string;
     user_id: string;
@@ -8,6 +22,7 @@ export type Plant = {
     size: number;
     motivation_style: string;
     last_updated: Date;
+    growth_milestones: MileStone;
 }
 
 export const plantTypes = [

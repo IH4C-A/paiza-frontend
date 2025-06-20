@@ -1,0 +1,210 @@
+/* レイアウト全体 */
+.wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+}
+
+.mainContainer {
+  padding: 1.5rem 0;
+  width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pageHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .pageHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: -0.025em;
+}
+
+.pageSubtitle {
+  color: #6b7280;
+}
+
+.searchFilterWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 85%;
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.searchBox {
+  position: relative;
+  width: 100%;
+  max-width: 16rem;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.625rem;
+  top: 0.625rem;
+  width: 1rem;
+  height: 1rem;
+  color: #6b7280;
+}
+
+.searchInput {
+  padding-left: 2rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  width: 100%;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+  border-color: #3b82f6;
+}
+
+.cardGrid {
+  margin-top: 1.5rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 0.5rem;
+  justify-content: center;
+  width: 1200px;
+  max-width: 85%;
+}
+
+@media (min-width: 768px) {
+  .cardGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .cardGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.card {
+  width: 100%;
+  /* padding: 1rem; */
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.cardHeader {
+  padding: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  width: 100%;
+}
+
+.cardTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.cardBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.cardDescription {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.cardContent {
+  padding: 1rem;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.cardText {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.cardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.cardTag {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+}
+
+.cardFooter {
+  padding: 1rem;
+  border-top: 1px solid #f3f4f6;
+  width: 100%;
+}
+
+.cardButton {
+  width: 100%;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cardButton:hover {
+  background-color: #93b636;
+}

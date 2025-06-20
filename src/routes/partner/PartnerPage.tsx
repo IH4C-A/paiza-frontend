@@ -21,15 +21,6 @@ interface CalendarEventItem {
   time: string;
 }
 
-interface GrowthMilestoneItem {
-  id: string;
-  level: number;
-  time: string;
-  iconHeight: string;
-  iconWidth: string;
-  leafHeight?: string;
-  leafWidth?: string;
-}
 
 // --- カスタムコンポーネント (Shadcn UIのProgress代替) ---
 const CustomProgressBar: React.FC<{ value: number; barClassName?: string }> = ({
@@ -81,47 +72,6 @@ export default function PartnerPage() {
     { id: "ev1", title: "Reactコンポーネント設計", time: "今日 15:00" },
     { id: "ev2", title: "二分探索木の実装", time: "明日 10:00" },
     { id: "ev3", title: "情報処理試験対策", time: "水曜日 13:00" },
-  ];
-  const growthMilestonesData: GrowthMilestoneItem[] = [
-    {
-      id: "gm1",
-      level: 1,
-      time: "2週間前",
-      iconHeight: "1.5rem",
-      iconWidth: "1.5rem",
-    },
-    {
-      id: "gm2",
-      level: 2,
-      time: "10日前",
-      iconHeight: "1.75rem",
-      iconWidth: "1.75rem",
-    },
-    {
-      id: "gm3",
-      level: 3,
-      time: "1週間前",
-      iconHeight: "2rem",
-      iconWidth: "2rem",
-    },
-    {
-      id: "gm4",
-      level: 4,
-      time: "3日前",
-      iconHeight: "2rem",
-      iconWidth: "2rem",
-      leafHeight: "0.5rem",
-      leafWidth: "1rem",
-    },
-    {
-      id: "gm5",
-      level: 5,
-      time: "昨日",
-      iconHeight: "2rem",
-      iconWidth: "2rem",
-      leafHeight: "0.75rem",
-      leafWidth: "1.25rem",
-    },
   ];
 
   useEffect(() => {
@@ -232,14 +182,14 @@ export default function PartnerPage() {
                     {getPlantPreview()}
                   </div>
                   <h3 className={styles.partnerName}>{plant?.plant_name}</h3>
-                  <p className={styles.partnerLevel}>レベル:</p>
+                  <p className={styles.partnerLevel}>レベル:{plant?.growth_milestones.level}</p>
                   <div className={styles.statRowContainer}>
                     <div className={styles.statRowInner}>
                       <div className={styles.statLabelContainer}>
                         <span className={styles.statLabel}>成長度</span>
-                        <span className={styles.statValue}>100%</span>
+                        <span className={styles.statValue}>{plant?.growth_milestones.milestone}%</span>
                       </div>
-                      <CustomProgressBar value={100} />
+                      <CustomProgressBar value={plant?.growth_milestones?.milestone ?? 0} />
                     </div>
                   </div>
                   <div
@@ -426,38 +376,23 @@ export default function PartnerPage() {
                     </div>
                     <div className={styles.cardContent}>
                       <div className={styles.calendarList}>
-                        {growthMilestonesData.map((milestone) => (
+                        {plant?.growth_milestones.logs.map((milestone) => (
                           <div
-                            key={milestone.id}
+                            key={milestone.log_id}
                             className={styles.calendarItem}
                           >
                             <div className={styles.growthRecordIconContainer}>
                               <div
                                 className={styles.growthPlantIcon}
-                                style={{
-                                  height: milestone.iconHeight,
-                                  width: milestone.iconWidth,
-                                }}
                               >
-                                {milestone.leafHeight &&
-                                  milestone.leafWidth && (
-                                    <div
-                                      className={styles.growthPlantIconLeaf}
-                                      style={{
-                                        height: milestone.leafHeight,
-                                        width: milestone.leafWidth,
-                                        marginTop: "0.2rem",
-                                      }}
-                                    ></div>
-                                  )}
                               </div>
                             </div>
                             <div>
                               <h3
                                 className={styles.calendarItemTextH3}
-                              >{`レベル${milestone.level}達成`}</h3>
+                              >{milestone.log_message}</h3>
                               <p className={styles.calendarItemTextP}>
-                                {milestone.time}
+                                {milestone.created_at}
                               </p>
                             </div>
                           </div>

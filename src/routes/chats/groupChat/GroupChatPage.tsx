@@ -19,8 +19,6 @@ export default function GroupChatPage() {
   const member = members || [];
   const { currentUser } = useCurrentUser();
 
-  console.log(groupchat);
-  console.log(member);
   const currentGroup = useMemo(() => {
     const groupData = myGroupChats.find((group) => group.group_id === id);
     return groupData;
@@ -106,7 +104,7 @@ export default function GroupChatPage() {
                 </div>
                 <div>
                   <h1 className={styles.groupNameHeader}>{currentGroup?.group_name ?? "グループ名未設定"}</h1>
-                  <p className={styles.groupMemberCountHeader}>{currentGroup?.memberCount ?? 0}人のメンバー</p>
+                  <p className={styles.groupMemberCountHeader}>{currentGroup?.member_count ?? 0}人のメンバー</p>
                 </div>
               </div>
             </div>
@@ -216,7 +214,7 @@ export default function GroupChatPage() {
                 </div>
                 <div className={styles.detailRow}>
                   <span className={styles.detailLabel}>メンバー数</span>
-                  <span className={styles.detailTextMuted}>{currentGroup?.memberCount}人</span>
+                  <span className={styles.detailTextMuted}>{currentGroup?.member_count}人</span>
                 </div>
               </div>
             </div>

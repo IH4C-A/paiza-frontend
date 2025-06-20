@@ -16,5 +16,11 @@ export type ArticleLikesAll = {
 
 export type ArticleLikesCount = {
     article_id: string;
-    likes_count: number;
+    like_count: number;
+    like: string;
 }
+
+export type ArticleLikeStatus = {
+  article_id: string;
+  liked: boolean;
+};
