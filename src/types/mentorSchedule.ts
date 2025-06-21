@@ -1,9 +1,11 @@
+import type { GroupChats } from "./groupChatType";
 import type { Mentorship } from "./mentorshipType";
 import type { User } from "./userTypes";
 
 export type MentorSchedule = {
     schedule_id: string;
     mentorship_id: Mentorship;
+    group: GroupChats;
     start_time: string;
     end_time: string;
     status: string;
@@ -13,6 +15,8 @@ export type MentorSchedule = {
     updated_at: string;
     cancel_reason?: string;
     meeting_link?: string;
+    notes: MentorNotes;
+    feedback: MentorFeedback;
 }
 
 export type MentorNotes = {

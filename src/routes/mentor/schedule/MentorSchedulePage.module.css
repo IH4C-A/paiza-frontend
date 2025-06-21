@@ -1,421 +1,697 @@
 /* Global Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* Variables */
-  :root {
-    --primary-color: #93b636; 
-    --primary-hover-color: #b0d93e;
-    --primary-foreground-color: #ffffff; 
-    --card-background-color: #fff; 
-    --border-color: #e2e8f0; 
-    --text-color: #1a202c; 
-    --muted-color: #718096; 
-    --muted-background-color: #f1f5f9;
-    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-    --input-border-color: #cbd5e0; 
-    --blue-50: #eff6ff;
-    --blue-200: #bfdbfe;
-    --blue-700: #1d4ed8;
-    --green-50: #f0fdf4;
-    --green-200: #bbf7d0;
-    --green-700: #15803d;
-    --red-50: #fef2f2;
-    --red-200: #fecaca;
-    --red-600: #dc2626;
-    --red-700: #b91c1c;
-    --secondary-color: #e2e8f0;
-  }
-  
-  /* Page Layout */
-  .pageContainer {
-    font-family: var(--font-family);
-    color: var(--text-color);
-    background-color: #f8fafc;
-  }
-  .mainContent { flex: 1; }
-  .container {
-    max-width: 1200px; 
-    margin-left: auto;
-    margin-right: auto;
-    padding: 1.5rem 1rem; 
-  }
-  
-  /* Top Section: Title & Actions */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Variables */
+:root {
+  --primary-color: #93b636;
+  --primary-hover-color: #b0d93e;
+  --primary-foreground-color: #ffffff;
+  --card-background-color: #fff;
+  --border-color: #e2e8f0;
+  --text-color: #1a202c;
+  --muted-color: #718096;
+  --muted-background-color: #f1f5f9;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --input-border-color: #cbd5e0;
+  --blue-50: #eff6ff;
+  --blue-200: #bfdbfe;
+  --blue-700: #1d4ed8;
+  --green-50: #f0fdf4;
+  --green-200: #bbf7d0;
+  --green-700: #15803d;
+  --red-50: #fef2f2;
+  --red-200: #fecaca;
+  --red-600: #dc2626;
+  --red-700: #b91c1c;
+  --secondary-color: #e2e8f0;
+}
+
+/* Page Layout */
+.pageContainer {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: #f8fafc;
+}
+.mainContent {
+  flex: 1;
+}
+.container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem 1rem;
+}
+
+/* Top Section: Title & Actions */
+.topSection {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
   .topSection {
-    margin-bottom: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  @media (min-width: 768px) {
-    .topSection {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-    }
-  }
-  .titleTextH1 {
-    font-size: 1.875rem;
-    font-weight: bold;
-    letter-spacing: -0.025em;
-  }
-  .titleTextP {
-    margin-top: 0.5rem;
-    color: var(--muted-color);
-  }
-  .actionsContainer {
-    display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between;
   }
-  .primaryButton {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background-color: var(--primary-color);
-    color: var(--primary-foreground-color);
-    border: none;
-    border-radius: 0.375rem;
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  .primaryButton:hover {
-    background-color: var(--primary-hover-color);
-  }
-  .primaryButton img { height: 1rem; width: 1rem; }
-  .viewToggleContainer {
-    border: 1px solid var(--border-color);
-    border-radius: 0.375rem;
-    padding: 0.25rem;
-    display: flex;
-  }
-  .viewToggleButton {
-    height: 2rem;
-    width: 2rem;
-    padding: 0;
-    border: none;
-    background-color: transparent;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .viewToggleButton img { height: 1rem; width: 1rem; }
-  .viewToggleButtonActive {
-    background-color: var(--primary-color);
-    color: var(--primary-foreground-color);
-  }
-  .viewToggleButtonActive:hover {
-    background-color: var(--primary-hover-color);
-  }
-  .viewToggleButton:not(.viewToggleButtonActive):hover {
-    background-color: var(--muted-background-color);
-  }
-  
-  /* Filters Section */
+}
+.titleTextH1 {
+  font-size: 1.875rem;
+  font-weight: bold;
+  letter-spacing: -0.025em;
+}
+.titleTextP {
+  margin-top: 0.5rem;
+  color: var(--muted-color);
+}
+.actionsContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-color);
+  color: var(--primary-foreground-color);
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+.primaryButton:hover {
+  background-color: var(--primary-hover-color);
+}
+.primaryButton img {
+  height: 1rem;
+  width: 1rem;
+}
+.viewToggleContainer {
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  padding: 0.25rem;
+  display: flex;
+}
+.viewToggleButton {
+  height: 2rem;
+  width: 2rem;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.viewToggleButton img {
+  height: 1rem;
+  width: 1rem;
+}
+.viewToggleButtonActive {
+  background-color: var(--primary-color);
+  color: var(--primary-foreground-color);
+}
+.viewToggleButtonActive:hover {
+  background-color: var(--primary-hover-color);
+}
+.viewToggleButton:not(.viewToggleButtonActive):hover {
+  background-color: var(--muted-background-color);
+}
+
+/* Filters Section */
+.filtersSection {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
   .filtersSection {
-    margin-bottom: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    flex-direction: row;
+    align-items: center;
   }
-  @media (min-width: 768px) {
-    .filtersSection {
-      flex-direction: row;
-      align-items: center;
-    }
-  }
-  .searchInputContainer {
-    position: relative;
-    flex: 1;
-  }
-  .searchInputIcon {
-    position: absolute;
-    left: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 1rem;
-    width: 1rem;
-    color: var(--muted-color);
-  }
-  .searchInput {
-    width: 100%;
-    padding-left: 2.5rem;
-    height: 2.5rem;
-    border: 1px solid var(--input-border-color);
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-  }
+}
+.searchInputContainer {
+  position: relative;
+  flex: 1;
+}
+.searchInputIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1rem;
+  width: 1rem;
+  color: var(--muted-color);
+}
+.searchInput {
+  width: 100%;
+  padding-left: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--input-border-color);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+.selectControl {
+  width: 100%;
+  height: 2.5rem;
+  border: 1px solid var(--input-border-color);
+  border-radius: 0.375rem;
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+  background-color: var(--card-background-color);
+}
+@media (min-width: 768px) {
   .selectControl {
-    width: 100%;
-    height: 2.5rem;
-    border: 1px solid var(--input-border-color);
-    border-radius: 0.375rem;
-    padding: 0 0.75rem;
-    font-size: 0.875rem;
-    background-color: var(--card-background-color);
+    width: 180px;
   }
-  @media (min-width: 768px) {
-    .selectControl {
-      width: 180px;
-    }
-  }
-  
-  /* List View */
-  .tabsList {
-    display: flex;
-    gap: 1rem;
-    border-bottom: 1px solid var(--border-color);
-  }
-  .tabTrigger {
-    padding: 0.5rem 0.25rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    color: var(--muted-color);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-  }
-  .tabTrigger:hover { color: var(--text-color); }
-  .tabTriggerActive {
-    color: var(--primary-color);
-    border-bottom-color: var(--primary-color);
-    font-weight: 600;
-  }
-  .tabContent { margin-top: 1.5rem; }
-  .meetingsList { display: flex; flex-direction: column; gap: 1rem; }
-  
-  /* Meeting Card */
-  .card {
-    background-color: var(--card-background-color);
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-  }
-  .cardHeader { padding: 0.75rem 1rem; padding-bottom: 0.5rem; }
-  .cardHeaderTop { display: flex; align-items: flex-start; justify-content: space-between; }
-  .cardHeaderInfo { display: flex; align-items: flex-start; gap: 1rem; }
-  .avatar {
-    height: 2.5rem; width: 2.5rem; border-radius: 9999px;
-    background-color: #eee; display: flex; align-items: center; justify-content: center; font-weight: 500;
-  }
-  .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 9999px; }
-  .mentorInfo .cardTitle { font-size: 1rem; margin: 0; }
-  .mentorSubtitle { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; } /* ★★★ .mentorSublineから変更 ★★★ */
-  .mentorInfo .mentorName { font-size: 0.875rem; font-weight: 500; }
-  .badge {
-    display: inline-flex; align-items: center; border-radius: 9999px;
-    border: 1px solid; padding: 0.125rem 0.625rem; font-size: 0.75rem; font-weight: 500;
-  }
-  .rankBadge {
-    height: 1.25rem; width: 1.25rem; padding: 0; justify-content: center; font-weight: bold;
-  }
-  .rankBadgeS { background-color: var(--red-500); color: #fff; border: none; }
-  .rankBadgeA { background-color: var(--secondary-color); color: var(--text-color); border: none; }
-  .statusBadgeUpcoming { background-color: var(--blue-50); color: var(--blue-700); border-color: var(--blue-200); }
-  .statusBadgeCompleted { background-color: var(--green-50); color: var(--green-700); border-color: var(--green-200); }
-  .statusBadgeCancelled { background-color: var(--red-50); color: var(--red-700); border-color: var(--red-200); }
-  
-  /* Dropdown Menu */
-  .dropdownContainer { position: relative; }
-  .iconButton {
-    background: transparent; border: none; padding: 0.5rem;
-    border-radius: 0.375rem; cursor: pointer; display: flex;
-    align-items: center; justify-content: center;
-  }
-  .iconButton:hover { background-color: var(--muted-background-color); }
-  .iconButton img { height: 1rem; width: 1rem; }
-  .dropdownMenu {
-    position: absolute; top: 100%; right: 0; z-index: 10;
-    margin-top: 0.25rem; width: 180px; background-color: var(--card-background-color);
-    border: 1px solid var(--border-color); border-radius: 0.375rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 0.25rem;
-  }
-  .dropdownMenuItem {
-    display: flex; align-items: center; gap: 0.5rem; width: 100%;
-    padding: 0.5rem; text-align: left; font-size: 0.875rem;
-    border-radius: 0.25rem; text-decoration: none; color: var(--text-color);
-    background: none; border: none; cursor: pointer;
-  }
-  .dropdownMenuItem img { height: 1rem; width: 1rem; }
-  .dropdownMenuItem:hover { background-color: var(--muted-background-color); }
-  .dropdownMenuItemDanger { color: var(--red-600); }
-  .dropdownMenuItemDanger:hover { color: var(--red-600); background-color: var(--red-50); }
-  
-  .cardContent { padding: 1rem; }
-  .cardContentInner { display: flex; flex-direction: column; gap: 0.5rem; }
-  .cardContentRow { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
-  .cardContentRow img { height: 1rem; width: 1rem; color: var(--muted-color); }
-  .notesBlock { margin-top: 0.5rem; padding: 0.5rem; background-color: var(--muted-background-color); border-radius: 0.25rem; }
-  .notesBlock p { font-size: 0.75rem; }
-  .notesBlock p:first-child { font-weight: 500; margin-bottom: 0.25rem; }
-  .cardFooter { padding: 0.5rem 1rem; border-top: 1px solid var(--border-color); }
-  .cardFooterInner { display: flex; width: 100%; justify-content: space-between; }
-  .outlineButton {
-    padding: 0.25rem 0.75rem; border: 1px solid var(--border-color);
-    background-color: transparent; border-radius: 0.375rem; cursor: pointer;
-    font-weight: 500; font-size: 0.875rem; text-decoration: none; color: var(--text-color);
-  }
-  .outlineButton:hover { background-color: var(--muted-background-color); }
-  .joinButton {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.25rem 0.75rem; background-color: var(--primary-color);
-    color: var(--primary-foreground-color); border: none; border-radius: 0.375rem;
-    font-weight: 500; text-decoration: none; cursor: pointer; font-size: 0.875rem;
-  }
-  .joinButton img { height: 1rem; width: 1rem; }
-  .joinButton:hover { background-color: var(--primary-hover-color); }
-  .emptyState { text-align: center; padding: 3rem 0; }
-  .emptyState img { height: 3rem; width: 3rem; color: var(--muted-color); margin: 0 auto 1rem; }
-  .emptyState h3 { font-size: 1.125rem; font-weight: 500; margin-bottom: 0.5rem; }
-  .emptyState p { color: var(--muted-color); margin-bottom: 1.5rem; }
-  
-  /* Calendar View */
-  .calendarHeader {
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .calendarTitle { font-size: 1.25rem; font-weight: bold; }
-  .calendarNav { display: flex; align-items: center; gap: 0.5rem; }
-  .calendarNavButton {
-    padding: 0.5rem 1rem; border: 1px solid var(--border-color);
-    background-color: transparent; border-radius: 0.375rem; cursor: pointer;
-    font-weight: 500;
-  }
-  .calendarNavButton:hover { background-color: var(--muted-background-color); }
-  .calendarNavButtonIcon { padding: 0.5rem; }
-  .calendarNavButtonIcon img { height: 1rem; width: 1rem; }
-  .calendarGrid {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 0.25rem;
-  }
-  .calendarGridHeader {
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 500;
-  }
-  .dayCell {
-    min-height: 6rem;
-    padding: 0.25rem;
-    border: 1px solid var(--border-color);
-    border-radius: 0.375rem;
-  }
-  .dayCellNotInMonth {
-    background-color: var(--muted-background-color);
-    color: var(--muted-color);
-  }
-  .dayCellToday {
-    border-color: var(--primary-color);
-    border-width: 2px;
-  }
-  .dayCellHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  .dayNumber {
-    font-size: 0.875rem;
-    font-weight: 500;
-    padding: 0.25rem;
-  }
-  .dayNumberSun { color: var(--red-700); }
-  .dayNumberSat { color: var(--blue-700); }
-  .meetingIndicator {
-    height: 0.5rem;
-    width: 0.5rem;
-    border-radius: 9999px;
-    background-color: var(--primary-color);
-    margin-top: 0.5rem;
-    margin-right: 0.25rem;
-  }
-  .meetingsInDay {
-    margin-top: 0.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  .meetingLink {
-    display: block;
-    font-size: 0.75rem;
-    padding: 0.25rem;
-    border-radius: 0.25rem;
-    background-color: rgba(147, 182, 54, 0.1);
-    border: 1px solid rgba(147, 182, 54, 0.2);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-decoration: none;
-    color: var(--text-color);
-  }
-  .meetingLink:hover {
-    background-color: rgba(147, 182, 54, 0.2);
-  }
-  .moreMeetings {
-    font-size: 0.75rem;
-    text-align: center;
-    color: var(--muted-color);
-  }
-  
-  .srOnly {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-  
-  /* Dialog (Modal) Styles */
-  .dialogOverlay {
-    position: fixed; inset: 0; z-index: 50;
-    background-color: rgba(0,0,0,0.5);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .dialogContent {
-    background-color: var(--card-background-color);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  }
-  .dialogHeader { margin-bottom: 1rem; }
-  .dialogTitle { font-size: 1.25rem; font-weight: 600; }
-  .dialogDescription { font-size: 0.875rem; color: var(--muted-color); margin-top: 0.5rem; }
-  .dialogBody { display: flex; flex-direction: column; gap: 1rem; margin: 1rem 0; }
-  .formLabel { font-size: 0.875rem; font-weight: 500; }
-  .formTextarea {
-    width: 100%; min-height: 80px; padding: 0.5rem 0.75rem;
-    border: 1px solid var(--input-border-color); border-radius: 0.375rem;
-  }
-  .ratingSelector { display: flex; align-items: center; gap: 0.25rem; }
-  .ratingStarButton { background: none; border: none; cursor: pointer; padding: 0; height: 2rem; width: 2rem; }
-  .ratingStarButton img { height: 100%; width: 100%; }
-  .starFilled { color: var(--yellow-400); }
-  .starEmpty { color: var(--muted-color); }
-  
-  .dialogFooter { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem; }
-  .dialogButton { padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500; cursor: pointer; }
-  .dialogButtonOutline { border: 1px solid var(--border-color); background-color: transparent; }
-  .dialogButtonOutline:hover { background-color: var(--muted-background-color); }
-  .dialogButtonDestructive { border: 1px solid var(--destructive-color); background-color: var(--destructive-color); color: #fff; }
-  .dialogButtonDestructive:hover { opacity: 0.9; }
-  .dialogButtonPrimary { border: 1px solid var(--primary-color); background-color: var(--primary-color); color: #fff; }
-  .dialogButtonPrimary:hover:not(:disabled) { background-color: var(--primary-hover-color); }
-  .dialogButton:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+/* List View */
+.tabsList {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+.tabTrigger {
+  padding: 0.5rem 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  color: var(--muted-color);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.tabTrigger:hover {
+  color: var(--text-color);
+}
+.tabTriggerActive {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+  font-weight: 600;
+}
+.tabContent {
+  margin-top: 1.5rem;
+}
+.meetingsList {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Meeting Card */
+.card {
+  background-color: var(--card-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+}
+.cardHeader {
+  padding: 0.75rem 1rem;
+  padding-bottom: 0.5rem;
+}
+.cardHeaderTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.cardHeaderInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.avatar {
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 9999px;
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 9999px;
+}
+.mentorInfo .cardTitle {
+  font-size: 1rem;
+  margin: 0;
+}
+.mentorSubtitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+} /* ★★★ .mentorSublineから変更 ★★★ */
+.mentorInfo .mentorName {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.badge {
+  display: inline-flex;
+  border-radius: 9999px;
+  border: 1px solid;
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.rankBadge {
+  height: 1.25rem;
+  width: 1.25rem;
+  padding: 0;
+  justify-content: center;
+  font-weight: bold;
+}
+.rankBadgeS {
+  background-color: var(--red-500);
+  color: #fff;
+  border: none;
+}
+.rankBadgeA {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  border: none;
+}
+.statusBadgeUpcoming {
+  background-color: var(--blue-50);
+  color: var(--blue-700);
+  border-color: var(--blue-200);
+}
+.statusBadgeCompleted {
+  background-color: var(--green-50);
+  color: var(--green-700);
+  border-color: var(--green-200);
+}
+.statusBadgeCancelled {
+  background-color: var(--red-50);
+  color: var(--red-700);
+  border-color: var(--red-200);
+}
+
+/* Dropdown Menu */
+.dropdownContainer {
+  position: relative;
+}
+.iconButton {
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.iconButton:hover {
+  background-color: var(--muted-background-color);
+}
+.iconButton img {
+  height: 1rem;
+  width: 1rem;
+}
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 10;
+  margin-top: 0.25rem;
+  width: 180px;
+  background-color: var(--card-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0.25rem;
+}
+.dropdownMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem;
+  text-align: left;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  color: var(--text-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.dropdownMenuItem img {
+  height: 1rem;
+  width: 1rem;
+}
+.dropdownMenuItem:hover {
+  background-color: var(--muted-background-color);
+}
+.dropdownMenuItemDanger {
+  color: var(--red-600);
+}
+.dropdownMenuItemDanger:hover {
+  color: var(--red-600);
+  background-color: var(--red-50);
+}
+
+.cardContent {
+  padding: 1rem;
+}
+.cardContentInner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.cardContentRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+.cardContentRow img {
+  height: 1rem;
+  width: 1rem;
+  color: var(--muted-color);
+}
+.notesBlock {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: var(--muted-background-color);
+  border-radius: 0.25rem;
+}
+.notesBlock p {
+  font-size: 0.75rem;
+}
+.notesBlock p:first-child {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+.cardFooter {
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--border-color);
+}
+.cardFooterInner {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.outlineButton {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-decoration: none;
+  color: var(--text-color);
+}
+.outlineButton:hover {
+  background-color: var(--muted-background-color);
+}
+.joinButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--primary-color);
+  color: var(--primary-foreground-color);
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+.joinButton img {
+  height: 1rem;
+  width: 1rem;
+}
+.joinButton:hover {
+  background-color: var(--primary-hover-color);
+}
+.emptyState {
+  text-align: center;
+  padding: 3rem 0;
+}
+.emptyState img {
+  height: 3rem;
+  width: 3rem;
+  color: var(--muted-color);
+  margin: 0 auto 1rem;
+}
+.emptyState h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.emptyState p {
+  color: var(--muted-color);
+  margin-bottom: 1.5rem;
+}
+
+/* Calendar View */
+.calendarHeader {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.calendarTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+.calendarNav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.calendarNavButton {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+.calendarNavButton:hover {
+  background-color: var(--muted-background-color);
+}
+.calendarNavButtonIcon {
+  padding: 0.5rem;
+}
+.calendarNavButtonIcon img {
+  height: 1rem;
+  width: 1rem;
+}
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.25rem;
+}
+.calendarGridHeader {
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+.dayCell {
+  min-height: 6rem;
+  padding: 0.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+}
+.dayCellNotInMonth {
+  background-color: var(--muted-background-color);
+  color: var(--muted-color);
+}
+.dayCellToday {
+  border-color: var(--primary-color);
+  border-width: 2px;
+}
+.dayCellHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.dayNumber {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.25rem;
+}
+.dayNumberSun {
+  color: var(--red-700);
+}
+.dayNumberSat {
+  color: var(--blue-700);
+}
+.meetingIndicator {
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--primary-color);
+  margin-top: 0.5rem;
+  margin-right: 0.25rem;
+}
+.meetingsInDay {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.meetingLink {
+  display: block;
+  font-size: 0.75rem;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  background-color: rgba(147, 182, 54, 0.1);
+  border: 1px solid rgba(147, 182, 54, 0.2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--text-color);
+}
+.meetingLink:hover {
+  background-color: rgba(147, 182, 54, 0.2);
+}
+.moreMeetings {
+  font-size: 0.75rem;
+  text-align: center;
+  color: var(--muted-color);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Dialog (Modal) Styles */
+.dialogOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dialogContent {
+  background-color: var(--card-background-color);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.dialogHeader {
+  margin-bottom: 1rem;
+}
+.dialogTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.dialogDescription {
+  font-size: 0.875rem;
+  color: var(--muted-color);
+  margin-top: 0.5rem;
+}
+.dialogBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.formLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.formTextarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--input-border-color);
+  border-radius: 0.375rem;
+}
+.ratingSelector {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.ratingStarButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  height: 2rem;
+  width: 2rem;
+}
+.ratingStarButton img {
+  height: 100%;
+  width: 100%;
+}
+.starFilled {
+  color: var(--yellow-400);
+}
+.starEmpty {
+  color: var(--muted-color);
+}
+
+.dialogFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+.dialogButton {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.dialogButtonOutline {
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+}
+.dialogButtonOutline:hover {
+  background-color: var(--muted-background-color);
+}
+.dialogButtonDestructive {
+  border: 1px solid var(--destructive-color);
+  background-color: var(--destructive-color);
+  color: #fff;
+}
+.dialogButtonDestructive:hover {
+  opacity: 0.9;
+}
+.dialogButtonPrimary {
+  border: 1px solid var(--primary-color);
+  background-color: var(--primary-color);
+  color: #fff;
+}
+.dialogButtonPrimary:hover:not(:disabled) {
+  background-color: var(--primary-hover-color);
+}
+.dialogButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

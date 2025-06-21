@@ -68,7 +68,8 @@ export const useCreateSchedule = () => {
   const [error, setError] = useState<string | null>(null);
 
   const createSchedule = async (schedule: {
-    mentorship_id: string;
+    mentorship_id?: string;
+    group_id?: string;
     start_time: string;
     end_time: string;
     topic?: string;

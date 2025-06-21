@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import styles from "./PartnerPage.module.css";
 import { usePlant } from "../../hooks/usePlant";
 import { plantTypes, personalities } from "../../types/plantType";
+import { FaCalendar, FaChevronCircleRight } from "react-icons/fa";
+import { FaMessage } from "react-icons/fa6";
 
 // --- インターフェース定義 ---
 interface Message {
@@ -246,7 +248,7 @@ export default function PartnerPage() {
                       <div key={event.id} className={styles.calendarItem}>
                         <div className={styles.calendarIconContainer}>
                           {/* public/icons/calendar.svg を配置してください */}
-                          <img src="/icons/calendar.svg" alt="" />
+                          <FaCalendar />
                         </div>
                         <div>
                           <h3 className={styles.calendarItemTextH3}>
@@ -260,7 +262,7 @@ export default function PartnerPage() {
                           className={`${styles.iconButton} ${styles.calendarItemButton}`}
                         >
                           {/* public/icons/chevron-right.svg を配置してください */}
-                          <img src="/icons/chevron-right.svg" alt="View" />
+                          <FaChevronCircleRight />
                         </button>
                       </div>
                     ))}
@@ -357,7 +359,7 @@ export default function PartnerPage() {
                           className={`${styles.iconButton} ${styles.sendButton}`}
                         >
                           {/* public/icons/message-square.svg を配置してください */}
-                          <img src="/icons/message-square.svg" alt="Send" />
+                          <FaMessage />
                         </button>
                       </div>
                     </div>

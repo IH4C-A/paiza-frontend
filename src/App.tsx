@@ -30,6 +30,8 @@ import ProblemDetailPage from "./routes/skillcheck/id/ProblemDetailPage";
 import MentorApplicationsPage from "./routes/mentor/applications/MentorApplicationsPage";
 import MentorSchedulePage from "./routes/mentor/schedule/MentorSchedulePage";
 import NewSchedulePage from "./routes/mentor/schedule/new/NewSchedulePage";
+import MeetingDetailPage from "./routes/mentor/schedule/id/MeetingDetailPage";
+import MeetingRoomPage from "./routes/meeting/MeetingRoomPage";
 
 function AppContent() {
   const location = useLocation();
@@ -56,6 +58,8 @@ function AppContent() {
         />
         <Route path="/mentor/schedule" element={<MentorSchedulePage />} />
         <Route path="/mentor/schedule/new" element={<NewSchedulePage />} />
+        <Route path="/mentor/schedule/:id" element={<MeetingDetailPage />} />
+        <Route path="/meeting/:id" element={<MeetingRoomPage />} />
         <Route path="/chats" element={<ChatsPage />} />
         <Route path="/chats/:id" element={<IndividualChatPage />} />
         <Route path="/group/:id" element={<GroupChatPage />} />
