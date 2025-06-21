@@ -8,7 +8,7 @@ export type User = {
     email: string;
     first_name: string;
     last_name: string;
-    profile_image: string | null;
+    profile_image?: string | null;
     age: number;
     seibetu: string;
     adrress: string;

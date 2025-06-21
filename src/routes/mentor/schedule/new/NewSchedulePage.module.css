@@ -1,316 +1,759 @@
 /* Global Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* Variables (Using the established green theme) */
-  :root {
-    --primary-color: #93b636; 
-    --primary-hover-color: #b0d93e;
-    --primary-foreground-color: #ffffff; 
-    --card-background-color: #fff; 
-    --border-color: #e2e8f0; 
-    --text-color: #1a202c; 
-    --muted-color: #718096; 
-    --muted-background-color: #f1f5f9;
-    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-    --input-border-color: #cbd5e0; 
-    --yellow-400: #facc15;
-    --green-100: #dcfce7;
-    --green-600: #16a34a;
-    --blue-500: #3b82f6;
-    --red-500: #ef4444;
-    --red-600: #dc2626;
-    --secondary-color: #e2e8f0;
-    --destructive-color: var(--red-600);
-  }
-  
-  /* Page Layout */
-  .pageContainer {
-    font-family: var(--font-family);
-    color: var(--text-color);
-    background-color: #f8fafc;
-  }
-  .mainContent { flex: 1; }
-  .container {
-    max-width: 896px; 
-    margin-left: auto;
-    margin-right: auto;
-    padding: 1.5rem 1rem; 
-  }
-  
-  /* Progress Bar */
-  .progressContainer {
-    margin-bottom: 2rem;
-  }
-  .progressInfo {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-  .stepLabel { color: var(--muted-color); }
-  .progressBarTrack {
-    width: 100%;
-    background-color: var(--muted-background-color);
-    border-radius: 9999px;
-    height: 0.5rem;
-  }
-  .progressBarFill {
-    background-color: var(--primary-color);
-    height: 0.5rem;
-    border-radius: 9999px;
-    transition: width 0.3s ease-in-out;
-  }
-  
-  /* Step Title */
-  .stepTitle {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-  .stepTitleContainer {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  /* General Form & Card Styles */
-  .card {
-    background-color: var(--card-background-color);
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-  }
-  .cardHeader { padding: 1rem 1.25rem; }
-  .cardTitle { font-size: 1.125rem; font-weight: 600; }
-  .cardDescription { font-size: 0.875rem; color: var(--muted-color); }
-  .cardContent { padding: 1rem; }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Variables (Using the established green theme) */
+:root {
+  --primary-color: #93b636;
+  --primary-hover-color: #b0d93e;
+  --primary-foreground-color: #ffffff;
+  --card-background-color: #fff;
+  --border-color: #e2e8f0;
+  --text-color: #1a202c;
+  --muted-color: #718096;
+  --muted-background-color: #f1f5f9;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --input-border-color: #cbd5e0;
+  --yellow-400: #facc15;
+  --green-100: #dcfce7;
+  --green-600: #16a34a;
+  --blue-500: #3b82f6;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --secondary-color: #e2e8f0;
+  --destructive-color: var(--red-600);
+}
+
+/* Page Layout */
+.pageContainer {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: #f8fafc;
+}
+.mainContent {
+  flex: 1;
+}
+.container {
+  max-width: 896px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem 1rem;
+}
+
+/* Progress Bar */
+.progressContainer {
+  margin-bottom: 2rem;
+}
+.progressInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.stepLabel {
+  color: var(--muted-color);
+}
+.progressBarTrack {
+  width: 100%;
+  background-color: var(--muted-background-color);
+  border-radius: 9999px;
+  height: 0.5rem;
+}
+.progressBarFill {
+  background-color: var(--primary-color);
+  height: 0.5rem;
+  border-radius: 9999px;
+  transition: width 0.3s ease-in-out;
+}
+
+/* Step Title */
+.stepTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.stepTitleContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* General Form & Card Styles */
+.card {
+  background-color: var(--card-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+}
+.cardHeader {
+  padding: 1rem 1.25rem;
+}
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.cardDescription {
+  font-size: 0.875rem;
+  color: var(--muted-color);
+}
+.cardContent {
+  padding: 1rem;
+}
+.formGridMd2 {
+  display: grid;
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
   .formGridMd2 {
-    display: grid;
-    gap: 1.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  @media (min-width: 768px) {
-    .formGridMd2 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
+}
+.formGridMd12 {
+  display: grid;
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
   .formGridMd12 {
-    display: grid;
-    gap: 1.5rem;
+    grid-template-columns: 1fr 2fr;
   }
-  @media (min-width: 768px) {
-    .formGridMd12 {
-      grid-template-columns: 1fr 2fr;
-    }
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.formLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.formInput,
+.formSelect,
+.formTextarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--input-border-color);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+}
+.formSelect {
+  height: 2.5rem;
+}
+.formTextarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.actionsContainer {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.actionButton img {
+  height: 1rem;
+  width: 1rem;
+}
+.buttonPrimary {
+  background-color: var(--primary-color);
+  color: var(--primary-foreground-color);
+}
+.buttonPrimary:hover:not(:disabled) {
+  background-color: var(--primary-hover-color);
+}
+.buttonOutline {
+  border-color: var(--border-color);
+  background-color: transparent;
+}
+.buttonOutline:hover:not(:disabled) {
+  background-color: var(--muted-background-color);
+}
+.buttonGhost {
+  border-color: transparent;
+  background-color: transparent;
+}
+.buttonGhost:hover:not(:disabled) {
+  background-color: var(--muted-background-color);
+}
+.actionButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Step 1: Mentor Selection */
+.mentorCard {
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.mentorCard:hover {
+  border-color: var(--primary-color);
+}
+.mentorCardSelected {
+  border-width: 2px;
+  border-color: var(--primary-color);
+}
+.mentorCardContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+}
+.avatar {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 9999px;
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 9999px;
+}
+.mentorDetails {
+  flex: 1;
+}
+.mentorNameContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.mentorName {
+  font-weight: 500;
+}
+.rankBadge {
+  height: 1.25rem;
+  width: 1.25rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+.rankBadgeS {
+  background-color: var(--red-500);
+  color: #fff;
+}
+.rankBadgeA {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+.ratingContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+.ratingContainer img {
+  height: 0.75rem;
+  width: 0.75rem;
+  color: var(--yellow-400);
+  fill: var(--yellow-400);
+}
+.ratingText {
+  font-size: 0.875rem;
+}
+.ratingCount {
+  font-size: 0.75rem;
+  color: var(--muted-color);
+}
+.categoriesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+.categoryBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border-color);
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+}
+.selectionCheck {
+  height: 1.5rem;
+  width: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: var(--primary-color);
+  color: var(--primary-foreground-color);
+}
+.selectionCheck img {
+  height: 1rem;
+  width: 1rem;
+}
+
+/* Step 2: Date & Time Selection */
+.selectedMentorInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.selectedMentorInfo .avatar {
+  height: 3rem;
+  width: 3rem;
+}
+.infoSeparator {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 1rem 0;
+}
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+.infoRow img {
+  height: 1rem;
+  width: 1rem;
+  color: var(--muted-color);
+}
+.dateViewTabsList {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+.dateViewTab {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  cursor: pointer;
+  border-radius: 0.375rem;
+}
+.dateViewTabActive {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+.calendarNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.calendarNav h3 {
+  font-weight: 500;
+}
+.calendarNavControls {
+  display: flex;
+  gap: 0.5rem;
+}
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+.calendarGridHeader {
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+}
+.calendarDay {
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+}
+.dayNotInMonth {
+  color: var(--muted-color);
+}
+.dayAvailable {
+  cursor: pointer;
+}
+.dayAvailable:hover {
+  background-color: var(--muted-background-color);
+}
+.daySelected {
+  background-color: var(--primary-color) !important;
+  color: var(--primary-foreground-color);
+}
+.dayDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.dateList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.dateListItem {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dateListItem:hover {
+  background-color: var(--muted-background-color);
+}
+.dateListItemSelected {
+  border-color: var(--primary-color);
+  background-color: var(--primary-10-percent-alpha);
+}
+.dateListItemSelected .selectionCheck {
+  visibility: visible;
+}
+.dateListItem .selectionCheck {
+  visibility: hidden;
+}
+.timeSlotGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+@media (min-width: 480px) {
+  .timeSlotGrid {
+    grid-template-columns: repeat(4, 1fr);
   }
-  
-  .formField {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+}
+@media (min-width: 768px) {
+  .timeSlotGrid {
+    grid-template-columns: repeat(5, 1fr);
   }
-  .formLabel {
-    font-size: 0.875rem;
-    font-weight: 500;
+}
+.timeSlotButton {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  text-align: center;
+  cursor: pointer;
+  background: none;
+}
+.timeSlotButton:hover {
+  background-color: var(--muted-background-color);
+}
+.timeSlotSelected {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: #fff;
+}
+.radioGroupContainer {
+  display: flex;
+  gap: 1rem;
+}
+.radioItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.radioInput {
+  display: none;
+}
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+.radioCircle {
+  height: 1.25rem;
+  width: 1.25rem;
+  border: 2px solid var(--border-color);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.radioCircleInner {
+  height: 0.75rem;
+  width: 0.75rem;
+  background-color: transparent;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+}
+.radioInput:checked + .radioLabel .radioCircle {
+  border-color: var(--primary-color);
+}
+.radioInput:checked + .radioLabel .radioCircleInner {
+  background-color: var(--primary-color);
+}
+
+/* Step 3: Details */
+.alert {
+  padding: 1rem;
+  border-radius: 0.375rem;
+  border-left-width: 4px;
+  background-color: var(--muted-background-color);
+  border-color: var(--muted-color);
+  display: flex;
+  gap: 0.75rem;
+}
+.alert img {
+  height: 1rem;
+  width: 1rem;
+  color: var(--muted-color);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+.alertTitle {
+  font-weight: 500;
+}
+.alertDescription {
+  font-size: 0.875rem;
+  color: var(--muted-color);
+  margin-top: 0.25rem;
+}
+.summaryCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.summaryRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.summaryLabel {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+.summaryValue {
+  font-size: 0.875rem;
+  color: var(--muted-color);
+}
+.summaryValueContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.summaryValueContainer img {
+  height: 1rem;
+  width: 1rem;
+  color: var(--muted-color);
+}
+
+/* Step 4: Confirmation */
+.confirmationContainer {
+  text-align: center;
+  padding: 3rem 0;
+}
+.confirmationIcon {
+  height: 3rem;
+  width: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: var(--green-100);
+  color: var(--green-600);
+  margin: 0 auto 1rem;
+}
+.confirmationIcon img {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+.confirmationTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.confirmationMessage {
+  color: var(--muted-color);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+.confirmationActions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .confirmationActions {
+    flex-direction: row;
+    justify-content: center;
   }
-  .formInput, .formSelect, .formTextarea {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--input-border-color);
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    font-family: inherit;
-  }
-  .formSelect { height: 2.5rem; }
-  .formTextarea { min-height: 120px; resize: vertical; }
-  
-  .actionsContainer {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-  }
-  .actionButton {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px solid transparent;
-  }
-  .actionButton img { height: 1rem; width: 1rem; }
-  .buttonPrimary {
-    background-color: var(--primary-color);
-    color: var(--primary-foreground-color);
-  }
-  .buttonPrimary:hover:not(:disabled) {
-    background-color: var(--primary-hover-color);
-  }
-  .buttonOutline {
-    border-color: var(--border-color);
-    background-color: transparent;
-  }
-  .buttonOutline:hover:not(:disabled) {
-    background-color: var(--muted-background-color);
-  }
-  .buttonGhost {
-    border-color: transparent;
-    background-color: transparent;
-  }
-  .buttonGhost:hover:not(:disabled) {
-    background-color: var(--muted-background-color);
-  }
-  .actionButton:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  
-  /* Step 1: Mentor Selection */
-  .mentorCard {
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  .mentorCard:hover {
-    border-color: var(--primary-color);
-  }
-  .mentorCardSelected {
-    border-width: 2px;
-    border-color: var(--primary-color);
-  }
-  .mentorCardContent {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  .avatar {
-    height: 3rem; width: 3rem; border-radius: 9999px;
-    background-color: #eee; display: flex; align-items: center; justify-content: center; font-weight: 500;
-    flex-shrink: 0;
-  }
-  .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 9999px; }
-  .mentorDetails { flex: 1; }
-  .mentorNameContainer { display: flex; align-items: center; gap: 0.5rem; }
-  .mentorName { font-weight: 500; }
-  .rankBadge {
-    height: 1.25rem; width: 1.25rem; padding: 0; display: flex; align-items: center; justify-content: center;
-    border-radius: 9999px; font-size: 0.75rem; font-weight: bold;
-  }
-  .rankBadgeS { background-color: var(--red-500); color: #fff; }
-  .rankBadgeA { background-color: var(--secondary-color); color: var(--text-color); }
-  .ratingContainer { display: flex; align-items: center; gap: 0.25rem; margin-top: 0.25rem; }
-  .ratingContainer img { height: 0.75rem; width: 0.75rem; color: var(--yellow-400); fill: var(--yellow-400); }
-  .ratingText { font-size: 0.875rem; }
-  .ratingCount { font-size: 0.75rem; color: var(--muted-color); }
-  .categoriesContainer { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.5rem; }
-  .categoryBadge {
-    display: inline-flex; align-items: center; border-radius: 0.25rem;
-    border: 1px solid var(--border-color); padding: 0.125rem 0.5rem; font-size: 0.75rem;
-  }
-  .selectionCheck {
-    height: 1.5rem; width: 1.5rem; display: flex; align-items: center; justify-content: center;
-    border-radius: 9999px; background-color: var(--primary-color); color: var(--primary-foreground-color);
-  }
-  .selectionCheck img { height: 1rem; width: 1rem; }
-  
-  /* Step 2: Date & Time Selection */
-  .selectedMentorInfo { display: flex; align-items: flex-start; gap: 1rem; }
-  .selectedMentorInfo .avatar { height: 3rem; width: 3rem; }
-  .infoSeparator {
-    height: 1px;
-    background-color: var(--border-color);
-    margin: 1rem 0;
-  }
-  .infoRow { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
-  .infoRow img { height: 1rem; width: 1rem; color: var(--muted-color); }
-  .dateViewTabsList { margin-bottom: 1rem; display: flex; gap: 0.5rem; }
-  .dateViewTab {
-    padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500;
-    border: 1px solid var(--border-color); background-color: transparent;
-    cursor: pointer; border-radius: 0.375rem;
-  }
-  .dateViewTabActive { background-color: var(--primary-color); color: #fff; border-color: var(--primary-color); }
-  .calendarNav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-  .calendarNav h3 { font-weight: 500; }
-  .calendarNavControls { display: flex; gap: 0.5rem; }
-  .calendarGrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; margin-bottom: 1.5rem; }
-  .calendarGridHeader { text-align: center; font-weight: 500; font-size: 0.875rem; padding: 0.5rem 0; }
-  .calendarDay {
-    height: 2.5rem; display: flex; align-items: center; justify-content: center;
-    border-radius: 0.375rem; border: 1px solid transparent;
-  }
-  .dayNotInMonth { color: var(--muted-color); }
-  .dayAvailable { cursor: pointer; }
-  .dayAvailable:hover { background-color: var(--muted-background-color); }
-  .daySelected { background-color: var(--primary-color) !important; color: var(--primary-foreground-color); }
-  .dayDisabled { opacity: 0.5; cursor: not-allowed; }
-  .dateList { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
-  .dateListItem {
-    padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 0.375rem;
-    cursor: pointer; display: flex; align-items: center; justify-content: space-between;
-  }
-  .dateListItem:hover { background-color: var(--muted-background-color); }
-  .dateListItemSelected { border-color: var(--primary-color); background-color: var(--primary-10-percent-alpha); }
-  .dateListItemSelected .selectionCheck { visibility: visible; }
-  .dateListItem .selectionCheck { visibility: hidden; }
-  .timeSlotGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
-  @media(min-width: 480px) { .timeSlotGrid { grid-template-columns: repeat(4, 1fr); } }
-  @media(min-width: 768px) { .timeSlotGrid { grid-template-columns: repeat(5, 1fr); } }
-  .timeSlotButton {
-    padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.375rem;
-    text-align: center; cursor: pointer; background: none;
-  }
-  .timeSlotButton:hover { background-color: var(--muted-background-color); }
-  .timeSlotSelected { border-color: var(--primary-color); background-color: var(--primary-color); color: #fff; }
-  .radioGroupContainer { display: flex; gap: 1rem; }
-  .radioItem { display: flex; align-items: center; gap: 0.5rem; }
-  .radioInput { display: none; }
-  .radioLabel { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
-  .radioCircle {
-    height: 1.25rem; width: 1.25rem; border: 2px solid var(--border-color);
-    border-radius: 9999px; display: flex; align-items: center; justify-content: center;
-  }
-  .radioCircleInner {
-    height: 0.75rem; width: 0.75rem; background-color: transparent; border-radius: 9999px;
-    transition: background-color 0.2s;
-  }
-  .radioInput:checked + .radioLabel .radioCircle { border-color: var(--primary-color); }
-  .radioInput:checked + .radioLabel .radioCircleInner { background-color: var(--primary-color); }
-  
-  /* Step 3: Details */
-  .alert {
-    padding: 1rem; border-radius: 0.375rem; border-left-width: 4px;
-    background-color: var(--muted-background-color);
-    border-color: var(--muted-color);
-    display: flex; gap: 0.75rem;
-  }
-  .alert img { height: 1rem; width: 1rem; color: var(--muted-color); flex-shrink: 0; margin-top: 0.125rem; }
-  .alertTitle { font-weight: 500; }
-  .alertDescription { font-size: 0.875rem; color: var(--muted-color); margin-top: 0.25rem; }
-  .summaryCardContent { display: flex; flex-direction: column; gap: 1rem; }
-  .summaryRow { display: flex; flex-direction: column; gap: 0.25rem; }
-  .summaryLabel { font-weight: 500; font-size: 0.875rem; }
-  .summaryValue { font-size: 0.875rem; color: var(--muted-color); }
-  .summaryValueContainer { display: flex; align-items: center; gap: 0.5rem; }
-  .summaryValueContainer img { height: 1rem; width: 1rem; color: var(--muted-color); }
-  
-  
-  /* Step 4: Confirmation */
-  .confirmationContainer { text-align: center; padding: 3rem 0; }
-  .confirmationIcon {
-    height: 3rem; width: 3rem; display: flex; align-items: center; justify-content: center;
-    border-radius: 9999px; background-color: var(--green-100); color: var(--green-600);
-    margin: 0 auto 1rem;
-  }
-  .confirmationIcon img { height: 1.5rem; width: 1.5rem; }
-  .confirmationTitle { font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem; }
-  .confirmationMessage { color: var(--muted-color); margin-bottom: 2rem; line-height: 1.6; }
-  .confirmationActions { display: flex; flex-direction: column; gap: 1rem; }
-  @media(min-width: 640px) { .confirmationActions { flex-direction: row; justify-content: center; } }
+}
+/* src/app/mentor/schedule/NewSchedulePage.module.css */
+
+/* ... (既存の変数と基本的なスタイルは変更なし) ... */
+
+/* 新しいタブセクション (Step 1用) */
+.step1TabsSection {
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.step1TabsList {
+  display: flex;
+  background-color: var(--muted-background); /* bg-muted */
+  border-radius: 8px; /* rounded-md */
+  padding: 4px; /* p-1 */
+  width: fit-content; /* w-fit */
+  margin-bottom: 1rem; /* タブとグリッドの間隔 */
+}
+
+.step1TabTrigger {
+  position: relative;
+  padding: 8px 12px; /* px-3 py-1 */
+  font-size: 14px; /* text-sm */
+  font-weight: 500;
+  color: var(--muted-foreground);
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+  border-radius: 6px; /* rounded-sm */
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  flex: 1; /* w-full if needed, or flex-1 for equal width */
+  text-align: center;
+  white-space: nowrap; /* テキストの折り返しを防ぐ */
+}
+
+.step1TabTrigger:hover {
+  color: var(--foreground);
+}
+
+.step1TabTriggerActive {
+  color: var(--foreground);
+  background-color: var(--background);
+  box-shadow: var(--shadow-sm);
+}
+
+/* グループカードのスタイル */
+.groupCard {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--card-background);
+  padding: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.groupCardSelected {
+  border-color: var(--primary); /* 選択時の色 */
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.groupName {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600; /* font-semibold */
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+
+.groupDescription {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted-foreground);
+  margin-bottom: 1rem;
+}
+
+.groupMembersCount {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem; /* gap-1 */
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.groupAvatarStack {
+  display: flex;
+  margin-bottom: 0.75rem; /* mb-3 */
+}
+
+.groupAvatar {
+  width: 2rem; /* w-8 */
+  height: 2rem; /* h-8 */
+  border-radius: 9999px; /* rounded-full */
+  overflow: hidden;
+  border: 2px solid var(--card-background); /* ring-2 ring-background */
+  margin-left: -0.5rem; /* -ml-2 */
+}
+
+.groupAvatar:first-child {
+  margin-left: 0;
+}
+
+.groupAvatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.groupAvatarFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--muted-background);
+  color: var(--muted-foreground);
+  font-size: 0.75rem; /* text-xs */
+}
+/* 新しいタブセクションの追加 */
+.mentorTabsSection {
+  margin-bottom: 24px; /* mb-6 */
+}
+
+.mentorTabsList {
+  display: flex;
+  background-color: var(--muted-background); /* bg-muted */
+  border-radius: 8px; /* rounded-md */
+  padding: 4px; /* p-1 */
+  width: fit-content; /* w-fit */
+}
+
+.mentorTabTrigger {
+  position: relative;
+  padding: 8px 12px; /* px-3 py-1 */
+  font-size: 14px; /* text-sm */
+  font-weight: 500;
+  color: var(--muted-foreground);
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border-radius: 6px; /* rounded-sm */
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  flex: 1; /* w-full if needed, or flex-1 for equal width */
+  text-align: center;
+}
+
+.mentorTabTrigger:hover {
+  color: var(--foreground);
+}
+
+.mentorTabTriggerActive {
+  color: var(--foreground);
+  background-color: var(--background);
+  box-shadow: var(--shadow-sm);
+  width: auto;
+}
