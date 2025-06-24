@@ -273,3 +273,95 @@
 .submitButton:hover {
   background-color: var(--primary-hover-color);
 }
+
+/* QuestionDetailPage.module.css */
+
+/* --- Existing styles remain above --- */
+
+.bestAnswerButton {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  overflow: hidden; /* Ensures content stays within bounds during animation */
+  position: relative;
+  font-weight: bold;
+}
+
+.bestAnswerButton:hover {
+  background-color: #45a049; /* Darker green on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.bestAnswerButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.bestAnswerButton svg {
+  transition: transform 0.3s ease;
+}
+
+.bestAnswerButton:hover svg {
+  transform: rotate(10deg) scale(1.1);
+}
+
+/* Style for when it's already selected */
+.bestAnswerButton.selected {
+  background-color: #007BFF; /* Blue, or another color to signify selected */
+  cursor: default;
+  box-shadow: none;
+  transform: none;
+}
+
+.bestAnswerButton.selected:hover {
+  background-color: #007BFF; /* Keep blue on hover */
+}
+
+/* Optional: Animation for when the button appears/disappears */
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bestAnswerButton.animateIn {
+  animation: fadeInSlideUp 0.5s ease-out forwards;
+}
+
+/* Style for the best answer card itself */
+.card.bestAnswer {
+  border: 2px solid #FFD700; /* Gold border */
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); /* Gold glow */
+  background-color: #FFFBE6; /* Light yellow background */
+}
+
+.bestAnswerBadge {
+  background-color: #FFD700; /* Gold */
+  color: #333;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.bestAnswerBadge svg {
+  color: #DAA520; /* Darker gold for the star */
+}

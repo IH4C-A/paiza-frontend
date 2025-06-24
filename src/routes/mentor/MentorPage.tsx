@@ -7,7 +7,7 @@ import { FaStar, FaUsers, FaMessage } from "react-icons/fa6"; // FaMessageはFa6
 // CSSモジュールをインポート
 import styles from "./MentorPage.module.css";
 import { FaSearch } from "react-icons/fa";
-import { useCategories, useMentorships } from "../../hooks";
+import { useCategories, useMentorships, useAllMentors } from "../../hooks";
 import type { Rank } from "../../types/rankType";
 import type { Mentorship } from "../../types/mentorshipType";
 import type { User } from "../../types/userTypes";
@@ -31,13 +31,15 @@ export default function MentorListPage() {
   const { categories } = useCategories();
   // useMentorships から両方のリストを取得
   const { mentorships, candidateMentors } = useMentorships();
-
-  console.log("My Mentorships:", mentorships); // 自分のメンター（契約中など）
-  console.log("Candidate Mentors:", candidateMentors); // おすすめメンター候補
+  const { mentors } = useAllMentors();
 
   // ★表示するメンターリストを activeTab に応じて切り替える
-  const currentMentorList =
-    activeTab === "myMentors" ? mentorships : candidateMentors;
+const currentMentorList =
+  activeTab === "myMentors"
+    ? mentorships
+    : activeTab === "recommended" && candidateMentors.length === 0
+      ? mentors
+      : candidateMentors;
 
   const filteredMentors = currentMentorList.filter((mentor) => {
     // 型ガード: Mentorshipかどうかを判定
@@ -247,25 +249,33 @@ export default function MentorListPage() {
                     <div>
                       <h4 className={styles.subHeading}>得意分野</h4>
                       <div className={styles.categoryBadges}>
-                        {mentor.categories.slice(0, 4).map((category: Category) => (
-                          <span
-                            key={
-                              typeof category === "string"
-                                ? category
-                                : category.category_id
-                            }
-                            className={`${styles.badgeBase} ${styles.badgeOutline} ${styles.badgeXs}`}
-                          >
-                            {typeof category === "string"
-                              ? category
-                              : category.category_name}
-                          </span>
-                        ))}
-                        {mentor.categories.length > 4 && (
-                          <span
-                            className={`${styles.badgeBase} ${styles.badgeOutline} ${styles.badgeXs}`}
-                          >
-                            +{mentor.categories.length - 4}
+                        {Array.isArray(mentor.categories) && mentor.categories.length > 0 ? (
+                          <>
+                            {mentor.categories.slice(0, 4).map((category: Category) => (
+                              <span
+                                key={
+                                  typeof category === "string"
+                                    ? category
+                                    : category.category_id
+                                }
+                                className={`${styles.badgeBase} ${styles.badgeOutline} ${styles.badgeXs}`}
+                              >
+                                {typeof category === "string"
+                                  ? category
+                                  : category.category_name}
+                              </span>
+                            ))}
+                            {mentor.categories.length > 4 && (
+                              <span
+                                className={`${styles.badgeBase} ${styles.badgeOutline} ${styles.badgeXs}`}
+                              >
+                                +{mentor.categories.length - 4}
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <span className={styles.noCategoriesText}>
+                            カテゴリなし
                           </span>
                         )}
                       </div>
