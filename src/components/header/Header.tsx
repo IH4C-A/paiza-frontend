@@ -50,7 +50,7 @@ export const Header = () => {
       </div>
       <div className={style.navigationList}>
         <a className={style.navigationLink} href="/notification">
-          <FaBell className={style.navigationLink} />
+          <FaBell />
         </a>
         {currentUser ? (
           <a className={style.navigationLink} href="/mypage">
