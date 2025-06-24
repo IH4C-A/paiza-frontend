@@ -296,3 +296,39 @@ export const useRejectMentorshipRequest = () => {
 
   return { rejectRequest, loading, error, success };
 };
+
+// 全メンター取得
+export const useAllMentors = () => {
+  const [mentors, setMentors] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchMentors = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("http://localhost:5000/mentors", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data: User[] = await response.json();
+      setMentors(data);
+    } catch (error) {
+      console.error("Error fetching mentors:", error);
+      setError(error instanceof Error ? error.message : "Unknown error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMentors();
+  }, []);
+
+  return { mentors, loading, error, refetch: fetchMentors };
+};

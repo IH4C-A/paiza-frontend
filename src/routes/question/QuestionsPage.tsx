@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./QuestionsPage.module.css";
 import { useBoards } from "../../hooks/useBoard";
 import { FaFilter, FaPlus, FaSearch } from "react-icons/fa";
-import { useCategories } from "../../hooks";
+import { useUserCategories } from "../../hooks";
 
 
 
@@ -14,20 +14,17 @@ export default function QuestionsPage() {
   const [sortOrder, setSortOrder] = useState("latest");
   const [searchTerm, setSearchTerm] = useState("");
   const { boards } = useBoards();
-  const { categories } = useCategories();
+  const { userCategories } = useUserCategories();
 
     // 表示するカテゴリタブを動的に生成
-  const categoryTabs = useMemo(() => {
-    // まず "すべて" タブを追加
-    const allTab = { value: 'all', label: 'すべて' };
-    // バックエンドから取得したカテゴリをマップしてタブ形式に変換
-    const dynamicTabs = categories.map(cat => ({
-      value: cat.category_name,
-      label: cat.category_name,
-    }));
-    // "すべて" タブと動的タブを結合
-    return [allTab, ...dynamicTabs];
-  }, [categories]);
+const categoryTabs = useMemo(() => {
+  const allTab = { value: 'all', label: 'すべて' };
+  const dynamicTabs = userCategories.map(cat => ({
+    value: cat.category_name,
+    label: cat.category_name,
+  }));
+  return [allTab, ...dynamicTabs];
+}, [userCategories]);
 
   // フィルタリングとソーティングロジック
   const displayedQuestions = useMemo(() => {
@@ -168,11 +165,11 @@ export default function QuestionsPage() {
                       </div>
                       {(() => {
                         let displayRank = null;
-                        if (q.user_id && Array.isArray(q.user_id.rank) && q.user_id.rank.length > 0) {
-                          const mentorRank = q.user_id.rank.find(
+                        if (q.user_id && Array.isArray(q.user_id.ranks) && q.user_id.ranks.length > 0) {
+                          const mentorRank = q.user_id.ranks.find(
                             (r) => r.rank_code === "mentor"
                           );
-                          displayRank = mentorRank || q.user_id.rank[0];
+                          displayRank = mentorRank || q.user_id.ranks[0];
                         }
                         return (
                           <div

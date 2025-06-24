@@ -7,15 +7,52 @@ import { usePlant, useMentorships } from "../../hooks";
 import { plantTypes } from "../../types/plantType";
 import UserCategoryGate from "../../components/modal/UserCategoryGate";
 import { useNavigate } from "react-router-dom";
+import { useMentorshipSchedules } from "../../hooks/useMentorSchedule";
+import type { MentorSchedule } from "../../types/mentorSchedule";
+
+function getThisWeekRange() {
+  const now = new Date();
+  const start = new Date(now);
+  start.setDate(now.getDate() - now.getDay()); // 日曜始まり
+
+  const end = new Date(start);
+  end.setDate(start.getDate() + 7); // 土曜終わり
+
+  start.setHours(0, 0, 0, 0);
+  end.setHours(23, 59, 59, 999);
+  return { start, end };
+}
+
+function groupThisWeekSchedules(schedules: MentorSchedule[]) {
+  const { start, end } = getThisWeekRange();
+  const grouped: Record<string, { count: number; schedule_id: string; start_time: string }> = {};
+
+  schedules.forEach((s) => {
+    const startTime = new Date(s.start_time);
+    if (startTime >= start && startTime <= end) {
+      const key = s.topic || "未分類";
+      if (!grouped[key]) {
+        grouped[key] = { count: 1, schedule_id: s.schedule_id, start_time: s.start_time };
+      } else {
+        grouped[key].count += 1;
+      }
+    }
+  });
+
+  return grouped;
+}
+
 
 export default function Mypage() {
   const [activeTab, setActiveTab] = useState("all");
   const { currentUser } = useCurrentUser();
   const { plant } = usePlant();
   const navigate = useNavigate();
-  const { candidateMentors } = useMentorships();
+  const { mentorships } = useMentorships();
+  const { schedules } = useMentorshipSchedules();
 
-  console.log(plant);
+  const progressData = groupThisWeekSchedules(schedules);
+  // const maxCount = Math.max(...Object.values(progressData).map((v) => v.count), 1);
 
   const TabsContent: React.FC<{ value: string; children: React.ReactNode }> = ({
     value,
@@ -62,7 +99,7 @@ export default function Mypage() {
     if (plant) {
       navigate("/partner");
     } else {
-      navigate("/partner/setup")
+      navigate("/partner/setup");
     }
   };
 
@@ -201,67 +238,39 @@ export default function Mypage() {
 
                     <div className={styles.card}>
                       <div className={styles.cardHeader}>
-                        <h3 className={styles.cardTitle}>学習の進捗</h3>
-                        <p className={styles.cardDescription}>今週の学習状況</p>
+                        <h3 className={styles.cardTitle}>スケジュール予定</h3>
+                        <p className={styles.cardDescription}>今週のスケジュール予定</p>
                       </div>
                       <div className={styles.cardContent}>
                         <div className={styles.progressList}>
-                          <div className={styles.progressItem}>
-                            <div className={styles.progressHeader}>
-                              <span className={styles.progressLabel}>
-                                アルゴリズム
-                              </span>
-                              <span className={styles.progressValue}>65%</span>
-                            </div>
-                            <div className={styles.progressBar}>
-                              <div
-                                className={styles.progressFill}
-                                style={{ width: "65%" }}
-                              />
-                            </div>
-                          </div>
-                          <div className={styles.progressItem}>
-                            <div className={styles.progressHeader}>
-                              <span className={styles.progressLabel}>
-                                Webフレームワーク
-                              </span>
-                              <span className={styles.progressValue}>40%</span>
-                            </div>
-                            <div className={styles.progressBar}>
-                              <div
-                                className={styles.progressFill}
-                                style={{ width: "40%" }}
-                              />
-                            </div>
-                          </div>
-                          <div className={styles.progressItem}>
-                            <div className={styles.progressHeader}>
-                              <span className={styles.progressLabel}>
-                                UI/UX
-                              </span>
-                              <span className={styles.progressValue}>25%</span>
-                            </div>
-                            <div className={styles.progressBar}>
-                              <div
-                                className={styles.progressFill}
-                                style={{ width: "25%" }}
-                              />
-                            </div>
-                          </div>
-                          <div className={styles.progressItem}>
-                            <div className={styles.progressHeader}>
-                              <span className={styles.progressLabel}>
-                                情報処理試験
-                              </span>
-                              <span className={styles.progressValue}>10%</span>
-                            </div>
-                            <div className={styles.progressBar}>
-                              <div
-                                className={styles.progressFill}
-                                style={{ width: "10%" }}
-                              />
-                            </div>
-                          </div>
+                          {Object.entries(progressData).map(
+                            ([topic, count]) => {
+                              return (
+                                <div
+                                  className={styles.progressItem}
+                                  key={topic}
+                                  onClick={() => {
+                                    navigate(`/mentor/schedule/${count.schedule_id}`);
+                                  }}
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  <div className={styles.progressHeader}>
+                                    <span className={styles.progressLabel}>
+                                      {topic}
+                                    </span>
+                                    <span className={styles.progressValue}>
+                                      {count.start_time}
+                                    </span>
+                                  </div>
+                                  <div className={styles.progressBar}>
+                                    <span className={styles.progressValue}>
+                                      {count.start_time}
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            }
+                          )}
                         </div>
                       </div>
                     </div>
@@ -392,22 +401,22 @@ export default function Mypage() {
                   <p className={styles.cardDescription}>質問や相談ができます</p>
                 </div>
                 <div className={styles.cardContent}>
-                  {candidateMentors.slice(0, 3).map((mentor) => (
+                  {mentorships.slice(0, 3).map((mentor) => (
                     <div className={styles.mentorList}>
                       <div className={styles.mentorItem}>
                         <div className={styles.mentorAvatar}>
                           <div
                             className={`${styles.mentorBadge} ${styles.rankS}`}
                           >
-                            {mentor.ranks?.[1].rank_name}
+                            {mentor.mentor.ranks?.[1].rank_name}
                           </div>
                         </div>
                         <div className={styles.mentorInfo}>
                           <h4 className={styles.mentorName}>
-                            {mentor.first_name}さん
+                            {mentor.mentor?.first_name}さん
                           </h4>
                           <div className={styles.mentorSpecialtyList}>
-                            {mentor.categories.map((category) => (
+                            {mentor.mentor.categories?.map((category) => (
                               <p
                                 key={category.category_id}
                                 className={styles.mentorSpecialty}
