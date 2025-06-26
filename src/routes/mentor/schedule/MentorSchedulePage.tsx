@@ -138,8 +138,6 @@ export default function MentorSchedulePage() {
   const [rating, setRating] = useState(0);
   const { schedules } = useMentorshipSchedules();
 
-  console.log("Schedules:", schedules);
-
   const changeMonth = (increment: number) => {
     let newMonth = calendarMonth + increment;
     let newYear = calendarYear;
@@ -200,7 +198,7 @@ export default function MentorSchedulePage() {
             完了
           </span>
         );
-      case "cancelled":
+      case "canceled":
         return (
           <span className={`${styles.badge} ${styles.statusBadgeCancelled}`}>
             キャンセル
@@ -218,6 +216,7 @@ export default function MentorSchedulePage() {
     console.log("Feedback:", { openMenuId, feedback, rating });
     setShowFeedbackDialog(false);
   };
+
 
   return (
     <div className={styles.pageContainer}>
@@ -276,7 +275,7 @@ export default function MentorSchedulePage() {
               <option value="all">すべてのステータス</option>
               <option value="scheduled">予定</option>
               <option value="completed">完了</option>
-              <option value="cancelled">キャンセル</option>
+              <option value="canceled">キャンセル</option>
             </select>
           </div>
 
@@ -338,7 +337,7 @@ export default function MentorSchedulePage() {
                     {sortedMeetings
                       .filter(
                         (m) =>
-                          m.status === "completed" || m.status === "cancelled"
+                          m.status === "completed" || m.status === "canceled"
                       )
                       .map((meeting) => (
                         <MeetingCard
@@ -353,7 +352,7 @@ export default function MentorSchedulePage() {
                       ))}
                     {sortedMeetings.filter(
                       (m) =>
-                        m.status === "completed" || m.status === "cancelled"
+                        m.status === "completed" || m.status === "canceled"
                     ).length === 0 && (
                       <div className={styles.emptyState}>
                         <FaCalendar />
@@ -519,7 +518,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
               />
             </div>
             <div className={styles.mentorInfo}>
-              <h3 className={styles.cardTitle}>{meeting.topic}</h3>
+              <h3 className={styles.cardTitle}><a href={`/mentor/schedule/${meeting.schedule_id}`} style={{color: "black", textDecoration: "none"}}>{meeting.topic}</a></h3>
               <div className={styles.mentorSubtitle}>
                 <span className={styles.mentorName}>
                   {meeting.mentorship_id ? (
@@ -543,8 +542,8 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
                   )}
               </div>
             </div>
-          </div>
           {getStatusBadge(meeting.status)}
+          </div>
           <Dropdown
             menuId={meeting.schedule_id}
             openMenuId={openMenuId}

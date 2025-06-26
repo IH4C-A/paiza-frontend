@@ -15,6 +15,9 @@ export type User = {
     employment_status: string;
     ranks: Rank[];
     categories: Category[];
+    mentees_count?: number;
+    response_time?: number;
+    average_rating?: number;
 }
 
 export type UserregisterPayload = {

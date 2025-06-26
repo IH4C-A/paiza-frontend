@@ -24,6 +24,7 @@ export default function GroupChatPage() {
     return groupData;
 }, [myGroupChats, id]);
 
+console.log(member)
   useEffect(() => {
   if (id && fetchGroupChatHistory) {
     fetchGroupChatHistory(id); // group_id を渡してグループチャット履歴を取得
@@ -242,16 +243,16 @@ export default function GroupChatPage() {
                           <span className={styles.memberName}>{member.name}</span>
                           <div
                             className={`${styles.senderRank} ${
-                              member.rank.rank_name === "S"
+                              member.rank?.[0]?.rank_name === "S"
                                 ? styles.rankS
-                                : member.rank.rank_name === "A"
+                                : member.rank?.[0]?.rank_name === "A"
                                 ? styles.rankA
-                                : member.rank.rank_name === "B"
+                                : member.rank?.[0]?.rank_name === "B"
                                 ? styles.rankB
                                 : styles.rankC
                             }`}
                           >
-                            {member.rank.rank_name}
+                            {member.rank?.[0]?.rank_name}
                           </div>
                           {/* {member.role === "moderator" && (
                             <FaCrown className={styles.moderatorIconSmall} title="モデレーター" />

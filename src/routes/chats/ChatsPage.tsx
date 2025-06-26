@@ -3,7 +3,7 @@
 import { HiOutlinePlus, HiOutlineMagnifyingGlass, HiOutlineUserGroup, HiOutlineArrowLeft, HiOutlineUser, HiOutlineUsers } from "react-icons/hi2"; // Heroicons v2
 // Import the CSS module
 import styles from "./ChatsPage.module.css"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useUsers } from "../../hooks/useUser";
 import { useChatHistory } from "../../hooks/useChat";
 import { useMyGroupChats } from "../../hooks/useGroupChat";
@@ -21,6 +21,34 @@ export default function ChatsPage() {
   const { createGroupChat } = useCreateGroupChat();
   const { candidateMentors } = useMentorships();
 
+
+  // チャット検索
+  const [searchQuery, setSearchQuery] = useState('');
+
+    // 個別チャット履歴を検索クエリでフィルタリング
+  const filteredIndividualChats = useMemo(() => {
+    if (!searchQuery) {
+      return chatHistory;
+    }
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    return chatHistory.filter(chat =>
+      chat.user_name.toLowerCase().includes(lowerCaseQuery) ||
+      (chat.last_message && chat.last_message.toLowerCase().includes(lowerCaseQuery))
+    );
+  }, [chatHistory, searchQuery]);
+
+  // グループチャット履歴を検索クエリでフィルタリング
+  const filteredGroupChats = useMemo(() => {
+    if (!searchQuery) {
+      return myGroupChats;
+    }
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    return myGroupChats.filter(chat =>
+      chat.group_name.toLowerCase().includes(lowerCaseQuery) ||
+      (chat.description && chat.description.toLowerCase().includes(lowerCaseQuery)) ||
+      (chat.last_message && chat.last_message.toLowerCase().includes(lowerCaseQuery))
+    );
+  }, [myGroupChats, searchQuery]);
 
 
   // Tabsの切り替え状態を管理するためのuseState
@@ -70,7 +98,8 @@ export default function ChatsPage() {
               <div className={styles.searchInputWrapper}>
                 <HiOutlineMagnifyingGlass className={styles.searchIcon} />
                 {/* Inputは既存のUIライブラリのInputコンポーネントに依存しないように変更 */}
-                <input type="search" placeholder="チャットを検索..." className={styles.searchInput} />
+                <input type="search" placeholder="チャットを検索..." className={styles.searchInput} value={searchQuery} // ★ ここに value プロパティを追加
+                  onChange={(e) => setSearchQuery(e.target.value)}  />
               </div>
               {/* ボタンは既存のUIライブラリのButtonコンポーネントに依存しないように変更 */}
               <button className={styles.primaryButton} onClick={() => setIsModalOpen(true)}>
@@ -99,7 +128,7 @@ export default function ChatsPage() {
             {activeTab === "individual" && (
               <div className={styles.tabContent}>
                 <div className={styles.chatGrid}>
-                  {chatHistory.map((chat: ChatUsers) => (
+                  {filteredIndividualChats.map((chat: ChatUsers) => (
                     // Cardコンポーネントの代わりにdivを使用
                     <div key={chat.user_id} className={styles.chatCard}>
                       <a href={`/chats/${chat.user_id}`} className={styles.cardLink}>
@@ -148,7 +177,7 @@ export default function ChatsPage() {
             {activeTab === "group" && (
               <div className={styles.tabContent}>
                 <div className={styles.chatGrid}>
-                  {myGroupChats.map((chat) => (
+                  {filteredGroupChats.map((chat) => (
                     // Cardコンポーネントの代わりにdivを使用
                     <div key={chat.group_id} className={styles.chatCard}>
                       <a href={`/group/${chat.group_id}`} className={styles.cardLink}>

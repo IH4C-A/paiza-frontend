@@ -232,7 +232,7 @@ const currentMentorList =
                         <div className={styles.mentorStats}>
                           <div className={styles.rating}>
                             <FaStar className={styles.starIcon} />
-                            <span className={styles.ratingText}>4.5</span>
+                            <span className={styles.ratingText}>{mentor?.average_rating}</span>
                           </div>
                           <div
                             className={`${styles.statusDot} ${
@@ -287,7 +287,7 @@ const currentMentorList =
                       <div className={styles.detailItem}>
                         <FaUsers className={styles.detailIcon} />
                         <span className={styles.detailLabel}>指導中:</span>
-                        <span className={styles.detailValue}>5人</span>
+                        <span className={styles.detailValue}>{mentor.mentees_count}人</span>
                       </div>
                       <div className={styles.detailItem}>
                         <FaMessage className={styles.detailIcon} />
@@ -295,7 +295,7 @@ const currentMentorList =
                         <span
                           className={`${styles.detailValue} ${styles.responseTimeText}`}
                         >
-                          平均1時間以内
+                          平均{mentor?.response_time}時間以内
                         </span>
                       </div>
                     </div>

@@ -15,7 +15,7 @@ export type GroupChatMember = {
     id: string;
     name: string;
     prof_image: string | null;
-    rank: Rank;
+    rank: Rank[];
 }
 
 export type GroupChats = {

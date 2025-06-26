@@ -7,6 +7,7 @@ import { useMentorshipSchedule } from "../../../../hooks/useMentorSchedule";
 import { useRegisterMentorshipFeedback } from "../../../../hooks/useMentorFeedBack";
 import { FaArrowLeft, FaCalendar, FaClock, FaEdit, FaEllipsisH, FaStar, FaTrash, FaVideo } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
+import { useUpdateSchedule } from "../../../../hooks/useMentorSchedule";
 // --- 型定義 (変更なし) ---
 
 interface DropdownProps {
@@ -71,6 +72,8 @@ export default function MeetingDetailPage() {
   const [rating, setRating] = useState(0);
   const { schedule } = useMentorshipSchedule(id || "");
   const { registerFeedback } = useRegisterMentorshipFeedback();
+  const { updateSchedule } = useUpdateSchedule();
+  console.log("Schedule Data:", schedule);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -86,7 +89,7 @@ export default function MeetingDetailPage() {
             完了
           </span>
         );
-      case "cancelled":
+      case "canceled":
         return (
           <span className={`${styles.badge} ${styles.statusBadgeCancelled}`}>
             キャンセル
@@ -97,7 +100,17 @@ export default function MeetingDetailPage() {
     }
   };
   const handleCancel = () => {
-    console.log("Cancel:", { meetingId: id, cancelReason });
+    updateSchedule(id || "", {
+      status: "canceled",
+      cancel_reason: cancelReason,
+    })
+      .then(() => {
+        setShowCancelDialog(false);
+        setCancelReason("");
+      })
+      .catch((error) => {
+        console.error("キャンセルの更新に失敗:", error);
+      });
     setShowCancelDialog(false);
   };
   const handleFeedbackSubmit = () => {
@@ -105,6 +118,7 @@ export default function MeetingDetailPage() {
     registerFeedback({
       mentorship_id: id || "",
       content: feedback,
+      rating: rating,
     })
       .then(() => {
         setShowFeedbackDialog(false);
@@ -213,21 +227,19 @@ export default function MeetingDetailPage() {
                         </h3>
                         <span
                           className={`${styles.badge} ${styles.rankBadge} ${
-                            schedule?.mentorship_id?.mentor?.ranks?.[1]
-                              .rank_name === "S"
+                            schedule?.mentorship_id?.mentor?.ranks?.[1]?.rank_name === "S"
                               ? styles.rankBadgeS
                               : styles.rankBadgeA
                           }`}
                         >
-                          {schedule?.mentorship_id?.mentor?.ranks?.[1]
-                              .rank_name}
+                          {schedule?.mentorship_id?.mentor?.ranks?.[1]?.rank_name}
                         </span>
                       </div>
                       <div className={styles.mentorRating}>
                         <FaStar
                           className={styles.starFilled}
                         />
-                        {/* <span>{meeting.mentorRating}</span> */}
+                        <span>{schedule?.mentorship_id.mentor?.average_rating}</span>
                         <span
                           style={{
                             fontSize: "0.75rem",
