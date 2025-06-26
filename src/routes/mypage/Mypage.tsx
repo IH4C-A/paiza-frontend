@@ -48,7 +48,7 @@ export default function Mypage() {
   const { currentUser } = useCurrentUser();
   const { plant } = usePlant();
   const navigate = useNavigate();
-  const { mentorships } = useMentorships();
+  const { candidateMentors } = useMentorships();
   const { schedules } = useMentorshipSchedules();
 
   const progressData = groupThisWeekSchedules(schedules);
@@ -401,22 +401,22 @@ export default function Mypage() {
                   <p className={styles.cardDescription}>質問や相談ができます</p>
                 </div>
                 <div className={styles.cardContent}>
-                  {mentorships.slice(0, 3).map((mentor) => (
+                  {candidateMentors.slice(0, 3).map((mentor) => (
                     <div className={styles.mentorList}>
                       <div className={styles.mentorItem}>
                         <div className={styles.mentorAvatar}>
                           <div
                             className={`${styles.mentorBadge} ${styles.rankS}`}
                           >
-                            {mentor.mentor.ranks?.[1].rank_name}
+                            {mentor.ranks?.[1].rank_name}
                           </div>
                         </div>
                         <div className={styles.mentorInfo}>
                           <h4 className={styles.mentorName}>
-                            {mentor.mentor?.first_name}さん
+                            {mentor?.first_name}さん
                           </h4>
                           <div className={styles.mentorSpecialtyList}>
-                            {mentor.mentor.categories?.map((category) => (
+                            {mentor.categories?.map((category) => (
                               <p
                                 key={category.category_id}
                                 className={styles.mentorSpecialty}

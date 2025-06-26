@@ -6,18 +6,15 @@ type Props = {
   onClose: () => void;
 };
 const CategoryModal: React.FC<Props> = ({ onClose }) => {
-  const [activeCode, setActiveCode] = useState<string | null>(null);
+  const [activeCode, setActiveCode] = useState<string>("all");
   const [categoryids, setSelectedIds] = useState<string[]>([]);
   const { categories } = useCategories();
   const { registerUserCategory, loading } = useRegisterUserCategory();
   const { currentUser } = useCurrentUser();
-  const uniqueCodes = Array.from(
-    new Set(categories.map((cat) => cat.category_code))
-  );
 
-  const filteredCategories = categories.filter(
-    (cat) => cat.category_code === activeCode
-  );
+  const uniqueCodes = ["all", ...Array.from(new Set(categories.map((cat) => cat.category_code)))];
+
+  const filteredCategories = activeCode === "all" ? categories : categories.filter((cat) => cat.category_code === activeCode);
 
   const toggle = (id: string) =>
     setSelectedIds((prev) =>

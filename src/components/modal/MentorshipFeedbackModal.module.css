@@ -1,0 +1,111 @@
+/* MentorshipFeedbackModal.module.css */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top */
+}
+
+.modalContent {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  text-align: center;
+}
+
+.modalContent h2 {
+  margin-bottom: 25px;
+  color: #333;
+  font-size: 1.8em;
+}
+
+.ratingContainer {
+  font-size: 2.5em; /* Size of the stars */
+  color: #ccc; /* Default star color */
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 5px; /* Space between stars */
+}
+
+.star {
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.star.filled {
+  color: #ffc107; /* Gold color for filled stars */
+}
+
+.commentContainer {
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.commentContainer label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+.commentTextarea {
+  width: calc(100% - 20px); /* Adjusting for padding */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+  min-height: 80px;
+  resize: vertical; /* Allow vertical resizing */
+}
+
+.commentTextarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px; /* Space between buttons */
+}
+
+.submitButton,
+.cancelButton {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton {
+  background-color: #007bff;
+  color: white;
+}
+
+.submitButton:hover {
+  background-color: #0056b3;
+}
+
+.cancelButton {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+}

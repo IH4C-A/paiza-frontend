@@ -70,6 +70,7 @@ export const useRegisterMentorshipFeedback = () => {
   const registerFeedback = async (feedback: {
     mentorship_id: string;
     content: string;
+    rating: number;
   }) => {
     setLoading(true);
     setError(null);

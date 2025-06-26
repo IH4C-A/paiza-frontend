@@ -55,7 +55,7 @@
 /* --- 全体レイアウト --- */
 .container {
   display: flex;
-  min-height: 100vh;
+  min-height: 89.5vh;
   flex-direction: column;
 }
 
