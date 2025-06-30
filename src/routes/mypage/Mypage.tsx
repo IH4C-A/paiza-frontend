@@ -1,9 +1,14 @@
 import { useState } from "react";
 import styles from "./Mypage.module.css";
 import { FaCode } from "react-icons/fa";
-import { FiCode } from "react-icons/fi";
 import { useCurrentUser } from "../../hooks/useUser";
-import { usePlant, useMentorships } from "../../hooks";
+import {
+  usePlant,
+  useMentorships,
+  useCategories,
+  useProblems,
+  useProblemsByCategory,
+} from "../../hooks";
 import { plantTypes } from "../../types/plantType";
 import UserCategoryGate from "../../components/modal/UserCategoryGate";
 import { useNavigate } from "react-router-dom";
@@ -25,14 +30,21 @@ function getThisWeekRange() {
 
 function groupThisWeekSchedules(schedules: MentorSchedule[]) {
   const { start, end } = getThisWeekRange();
-  const grouped: Record<string, { count: number; schedule_id: string; start_time: string }> = {};
+  const grouped: Record<
+    string,
+    { count: number; schedule_id: string; start_time: string }
+  > = {};
 
   schedules.forEach((s) => {
     const startTime = new Date(s.start_time);
     if (startTime >= start && startTime <= end) {
       const key = s.topic || "未分類";
       if (!grouped[key]) {
-        grouped[key] = { count: 1, schedule_id: s.schedule_id, start_time: s.start_time };
+        grouped[key] = {
+          count: 1,
+          schedule_id: s.schedule_id,
+          start_time: s.start_time,
+        };
       } else {
         grouped[key].count += 1;
       }
@@ -42,7 +54,6 @@ function groupThisWeekSchedules(schedules: MentorSchedule[]) {
   return grouped;
 }
 
-
 export default function Mypage() {
   const [activeTab, setActiveTab] = useState("all");
   const { currentUser } = useCurrentUser();
@@ -50,10 +61,12 @@ export default function Mypage() {
   const navigate = useNavigate();
   const { candidateMentors } = useMentorships();
   const { schedules } = useMentorshipSchedules();
-
+  const { categories } = useCategories();
   const progressData = groupThisWeekSchedules(schedules);
-  // const maxCount = Math.max(...Object.values(progressData).map((v) => v.count), 1);
-
+  const { problems } = useProblems();
+  const categoriesToRender = currentUser?.categories || categories;
+  const categoryId = activeTab === "all" ? "" : activeTab;
+  const { problemcategory } = useProblemsByCategory(categoryId);
   const TabsContent: React.FC<{ value: string; children: React.ReactNode }> = ({
     value,
     children,
@@ -134,38 +147,17 @@ export default function Mypage() {
                   >
                     すべて
                   </button>
-                  <button
-                    className={`${styles.tabsTrigger} ${
-                      activeTab === "algorithm" ? styles.active : ""
-                    }`}
-                    onClick={() => setActiveTab("algorithm")}
-                  >
-                    アルゴリズム
-                  </button>
-                  <button
-                    className={`${styles.tabsTrigger} ${
-                      activeTab === "web" ? styles.active : ""
-                    }`}
-                    onClick={() => setActiveTab("web")}
-                  >
-                    Webフレームワーク
-                  </button>
-                  <button
-                    className={`${styles.tabsTrigger} ${
-                      activeTab === "design" ? styles.active : ""
-                    }`}
-                    onClick={() => setActiveTab("design")}
-                  >
-                    UI/UX
-                  </button>
-                  <button
-                    className={`${styles.tabsTrigger} ${
-                      activeTab === "exam" ? styles.active : ""
-                    }`}
-                    onClick={() => setActiveTab("exam")}
-                  >
-                    情報処理試験
-                  </button>
+                  {categoriesToRender.map((cat) => (
+                    <button
+                      key={cat.category_id}
+                      className={`${styles.tabsTrigger} ${
+                        activeTab === cat.category_id ? styles.active : ""
+                      }`}
+                      onClick={() => setActiveTab(cat.category_id)}
+                    >
+                      {cat.category_name}
+                    </button>
+                  ))}
                 </div>
 
                 <TabsContent value="all">
@@ -179,169 +171,148 @@ export default function Mypage() {
                       </div>
                       <div className={styles.cardContent}>
                         <div className={styles.problemList}>
-                          <div className={styles.problemItem}>
-                            <div className={styles.problemIcon}>
-                              <FaCode className={styles.icon} />
-                            </div>
-                            <div className={styles.problemContent}>
-                              <div className={styles.problemHeader}>
-                                <h4 className={styles.problemTitle}>
-                                  Reactコンポーネント設計
-                                </h4>
-                                <span className={styles.difficultyB}>B</span>
+                          {problems.slice(0, 3).map((problem) => (
+                            <div
+                              key={problem.problem_id}
+                              className={styles.problemItem}
+                              onClick={() => navigate(`/skillcheck/${problem.problem_id}`)}
+                                style={{cursor: "pointer"}}
+                            >
+                              <div className={styles.problemIcon}>
+                                <FaCode className={styles.icon} />
                               </div>
-                              <p className={styles.problemDescription}>
-                                Reactを使用して再利用可能なコンポーネントを設計する問題
-                              </p>
-                            </div>
-                          </div>
-                          <div className={styles.problemItem}>
-                            <div className={styles.problemIcon}>
-                              <FiCode className={styles.icon} />
-                            </div>
-                            <div className={styles.problemContent}>
-                              <div className={styles.problemHeader}>
-                                <h4 className={styles.problemTitle}>
-                                  二分探索木の実装
-                                </h4>
-                                <span className={styles.difficultyB}>B</span>
+                              <div className={styles.problemContent}>
+                                <div className={styles.problemHeader}>
+                                  <h4 className={styles.problemTitle}>
+                                    {problem.problem_title}
+                                  </h4>
+                                  <span
+                                    className={
+                                      styles[
+                                        `difficulty${problem.rank.rank_name?.charAt(
+                                          0
+                                        )}`
+                                      ]
+                                    }
+                                  >
+                                    {problem.rank.rank_name?.charAt(0)}
+                                  </span>
+                                </div>
+                                <p className={styles.problemDescription}>
+                                  {problem.problem_text}
+                                </p>
                               </div>
-                              <p className={styles.problemDescription}>
-                                二分探索木のデータ構造を実装する問題
-                              </p>
                             </div>
-                          </div>
-                          <div className={styles.problemItem}>
-                            <div className={styles.problemIcon}>
-                              <FiCode className={styles.icon} />
-                            </div>
-                            <div className={styles.problemContent}>
-                              <div className={styles.problemHeader}>
-                                <h4 className={styles.problemTitle}>
-                                  レスポンシブデザインの実装
-                                </h4>
-                                <span className={styles.difficultyB}>B</span>
-                              </div>
-                              <p className={styles.problemDescription}>
-                                モバイルフレンドリーなWebページを設計する問題
-                              </p>
-                            </div>
-                          </div>
+                          ))}
                         </div>
                       </div>
                       <div className={styles.cardFooter}>
-                        <button className={styles.primaryButton}>
+                        <button
+                          className={styles.primaryButton}
+                          onClick={() => navigate("/skillcheck")}
+                        >
                           すべての問題を見る
                         </button>
                       </div>
                     </div>
+                  </div>
+                </TabsContent>
 
-                    <div className={styles.card}>
-                      <div className={styles.cardHeader}>
-                        <h3 className={styles.cardTitle}>スケジュール予定</h3>
-                        <p className={styles.cardDescription}>今週のスケジュール予定</p>
-                      </div>
-                      <div className={styles.cardContent}>
-                        <div className={styles.progressList}>
-                          {Object.entries(progressData).map(
-                            ([topic, count]) => {
-                              return (
-                                <div
-                                  className={styles.progressItem}
-                                  key={topic}
-                                  onClick={() => {
-                                    navigate(`/mentor/schedule/${count.schedule_id}`);
-                                  }}
-                                  style={{ cursor: "pointer" }}
-                                >
-                                  <div className={styles.progressHeader}>
-                                    <span className={styles.progressLabel}>
-                                      {topic}
-                                    </span>
-                                    <span className={styles.progressValue}>
-                                      {count.start_time}
-                                    </span>
-                                  </div>
-                                  <div className={styles.progressBar}>
-                                    <span className={styles.progressValue}>
-                                      {count.start_time}
-                                    </span>
-                                  </div>
+                {problemcategory.slice(0, 3).map((cat) => {
+                  return (
+                    <TabsContent
+                      value={cat.category.category_id}
+                      key={cat.category.category_id}
+                    >
+                      <div className={styles.cardGrid}>
+                        <div className={styles.card}>
+                          <div className={styles.cardHeader}>
+                            <h3 className={styles.cardTitle}>
+                              {cat.category.category_name}問題
+                            </h3>
+                            <p className={styles.cardDescription}>
+                              {cat.rank.rank_name}問題です
+                            </p>
+                          </div>
+                          <div className={styles.cardContent}>
+                            <div className={styles.problemList}>
+                              <div
+                                key={cat.problem_id}
+                                className={styles.problemItem}
+                                onClick={() => navigate(`/skillcheck/${cat.problem_id}`)}
+                                style={{cursor: "pointer"}}
+                              >
+                                <div className={styles.problemIcon}>
+                                  <FaCode className={styles.icon} />
                                 </div>
-                              );
-                            }
-                          )}
+                                <div className={styles.problemContent}>
+                                  <div className={styles.problemHeader}>
+                                    <h4 className={styles.problemTitle}>
+                                      {cat.problem_title}
+                                    </h4>
+                                    <span
+                                      className={
+                                        styles[
+                                          `difficulty${cat.rank.rank_name?.charAt(
+                                            0
+                                          )}`
+                                        ]
+                                      }
+                                    >
+                                      {cat.rank.rank_name?.charAt(0)}
+                                    </span>
+                                  </div>
+                                  <p className={styles.problemDescription}>
+                                    {cat.problem_text}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </TabsContent>
+                    </TabsContent>
+                  );
+                })}
 
-                <TabsContent value="algorithm">
-                  <div className={styles.card}>
-                    <div className={styles.cardHeader}>
-                      <h3 className={styles.cardTitle}>アルゴリズム問題</h3>
-                      <p className={styles.cardDescription}>
-                        データ構造とアルゴリズムの問題
-                      </p>
-                    </div>
-                    <div className={styles.cardContent}>
-                      <div className={styles.cardGrid}>
-                        {/* アルゴリズム問題のリスト */}
-                      </div>
+                <div className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <h3 className={styles.cardTitle}>スケジュール予定</h3>
+                    <p className={styles.cardDescription}>
+                      今週のスケジュール予定
+                    </p>
+                  </div>
+                  <div className={styles.cardContent}>
+                    <div className={styles.progressList}>
+                      {Object.entries(progressData).map(([topic, count]) => {
+                        return (
+                          <div
+                            className={styles.progressItem}
+                            key={topic}
+                            onClick={() => {
+                              navigate(`/mentor/schedule/${count.schedule_id}`);
+                            }}
+                            style={{ cursor: "pointer" }}
+                          >
+                            <div className={styles.progressHeader}>
+                              <span className={styles.progressLabel}>
+                                {topic}
+                              </span>
+                              <span className={styles.progressValue}>
+                                {count.start_time}
+                              </span>
+                            </div>
+                            <div className={styles.progressBar}>
+                              <span className={styles.progressValue}>
+                                {count.start_time}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-                </TabsContent>
-
-                <TabsContent value="web">
-                  <div className={styles.card}>
-                    <div className={styles.cardHeader}>
-                      <h3 className={styles.cardTitle}>
-                        Webフレームワーク問題
-                      </h3>
-                      <p className={styles.cardDescription}>
-                        React, Vue, Angularなどのフレームワーク問題
-                      </p>
-                    </div>
-                    <div className={styles.cardContent}>
-                      <div className={styles.cardGrid}>
-                        {/* Webフレームワーク問題のリスト */}
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="design">
-                  <div className={styles.card}>
-                    <div className={styles.cardHeader}>
-                      <h3 className={styles.cardTitle}>UI/UX問題</h3>
-                      <p className={styles.cardDescription}>
-                        デザインとユーザー体験に関する問題
-                      </p>
-                    </div>
-                    <div className={styles.cardContent}>
-                      <div className={styles.cardGrid}>
-                        {/* UI/UX問題のリスト */}
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="exam">
-                  <div className={styles.card}>
-                    <div className={styles.cardHeader}>
-                      <h3 className={styles.cardTitle}>情報処理試験対策</h3>
-                      <p className={styles.cardDescription}>
-                        情報処理技術者試験の対策問題
-                      </p>
-                    </div>
-                    <div className={styles.cardContent}>
-                      <div className={styles.cardGrid}>
-                        {/* 情報処理試験問題のリスト */}
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
+                </div>
               </div>
             </div>
 

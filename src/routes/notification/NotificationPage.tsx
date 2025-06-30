@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 // import { ... } from "lucide-react"; // lucide-react のインポートを削除
 
 import styles from "./NotificationPage.module.css";
-import { useNotifications } from "../../hooks";
+import { useNotifications, useMarkNotificationsAsRead } from "../../hooks";
 import type { Notification } from "../../types/notificationType";
 // SVG Icon Components (Inline)
 const BellIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
@@ -109,6 +109,7 @@ const HeartIcon = ({ className, style }: { className?: string; style?: React.CSS
 export default function NotificationsPage() {
   const [notification, setNotifications] = useState<Notification[]>([]);
   const { notifications } = useNotifications();
+  const { markAsRead } = useMarkNotificationsAsRead();
   const [activeTab, setActiveTab] = useState<"all" | "unread" | "read">("all");
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [notificationMenuOpen, setNotificationMenuOpen] = useState<string | null>(null);
@@ -172,13 +173,19 @@ export default function NotificationsPage() {
     }
   };
   
-  const toggleReadStatus = (id: string) => {
-    setNotifications(
-      notifications.map((notif) =>
-        notif.notification_id === id ? { ...notif, isRead: !notif.is_read } : notif
+  const toggleReadStatus = async (id: string) => {
+    // 1. UI を即時反映
+    setNotifications((prev) =>
+      prev.map((notif) =>
+        notif.notification_id === id ? { ...notif, is_read: !notif.is_read } : notif
       )
     );
+
     setNotificationMenuOpen(null);
+    const target = notification.find((n) => n.notification_id === id);
+    if (target && !target.is_read) {
+      await markAsRead([id]);
+    }
   };
 
   const markAllAsRead = () => {

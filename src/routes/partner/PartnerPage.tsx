@@ -4,6 +4,9 @@ import { usePlant } from "../../hooks/usePlant";
 import { plantTypes, personalities } from "../../types/plantType";
 import { FaCalendar, FaChevronCircleRight } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
+import { useMentorshipSchedules } from "../../hooks/useMentorSchedule";
+import type { MentorSchedule } from "../../types/mentorSchedule";
+import { useNavigate } from "react-router-dom";
 
 // --- インターフェース定義 ---
 interface Message {
@@ -16,13 +19,6 @@ interface LearningProgressItem {
   subject: string;
   percentage: number;
 }
-
-interface CalendarEventItem {
-  id: string;
-  title: string;
-  time: string;
-}
-
 
 // --- カスタムコンポーネント (Shadcn UIのProgress代替) ---
 const CustomProgressBar: React.FC<{ value: number; barClassName?: string }> = ({
@@ -38,6 +34,45 @@ const CustomProgressBar: React.FC<{ value: number; barClassName?: string }> = ({
     </div>
   );
 };
+
+function getThisWeekRange() {
+  const now = new Date();
+  const start = new Date(now);
+  start.setDate(now.getDate() - now.getDay()); // 日曜始まり
+
+  const end = new Date(start);
+  end.setDate(start.getDate() + 7); // 土曜終わり
+
+  start.setHours(0, 0, 0, 0);
+  end.setHours(23, 59, 59, 999);
+  return { start, end };
+}
+
+function groupThisWeekSchedules(schedules: MentorSchedule[]) {
+  const { start, end } = getThisWeekRange();
+  const grouped: Record<
+    string,
+    { count: number; schedule_id: string; start_time: string }
+  > = {};
+
+  schedules.forEach((s) => {
+    const startTime = new Date(s.start_time);
+    if (startTime >= start && startTime <= end) {
+      const key = s.topic || "未分類";
+      if (!grouped[key]) {
+        grouped[key] = {
+          count: 1,
+          schedule_id: s.schedule_id,
+          start_time: s.start_time,
+        };
+      } else {
+        grouped[key].count += 1;
+      }
+    }
+  });
+
+  return grouped;
+}
 
 // --- メインコンポーネント ---
 export default function PartnerPage() {
@@ -63,17 +98,14 @@ export default function PartnerPage() {
   const [newMessage, setNewMessage] = useState("");
   const [activeTab, setActiveTab] = useState("chat");
   const chatAreaRef = useRef<HTMLDivElement>(null);
+  const { schedules } = useMentorshipSchedules();
+  const navigate = useNavigate();
 
   const learningProgressData: LearningProgressItem[] = [
     { subject: "アルゴリズム", percentage: 65 },
     { subject: "Webフレームワーク", percentage: 40 },
     { subject: "UI/UX", percentage: 25 },
     { subject: "情報処理試験", percentage: 10 },
-  ];
-  const calendarEventsData: CalendarEventItem[] = [
-    { id: "ev1", title: "Reactコンポーネント設計", time: "今日 15:00" },
-    { id: "ev2", title: "二分探索木の実装", time: "明日 10:00" },
-    { id: "ev3", title: "情報処理試験対策", time: "水曜日 13:00" },
   ];
 
   useEffect(() => {
@@ -153,6 +185,7 @@ export default function PartnerPage() {
       </div>
     );
   };
+  const progressData = groupThisWeekSchedules(schedules);
 
   return (
     <div className={styles.pageContainer}>
@@ -184,14 +217,20 @@ export default function PartnerPage() {
                     {getPlantPreview()}
                   </div>
                   <h3 className={styles.partnerName}>{plant?.plant_name}</h3>
-                  <p className={styles.partnerLevel}>レベル:{plant?.growth_milestones.level}</p>
+                  <p className={styles.partnerLevel}>
+                    レベル:{plant?.growth_milestones.level}
+                  </p>
                   <div className={styles.statRowContainer}>
                     <div className={styles.statRowInner}>
                       <div className={styles.statLabelContainer}>
                         <span className={styles.statLabel}>成長度</span>
-                        <span className={styles.statValue}>{plant?.growth_milestones.milestone}%</span>
+                        <span className={styles.statValue}>
+                          {plant?.growth_milestones.milestone}%
+                        </span>
                       </div>
-                      <CustomProgressBar value={plant?.growth_milestones?.milestone ?? 0} />
+                      <CustomProgressBar
+                        value={plant?.growth_milestones?.milestone ?? 0}
+                      />
                     </div>
                   </div>
                   <div
@@ -244,22 +283,26 @@ export default function PartnerPage() {
                 </div>
                 <div className={styles.cardContent}>
                   <div className={styles.calendarList}>
-                    {calendarEventsData.map((event) => (
-                      <div key={event.id} className={styles.calendarItem}>
+                    {Object.entries(progressData).map(([topic, count]) => (
+                      <div
+                        key={topic}
+                        className={styles.calendarItem}
+                      >
                         <div className={styles.calendarIconContainer}>
                           {/* public/icons/calendar.svg を配置してください */}
                           <FaCalendar />
                         </div>
                         <div>
-                          <h3 className={styles.calendarItemTextH3}>
-                            {event.title}
-                          </h3>
+                          <h3 className={styles.calendarItemTextH3}>{topic}</h3>
                           <p className={styles.calendarItemTextP}>
-                            {event.time}
+                            {count.start_time}
                           </p>
                         </div>
                         <button
                           className={`${styles.iconButton} ${styles.calendarItemButton}`}
+                          onClick={() => {
+                            navigate(`/mentor/schedule/${count.schedule_id}`);
+                          }}
                         >
                           {/* public/icons/chevron-right.svg を配置してください */}
                           <FaChevronCircleRight />
@@ -384,15 +427,12 @@ export default function PartnerPage() {
                             className={styles.calendarItem}
                           >
                             <div className={styles.growthRecordIconContainer}>
-                              <div
-                                className={styles.growthPlantIcon}
-                              >
-                              </div>
+                              <div className={styles.growthPlantIcon}></div>
                             </div>
                             <div>
-                              <h3
-                                className={styles.calendarItemTextH3}
-                              >{milestone.log_message}</h3>
+                              <h3 className={styles.calendarItemTextH3}>
+                                {milestone.log_message}
+                              </h3>
                               <p className={styles.calendarItemTextP}>
                                 {milestone.created_at}
                               </p>

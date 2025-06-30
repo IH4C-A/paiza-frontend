@@ -308,3 +308,54 @@
     font-size: 0.75rem;
     overflow-x: auto;
   }
+
+/* ProblemDetailPage.module.css */
+
+/* ... (既存のスタイル) ... */
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 左カラムと右カラムを均等に */
+  gap: 20px;
+}
+
+/* 右カラム全体のコンテナ（エディタと結果/プレビューを内包） */
+.editorAndOutputColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* エディタとプレビュー/結果の間のスペース */
+}
+
+.previewSection {
+  flex-grow: 1; /* 親のeditorAndOutputColumnの残りのスペースを埋める */
+  min-height: 300px; /* プレビューエリアの最小の高さ */
+  display: flex;
+  flex-direction: column; /* カード内でタイトルとコンテンツを縦に並べる */
+}
+
+.previewSection .cardContent {
+  flex-grow: 1; /* iframeをコンテンツ領域いっぱいに広げる */
+  padding: 0; /* iframeがカードのpaddingで余白ができないように調整 */
+}
+
+.previewIframe {
+  width: 100%;
+  height: 100%;
+  border: none; /* iframeのデフォルトのボーダーを削除 */
+  border-radius: 8px; /* 親のカードに合わせて角を丸く */
+  background-color: white;
+  display: block; /* 余計な空白をなくす */
+}
+
+/* 必要に応じて、実行ボタンのアイコンとテキストの調整 */
+.editorButton img {
+  margin-right: 5px; /* アイコンとテキストの間隔 */
+}
+
+/* 実行ボタンの disabled 状態での見た目を調整 (任意) */
+.editorButton[disabled] {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* 他のスタイルも適宜調整してください */

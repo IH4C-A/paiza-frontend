@@ -1,14 +1,22 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import { Link, useParams } from "react-router-dom"; // useParamsは不要になったので削除
+import { Link, useParams } from "react-router-dom";
 import styles from "./MeetingDetailPage.module.css";
 import type { MentorSchedule } from "../../../../types/mentorSchedule";
 import { useMentorshipSchedule } from "../../../../hooks/useMentorSchedule";
 import { useRegisterMentorshipFeedback } from "../../../../hooks/useMentorFeedBack";
-import { FaArrowLeft, FaCalendar, FaClock, FaEdit, FaEllipsisH, FaStar, FaTrash, FaVideo } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaCalendar,
+  FaClock,
+  FaEdit,
+  FaEllipsisH,
+  FaStar,
+  FaTrash,
+  FaVideo,
+} from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
 import { useUpdateSchedule } from "../../../../hooks/useMentorSchedule";
-// --- 型定義 (変更なし) ---
 
 interface DropdownProps {
   openMenuId: string | null;
@@ -34,7 +42,6 @@ interface FeedbackDialogProps {
   setRating: React.Dispatch<React.SetStateAction<number>>;
 }
 
-// ヘルパー関数 (変更なし)
 function formatDate(dateString: string) {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
@@ -61,7 +68,6 @@ function getRelativeTime(dateString: string) {
   return `${Math.floor(diffInHours / 24)}日後`;
 }
 
-// --- メインコンポーネント ---
 export default function MeetingDetailPage() {
   const { id } = useParams();
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -99,6 +105,7 @@ export default function MeetingDetailPage() {
         return <span className={styles.badge}>不明</span>;
     }
   };
+
   const handleCancel = () => {
     updateSchedule(id || "", {
       status: "canceled",
@@ -110,22 +117,28 @@ export default function MeetingDetailPage() {
       })
       .catch((error) => {
         console.error("キャンセルの更新に失敗:", error);
+        alert("キャンセルの更新に失敗しました。"); // ユーザーに通知
       });
-    setShowCancelDialog(false);
   };
-  const handleFeedbackSubmit = () => {
+
+  const handleFeedbackSubmit = async () => {
     console.log("Feedback:", { meetingId: id, feedback, rating });
-    registerFeedback({
-      mentorship_id: id || "",
-      content: feedback,
-      rating: rating,
-    })
-      .then(() => {
-        setShowFeedbackDialog(false);
-        setFeedback("");
-        setRating(0);
+    try {
+      await registerFeedback({
+        mentorship_id: schedule?.mentorship_id?.mentorship_id || "", // Correctly pass mentorship_id
+        content: feedback,
+        rating: rating,
       });
-    setShowFeedbackDialog(false);
+      alert("フィードバックを送信しました！"); // 成功メッセージ
+      setShowFeedbackDialog(false);
+      setFeedback("");
+      setRating(0);
+      // Optionally, refetch schedule data to show the new feedback immediately
+      // useMentorshipSchedule hook should ideally handle re-fetching if `id` changes or a state triggers it
+    } catch (error) {
+      console.error("フィードバックの登録に失敗:", error);
+      alert("フィードバックの送信に失敗しました。"); // ユーザーに通知
+    }
   };
 
   return (
@@ -180,13 +193,12 @@ export default function MeetingDetailPage() {
                         </div>
                       </div>
                     )}
-                    {/* {meeting.preparation && <div><h3>事前準備</h3><ul className={styles.checklist}>{meeting.preparation.map((item:string, i:number)=><li key={i} className={styles.checklistItem}><span>✓</span><span>{item}</span></li>)}</ul></div>} */}
-                    {/* {meeting.status === 'completed' && meeting.actionItems && <div><h3>アクションアイテム</h3><ul className={styles.checklist}>{meeting.actionItems.map((item:string, i:number)=><li key={i} className={styles.checklistItem}><span>✓</span><span>{item}</span></li>)}</ul></div>} */}
                   </div>
                 </div>
               </div>
+              {/* フィードバック表示部分 */}
               {schedule?.status === "completed" &&
-                (schedule?.feedback || "") && (
+                schedule.feedback?.comment && ( // ここを修正
                   <div className={styles.card}>
                     <div className={styles.cardHeader}>
                       <h2 className={styles.cardTitle}>フィードバック</h2>
@@ -194,60 +206,80 @@ export default function MeetingDetailPage() {
                     <div
                       className={`${styles.cardContent} ${styles.feedbackCardContent}`}
                     >
-                      {schedule?.feedback && (
-                        <div className={styles.feedbackBlock}>
-                          <p>あなたのフィードバック</p>
-                          <div className={styles.feedbackText}>
-                            <p>{schedule?.feedback.comment}</p>
+                      <div className={styles.feedbackBlock}>
+                        <p>あなたのフィードバック</p>
+                        <div className={styles.feedbackText}>
+                          <div className={styles.ratingDisplay}>
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <FaStar
+                                key={i}
+                                className={
+                                  i < (schedule.feedback?.rating || 0) // 表示用の星
+                                    ? styles.starFilled
+                                    : styles.starEmpty
+                                }
+                              />
+                            ))}
                           </div>
+                          <p>{schedule.feedback.comment}</p>
                         </div>
-                      )}
-                      {/* {meeting.mentorFeedback && <div className={styles.feedbackBlock}><p>メンターからのフィードバック</p><div className={styles.feedbackText}><p>{meeting.mentorFeedback}</p></div></div>} */}
+                      </div>
                     </div>
                   </div>
                 )}
             </div>
             <div className={styles.rightColumn}>
-              <div className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <h2 className={styles.cardTitle}>メンター情報</h2>
-                </div>
-                <div className={styles.mentorCardContent}>
-                  <div className={styles.mentorCardHeader}>
-                    <div className={styles.avatar}>
-                      <img
-                        src={schedule?.mentorship_id?.mentor?.profile_image ?? ""}
-                        alt={schedule?.mentorship_id?.mentor?.first_name}
-                      />
-                    </div>
-                    <div>
-                      <div className={styles.mentorNameContainer}>
-                        <h3 className={styles.mentorName}>
-                          {schedule?.mentorship_id?.mentor?.first_name}
-                        </h3>
-                        <span
-                          className={`${styles.badge} ${styles.rankBadge} ${
-                            schedule?.mentorship_id?.mentor?.ranks?.[1]?.rank_name === "S"
-                              ? styles.rankBadgeS
-                              : styles.rankBadgeA
-                          }`}
-                        >
-                          {schedule?.mentorship_id?.mentor?.ranks?.[1]?.rank_name}
-                        </span>
-                      </div>
-                      <div className={styles.mentorRating}>
-                        <FaStar
-                          className={styles.starFilled}
+              {schedule?.mentorship_id ? (
+                <div className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <h2 className={styles.cardTitle}>メンター情報</h2>
+                  </div>
+                  <div className={styles.mentorCardContent}>
+                    <div className={styles.mentorCardHeader}>
+                      <div className={styles.avatar}>
+                        <img
+                          src={
+                            schedule?.mentorship_id?.mentor?.profile_image ?? ""
+                          }
+                          alt={schedule?.mentorship_id?.mentor?.first_name}
                         />
-                        <span>{schedule?.mentorship_id.mentor?.average_rating}</span>
-                        <span
-                          style={{
-                            fontSize: "0.75rem",
-                            color: "var(--muted-color)",
-                          }}
-                        >
-                          {/* ({meeting.mentorReviewCount}件) */}
-                        </span>
+                      </div>
+                      <div>
+                        <div className={styles.mentorNameContainer}>
+                          <h3 className={styles.mentorName}>
+                            {schedule?.mentorship_id?.mentor?.first_name}
+                          </h3>
+                          <span
+                            className={`${styles.badge} ${styles.rankBadge} ${
+                              schedule?.mentorship_id?.mentor?.ranks?.[1]
+                                ?.rank_name === "S"
+                                ? styles.rankBadgeS
+                                : schedule.mentorship_id?.mentor?.ranks?.[1]
+                                    ?.rank_name === "A"
+                                ? styles.rankBadgeA
+                                : styles.rankBadgeB // Fallback for other ranks
+                            }`}
+                          >
+                            {
+                              schedule?.mentorship_id?.mentor?.ranks?.[1]
+                                ?.rank_name
+                            }
+                          </span>
+                        </div>
+                        <div className={styles.mentorRating}>
+                          <FaStar className={styles.starFilled} />
+                          <span>
+                            {schedule?.mentorship_id?.mentor?.average_rating}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "0.75rem",
+                              color: "var(--muted-color)",
+                            }}
+                          >
+                            {/* ({meeting.mentorReviewCount}件) */}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -267,67 +299,107 @@ export default function MeetingDetailPage() {
                     </Link>
                   </div>
                 </div>
-              </div>
-              <div className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <h2 className={styles.cardTitle}>面談詳細</h2>
-                </div>
-                <div className={styles.cardContent}>
-                  <div className={styles.detailsList}>
-                    <div className={styles.detailItem}>
-                      <FaCalendar />
-                      <span>{formatDate(schedule?.start_time || "")}</span>
+              ) : schedule?.group ? (
+                <div className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <h2 className={styles.cardTitle}>グループ情報</h2>
+                  </div>
+                  <div className={styles.mentorCardContent}>
+                    <div className={styles.mentorCardHeader}>
+                      <div className={styles.avatar}>
+                        <img
+                          src={schedule?.group?.group_image ?? ""}
+                          alt={schedule?.group?.group_name}
+                        />
+                      </div>
+                      <div>
+                        <div className={styles.mentorNameContainer}>
+                          <h3 className={styles.mentorName}>
+                            {schedule?.group?.group_name}
+                          </h3>
+                        </div>
+                        <div>
+                          <span
+                            style={{
+                              fontSize: "0.9rem",
+                              color: "var(--muted-color)",
+                            }}
+                          >
+                            {schedule?.group?.description}
+                          </span>
+                        </div>
+                      </div>
                     </div>
+                  </div>
+                  <div className={styles.mentorButtons}>
+                    <Link
+                      to={`/group/${schedule?.group?.group_id}`}
+                      className={styles.mentorButton}
+                    >
+                      <FaMessage />
+                      メッセージ
+                    </Link>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+            <div className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>面談詳細</h2>
+              </div>
+              <div className={styles.cardContent}>
+                <div className={styles.detailsList}>
+                  <div className={styles.detailItem}>
+                    <FaCalendar />
+                    <span>{formatDate(schedule?.start_time || "")}</span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <FaClock />
+                    <span>
+                      {schedule?.start_time.split("T")[1]} -{" "}
+                      {schedule?.end_time.split("T")[1]}
+                    </span>
+                  </div>
+                  {schedule?.status === "scheduled" ? (
                     <div className={styles.detailItem}>
-                      <FaClock />
+                      <FaVideo />
                       <span>
-                        {schedule?.start_time.split("T")[1]} - {schedule?.end_time.split("T")[1]}
-                        {/* {meeting.duration}分) */}
+                        {getRelativeTime(`${schedule?.start_time || ""}`)}
                       </span>
                     </div>
-                    {schedule?.status === "scheduled" ? (
-                      <div className={styles.detailItem}>
-                        <FaVideo />
-                        <span>
-                          {getRelativeTime(
-                            `${schedule?.start_time || ""}`
-                          )}
-                        </span>
-                      </div>
-                    ) : null}
-                  </div>
+                  ) : null}
                 </div>
               </div>
-              {schedule?.status === "scheduled" && (
-                <div className={styles.card}>
-                  <div className={styles.cardContent}>
-                    <a
-                      href={`/meeting/${schedule?.schedule_id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.joinButton}
-                    >
-                      <FaVideo />
-                      ミーティングに参加
-                    </a>
-                    <p className={styles.joinHelpText}>
-                      面談開始時刻の5分前から参加できます
-                    </p>
-                  </div>
-                </div>
-              )}
-              {schedule?.status === "scheduled" && (
-                <div className={styles.alert}>
-                  <FaCalendar />
-                  <div>
-                    <h4 className={styles.alertTitle}>リマインダー設定済み</h4>
-                    <p className={styles.alertDescription}>
-                      面談の1日前と1時間前に通知をお送りします。
-                    </p>
-                  </div>
-                </div>
-              )}
             </div>
+            {schedule?.status === "scheduled" && (
+              <div className={styles.card}>
+                <div className={styles.cardContent}>
+                  <a
+                    href={`/meeting/${schedule?.schedule_id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.joinButton}
+                  >
+                    <FaVideo />
+                    ミーティングに参加
+                  </a>
+                  <p className={styles.joinHelpText}>
+                    面談開始時刻の5分前から参加できます
+                  </p>
+                </div>
+              </div>
+            )}
+            {schedule?.status === "scheduled" && (
+              <div className={styles.alert}>
+                <FaCalendar />
+                <div>
+                  <h4 className={styles.alertTitle}>リマインダー設定済み</h4>
+                  <p className={styles.alertDescription}>
+                    面談の1日前と1時間前に通知をお送りします。
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </main>
@@ -353,7 +425,6 @@ export default function MeetingDetailPage() {
   );
 }
 
-// --- サブコンポーネント ---
 const Dropdown: React.FC<DropdownProps> = ({
   openMenuId,
   setOpenMenuId,
@@ -374,15 +445,18 @@ const Dropdown: React.FC<DropdownProps> = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [setOpenMenuId]);
+
   return (
     <div className={styles.dropdownContainer} ref={dropdownRef}>
       <button
         className={styles.iconButton}
         onClick={() =>
-          setOpenMenuId(openMenuId === meeting.schedule_id ? null : meeting.schedule_id)
+          setOpenMenuId(
+            openMenuId === meeting.schedule_id ? null : meeting.schedule_id
+          )
         }
       >
-      <FaEllipsisH />
+        <FaEllipsisH />
       </button>
       {openMenuId === meeting.schedule_id && (
         <div className={styles.dropdownMenu}>
@@ -402,7 +476,10 @@ const Dropdown: React.FC<DropdownProps> = ({
                 予約を変更
               </a>
               <button
-                onClick={() => setShowCancelDialog(true)}
+                onClick={() => {
+                  setShowCancelDialog(true);
+                  setOpenMenuId(null); // Close dropdown when opening dialog
+                }}
                 className={`${styles.dropdownMenuItem} ${styles.dropdownMenuItemDanger}`}
               >
                 <FaTrash />
@@ -410,9 +487,12 @@ const Dropdown: React.FC<DropdownProps> = ({
               </button>
             </>
           )}
-          {meeting.status === "completed" && !meeting.feedback && (
+          {meeting?.status === "completed" && !meeting.feedback && (
             <button
-              onClick={() => setShowFeedbackDialog(true)}
+              onClick={() => {
+                setShowFeedbackDialog(true);
+                setOpenMenuId(null); // Close dropdown when opening dialog
+              }}
               className={styles.dropdownMenuItem}
             >
               <FaStar />
@@ -420,7 +500,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             </button>
           )}
           <Link
-            to={`/mentor/schedule/new?mentor=${meeting.schedule_id}`}
+            to={`/mentor/schedule/new?mentor=${meeting.mentorship_id?.mentor?.user_id}`} // Corrected to use mentor's user_id
             className={styles.dropdownMenuItem}
           >
             再予約する
@@ -510,9 +590,7 @@ const FeedbackDialog: React.FC<FeedbackDialogProps> = ({
                   onClick={() => setRating(i + 1)}
                   className={styles.ratingStarButton}
                 >
-                  <img
-                    src="/icons/star.svg"
-                    alt=""
+                  <FaStar
                     className={
                       i < rating ? styles.starFilled : styles.starEmpty
                     }
@@ -544,7 +622,7 @@ const FeedbackDialog: React.FC<FeedbackDialogProps> = ({
           <button
             className={`${styles.dialogButton} ${styles.dialogButtonPrimary}`}
             onClick={onSubmit}
-            disabled={!rating || !feedback}
+            disabled={!rating || !feedback.trim()} // feedbackが空白の場合は無効化
           >
             送信する
           </button>
