@@ -45,7 +45,7 @@ export default function ProblemDetailPage() {
   const { problem } = useProblem(id ?? "");
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState(getDefaultCode(language));
-
+  console.log(problem);
   const [testResults, setTestResults] = useState<TestCase[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [activeTab, setActiveTab] = useState("problem"); // 'problem', 'examples', 'hints'

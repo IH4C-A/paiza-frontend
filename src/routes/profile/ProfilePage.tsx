@@ -1,23 +1,24 @@
 "use client"
 
-import { useState, type JSX } from "react"
+import { useState } from "react"
 // react-router-domからuseParamsをインポート
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // react-iconsをインポート: FaBookOpenとFaMessageを適切なアイコン(FaBook, FaComment)に修正
-import { FaHeart, FaStar, FaTrophy, FaUser, FaUserPlus, FaCalendarAlt, FaCode, FaComment, FaBook, FaEllipsisV } from "react-icons/fa"; // Font Awesomeのアイコンを使用
+import { FaHeart, FaStar, FaUser, FaUserPlus, FaCalendarAlt, FaComment, FaEllipsisV } from "react-icons/fa"; // Font Awesomeのアイコンを使用
 import { FaCog } from "react-icons/fa"; // 設定アイコンの例 (編集ボタンで使用)
-
+import { useUser, useCurrentUser, useUserPlant } from "../../hooks";
+import { plantTypes } from "../../types/plantType";
 
 // CSS Modulesファイルをインポート (変更なし)
 import styles from './ProfilePage.module.css' // CSS Modulesのパスが正しいことを確認してください
 
 // アクティビティタイプとアイコンのマッピング
-const activityIconMap: { [key: string]: JSX.Element } = {
-  course_completed: <FaBook className={styles.iconSmall} style={{ color: '#3b82f6' }} />, // FaBookOpen -> FaBook
-  Youtubeed: <FaComment className={styles.iconSmall} style={{ color: '#22c55e' }} />, // FaMessage -> FaComment
-  problem_solved: <FaCode className={styles.iconSmall} style={{ color: '#a855f7' }} />,
-  achievement: <FaTrophy className={styles.iconSmall} style={{ color: '#eab308' }} />,
-};
+// const activityIconMap: { [key: string]: JSX.Element } = {
+//   course_completed: <FaBook className={styles.iconSmall} style={{ color: '#3b82f6' }} />, // FaBookOpen -> FaBook
+//   Youtubeed: <FaComment className={styles.iconSmall} style={{ color: '#22c55e' }} />, // FaMessage -> FaComment
+//   problem_solved: <FaCode className={styles.iconSmall} style={{ color: '#a855f7' }} />,
+//   achievement: <FaTrophy className={styles.iconSmall} style={{ color: '#eab308' }} />,
+// };
 
 export default function ProfilePage() { // paramsの受け取りを削除
   const { id } = useParams<{ id: string }>(); // useParamsフックを使ってidを取得
@@ -25,84 +26,15 @@ export default function ProfilePage() { // paramsの受け取りを削除
   const [isFollowing, setIsFollowing] = useState(false)
   const [activeTab, setActiveTab] = useState("activity")
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { user } = useUser(id ?? "");
+  const { currentUser } = useCurrentUser();
+  const { userplant } = useUserPlant(id ?? "");
+  const navigate = useNavigate();
 
-  // ログインユーザーのID（実際の認証システムから取得するように置き換えてください）
-  const currentLoggedInUserId = "user123"; // 例: あなたのログインユーザーID
-
-  // ユーザーデータのモック
-  // useParamsで取得したIDに基づいてデータを表示するように変更
-  const user = {
-    id: id || currentLoggedInUserId, // URLにIDがあればそのID、なければログインユーザーIDを使用
-    name: "田中太郎",
-    username: "@tanaka_dev",
-    rank: "A",
-    bio: "フロントエンドエンジニア志望の大学生です。React、TypeScriptを中心に学習中。UI/UXにも興味があります。",
-    joinDate: "2024年1月",
-    location: "東京都",
-    website: "https://tanaka-dev.com",
-    followers: 156,
-    following: 89,
-    isOnline: true,
-    lastSeen: "2分前",
-    specialties: ["React", "TypeScript", "UI/UX", "JavaScript"],
-    achievements: [
-      { id: "1", name: "React マスター", description: "React基礎講座を完了", icon: "🏆", date: "2024年3月" },
-      { id: "2", name: "問題解決王", description: "100問の問題を解決", icon: "🧩", date: "2024年2月" },
-      { id: "3", name: "コミュニティ貢献者", description: "50回の質問に回答", icon: "🤝", date: "2024年1月" },
-    ],
-    stats: {
-      problemsSolved: 127,
-      coursesCompleted: 8,
-      questionsAnswered: 43,
-      helpfulAnswers: 38,
-      studyStreak: 15,
-      totalStudyTime: "156時間",
-    },
-    learningProgress: [
-      { category: "React", progress: 85, level: "上級" },
-      { category: "TypeScript", progress: 70, level: "中級" },
-      { category: "UI/UX", progress: 60, level: "中級" },
-      { category: "アルゴリズム", progress: 45, level: "初級" },
-    ],
-    recentActivity: [
-      {
-        id: "1",
-        type: "course_completed", // type を使用
-        title: "TypeScript応用講座を完了しました",
-        timestamp: "2時間前",
-      },
-      {
-        id: "2",
-        type: "Youtubeed", // type を使用
-        title: "「Reactのパフォーマンス最適化」に回答しました",
-        timestamp: "5時間前",
-      },
-      {
-        id: "3",
-        type: "problem_solved", // type を使用
-        title: "「二分探索の実装」問題を解決しました",
-        timestamp: "1日前",
-      },
-      {
-        id: "4",
-        type: "achievement", // type を使用
-        title: "「React マスター」の称号を獲得しました",
-        timestamp: "3日前",
-      },
-    ],
-    uchinoKo: {
-      name: "ピカピカ",
-      type: "flower",
-      level: 7,
-      personality: "明るい励まし屋",
-      color: "#f59e0b",
-      icon: "🌸",
-    },
-  }
-
-  // 自分のプロフィールかどうかを判定
-  const isMyProfile = user.id === currentLoggedInUserId;
-
+  const selectedType = plantTypes.find(
+      (type) => type.id === userplant?.growth_stage
+    );
+  console.log(user)
 
   const toggleFollow = () => {
     setIsFollowing(!isFollowing)
@@ -118,6 +50,8 @@ export default function ProfilePage() { // paramsの受け取りを削除
     return styles.rankOther;
   };
 
+  const isMyProfile = user?.user_id === (typeof currentUser === "string" ? currentUser : currentUser?.user_id);
+
   return (
     <div className={styles.container}>
       <main className={styles.main}>
@@ -128,46 +62,41 @@ export default function ProfilePage() { // paramsの受け取りを削除
               <div className={styles.profileHeader}>
                 <div className={styles.avatarSection}>
                   <div className={styles.avatarContainer}>
-                    <img src="/sampleA.png" alt={user.name} className={styles.avatar} />
-                    {user.isOnline && <div className={styles.onlineIndicator} />}
+                    <img src="/sampleA.png" alt={user?.first_name} className={styles.avatar} />
+                    {/* {user.isOnline && <div className={styles.onlineIndicator} />} */}
                   </div>
                   <div className={styles.userInfo}>
                     <div className={styles.userNameRank}>
-                      <h1 className={styles.userName}>{user.name}</h1>
-                      <div className={`${styles.userRank} ${getRankClass(user.rank)}`}>
-                        {user.rank}
+                      <h1 className={styles.userName}>{user?.last_name}{user?.first_name}</h1>
+                      <div className={`${styles.userRank} ${getRankClass(user?.ranks?.[1].rank_name ?? "")}`}>
+                        {user?.ranks?.[1].rank_name}
                       </div>
                     </div>
-                    <p className={styles.usernameText}>{user.username}</p>
+                    <p className={styles.usernameText}>{user?.username}</p>
                     <p className={styles.lastSeenText}>
-                      {user.isOnline ? "オンライン" : `最終ログイン: ${user.lastSeen}`}
+                      {/* {user.isOnline ? "オンライン" : `最終ログイン: ${user.lastSeen}`} */}
                     </p>
                   </div>
                 </div>
                 <div className={styles.profileDetails}>
                   <div className={styles.bioActions}>
                     <div className={styles.bioSection}>
-                      <p className={styles.bioText}>{user.bio}</p>
+                      <p className={styles.bioText}></p>
                       <div className={styles.specialties}>
-                        {user.specialties.map((specialty) => (
+                        {user?.categories.map((specialty) => (
                           <span
-                            key={specialty}
+                            key={specialty.category_id}
                             className={styles.specialtyTag}
                           >
-                            {specialty}
+                            {specialty.category_name}
                           </span>
                         ))}
                       </div>
                       <div className={styles.joinLocation}>
                         <div className={styles.joinItem}>
                           <FaCalendarAlt className={styles.iconSmall} />
-                          <span>{user.joinDate}に参加</span>
+                          <span>{user?.created_at}に参加</span>
                         </div>
-                        {user.location && (
-                          <div className={styles.joinItem}>
-                            <span>📍 {user.location}</span>
-                          </div>
-                        )}
                       </div>
                     </div>
                     <div className={styles.actionButtons}>
@@ -189,17 +118,17 @@ export default function ProfilePage() { // paramsの受け取りを削除
                             {isFollowing ? (
                               <>
                                 <FaUserPlus className={styles.iconSmall} />
-                                フォロー中
+                                指導中
                               </>
                             ) : (
-                              <>
-                                <FaUserPlus className={styles.iconSmall} />
-                                フォローする
-                              </>
+                              <div  className={styles.iconSmall} onClick={() => navigate(`/mentor/apply/${user?.user_id}`)}>
+                                <FaUserPlus />
+                                メンター申請へ
+                              </div>
                             )}
                           </button>
-                          <button className={styles.outlineButton}>
-                            <FaComment className={styles.iconSmall} /> {/* FaMessage -> FaComment */}
+                          <button className={styles.outlineButton} onClick={() => navigate(`/chats/${user?.user_id}`)}>
+                            <FaComment className={styles.iconSmall} />
                             メッセージ
                           </button>
                           <div className={styles.dropdown}>
@@ -221,15 +150,15 @@ export default function ProfilePage() { // paramsの受け取りを削除
                   </div>
                   <div className={styles.followStats}>
                     <div className={styles.statItem}>
-                      <div className={styles.statNumber}>{user.followers}</div>
-                      <div className={styles.statLabel}>フォロワー</div>
+                      <div className={styles.statNumber}>{user?.mentees_count}</div>
+                      <div className={styles.statLabel}>指導中</div>
                     </div>
                     <div className={styles.statItem}>
-                      <div className={styles.statNumber}>{user.following}</div>
+                      <div className={styles.statNumber}>0</div>
                       <div className={styles.statLabel}>フォロー中</div>
                     </div>
                     <div className={styles.statItem}>
-                      <div className={styles.statNumber}>{user.stats.studyStreak}</div>
+                      {/* <div className={styles.statNumber}>{user.stats.studyStreak}</div> */}
                       <div className={styles.statLabel}>連続学習日</div>
                     </div>
                   </div>
@@ -271,17 +200,6 @@ export default function ProfilePage() { // paramsの受け取りを削除
                       </div>
                       <div className={styles.cardContent}>
                         <div className={styles.activityList}>
-                          {user.recentActivity.map((activity) => (
-                            <div key={activity.id} className={styles.activityItem}>
-                              <div className={styles.activityIconContainer}>
-                                {activityIconMap[activity.type]} {/* typeに基づいてアイコンをレンダリング */}
-                              </div>
-                              <div className={styles.activityText}>
-                                <p className={styles.activityTitle}>{activity.title}</p>
-                                <p className={styles.activityTimestamp}>{activity.timestamp}</p>
-                              </div>
-                            </div>
-                          ))}
                         </div>
                       </div>
                     </div>
@@ -297,20 +215,6 @@ export default function ProfilePage() { // paramsの受け取りを削除
                       </div>
                       <div className={styles.cardContent}>
                         <div className={styles.progressList}>
-                          {user.learningProgress.map((item) => (
-                            <div key={item.category} className={styles.progressItem}>
-                              <div className={styles.progressHeader}>
-                                <span className={styles.progressCategory}>{item.category}</span>
-                                <div className={styles.progressDetails}>
-                                  <span className={styles.progressLevel}>{item.level}</span>
-                                  <span className={styles.progressPercentage}>{item.progress}%</span>
-                                </div>
-                              </div>
-                              <div className={styles.progressBarBackground}>
-                                <div className={styles.progressBarFill} style={{ width: `${item.progress}%` }}></div>
-                              </div>
-                            </div>
-                          ))}
                         </div>
                       </div>
                     </div>
@@ -326,16 +230,6 @@ export default function ProfilePage() { // paramsの受け取りを削除
                       </div>
                       <div className={styles.cardContent}>
                         <div className={styles.achievementsGrid}>
-                          {user.achievements.map((achievement) => (
-                            <div key={achievement.id} className={styles.achievementItem}>
-                              <div className={styles.achievementIcon}>{achievement.icon}</div>
-                              <div className={styles.achievementText}>
-                                <h3 className={styles.achievementName}>{achievement.name}</h3>
-                                <p className={styles.achievementDescription}>{achievement.description}</p>
-                                <p className={styles.achievementDate}>{achievement.date}</p>
-                              </div>
-                            </div>
-                          ))}
                         </div>
                       </div>
                     </div>
@@ -354,23 +248,23 @@ export default function ProfilePage() { // paramsの受け取りを削除
                   <div className={styles.statsList}>
                     <div className={styles.statRow}>
                       <span className={styles.statRowLabel}>解決した問題</span>
-                      <span className={styles.statRowValue}>{user.stats.problemsSolved}</span>
+                      {/* <span className={styles.statRowValue}>{user.stats.problemsSolved}</span> */}
                     </div>
                     <div className={styles.statRow}>
                       <span className={styles.statRowLabel}>完了した講座</span>
-                      <span className={styles.statRowValue}>{user.stats.coursesCompleted}</span>
+                      {/* <span className={styles.statRowValue}>{user.stats.coursesCompleted}</span> */}
                     </div>
                     <div className={styles.statRow}>
                       <span className={styles.statRowLabel}>回答した質問</span>
-                      <span className={styles.statRowValue}>{user.stats.questionsAnswered}</span>
+                      {/* <span className={styles.statRowValue}>{user.stats.questionsAnswered}</span> */}
                     </div>
                     <div className={styles.statRow}>
                       <span className={styles.statRowLabel}>役立った回答</span>
-                      <span className={styles.statRowValue}>{user.stats.helpfulAnswers}</span>
+                      {/* <span className={styles.statRowValue}>{user.stats.helpfulAnswers}</span> */}
                     </div>
                     <div className={styles.statRow}>
                       <span className={styles.statRowLabel}>総学習時間</span>
-                      <span className={styles.statRowValue}>{user.stats.totalStudyTime}</span>
+                      {/* <span className={styles.statRowValue}>{user.stats.totalStudyTime}</span> */}
                     </div>
                   </div>
                 </div>
@@ -388,18 +282,18 @@ export default function ProfilePage() { // paramsの受け取りを削除
                   <div className={styles.uchinoKoInfo}>
                     <div
                       className={styles.uchinoKoAvatarOuter}
-                      style={{ backgroundColor: `${user.uchinoKo.color}20` }}
+                      style={{ backgroundColor: `${userplant?.color}20` }}
                     >
                       <div
                         className={styles.uchinoKoAvatarInner}
-                        style={{ backgroundColor: user.uchinoKo.color }}
+                        style={{ backgroundColor: userplant?.color }}
                       >
-                        {user.uchinoKo.icon}
+                        {selectedType?.icon || "🌱"}
                       </div>
                     </div>
-                    <h3 className={styles.uchinoKoName}>{user.uchinoKo.name}</h3>
-                    <p className={styles.uchinoKoLevel}>レベル {user.uchinoKo.level}</p>
-                    <p className={styles.uchinoKoPersonality}>{user.uchinoKo.personality}</p>
+                    <h3 className={styles.uchinoKoName}>{userplant?.plant_name}</h3>
+                    <p className={styles.uchinoKoLevel}>レベル {userplant?.growth_milestones.level}</p>
+                    <p className={styles.uchinoKoPersonality}>{userplant?.growth_stage}</p>
                   </div>
                 </div>
               </div>
