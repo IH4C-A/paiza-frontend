@@ -1,9 +1,11 @@
 import { FaFilter, FaSearch } from "react-icons/fa";
 import styles from "./SkillCheckPage.module.css";
 import { useProblems } from "../../hooks";
+import { useNavigate } from "react-router-dom";
 
 export default function SkillCheckPage() {
   const { problems } = useProblems();
+  const navigate = useNavigate();
   return (
     <div className={styles.wrapper}>
       <main className={styles.main}>
@@ -57,7 +59,7 @@ export default function SkillCheckPage() {
                 </div>
               </div>
               <div className={styles.cardFooter}>
-                <button className={styles.cardButton}>問題に挑戦</button>
+                <button className={styles.cardButton} onClick={() => navigate(`/skillcheck/${p.problem_id}`)}>問題に挑戦</button>
               </div>
             </div>
           ))}

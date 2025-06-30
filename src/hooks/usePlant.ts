@@ -142,3 +142,39 @@ export const useUpdatePlant = () => {
 
     return { loading, error, updatePlant };
 }
+
+// ユーザーの植物単体取得
+export const useUserPlant = (id: string) => {
+    const [userplant, setPlant] = useState<Plant | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchPlant = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch(`http://localhost:5000/plant_user/${id}`,{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data: Plant = await response.json();
+            setPlant(data);
+        } catch (error) {
+            console.error('Error fetching plant:', error);
+            setError(error instanceof Error ? error.message : 'Unknown error');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchPlant();
+    }, []);
+
+    return { userplant, loading, error, refetch: fetchPlant };
+}

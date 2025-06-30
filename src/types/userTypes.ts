@@ -18,6 +18,7 @@ export type User = {
     mentees_count?: number;
     response_time?: number;
     average_rating?: number;
+    created_at: string;
 }
 
 export type UserregisterPayload = {

@@ -32,6 +32,7 @@ import MentorSchedulePage from "./routes/mentor/schedule/MentorSchedulePage";
 import NewSchedulePage from "./routes/mentor/schedule/new/NewSchedulePage";
 import MeetingDetailPage from "./routes/mentor/schedule/id/MeetingDetailPage";
 import MeetingRoomPage from "./routes/meeting/MeetingRoomPage";
+import ProfilePage from "./routes/profile/ProfilePage";
 
 function AppContent() {
   const location = useLocation();
@@ -72,6 +73,7 @@ function AppContent() {
           element={<NotificationSettingsPage />}
         />
         <Route path="/mypage" element={<Mypage />} />
+        <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/question" element={<QuestionsPage />} />
         <Route path="/question/:id" element={<QuestionDetailPage />} />
         <Route path="/question/new" element={<NewQuestionPage />} />
