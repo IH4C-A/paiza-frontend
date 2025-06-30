@@ -5,12 +5,19 @@ export const useProblems = () => {
     const [problems, setProblems] = useState<Problem[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const token = localStorage.getItem('token');
 
     const fetchProblems = async () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('http://localhost:5000/problems');
+            const response = await fetch('http://localhost:5000/problems',{
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -64,7 +71,7 @@ export const useProblem = (problemId: string) => {
 
 // category_idで問題を取得
 export const useProblemsByCategory = (categoryId: string) => {
-    const [problems, setProblems] = useState<Problem[]>([]);
+    const [problemcategory, setProblems] = useState<Problem[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -72,7 +79,9 @@ export const useProblemsByCategory = (categoryId: string) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`http://localhost:5000/problems/category/${categoryId}`);
+            const response = await fetch(`http://localhost:5000/problems/category/${categoryId}`,{
+                method: "GET",
+            });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -87,10 +96,16 @@ export const useProblemsByCategory = (categoryId: string) => {
     };
 
     useEffect(() => {
+        if (!categoryId || categoryId === "all") {
+            // categoryIdがnullか"all"のときはfetchしない
+            setProblems([]);
+            setLoading(false);
+            return;
+        }
         fetchProblemsByCategory();
     }, [categoryId]);
 
-    return { problems, loading, error, refetch: fetchProblemsByCategory };
+    return { problemcategory, loading, error, refetch: fetchProblemsByCategory };
 };
 
 // rank_idで問題を取得

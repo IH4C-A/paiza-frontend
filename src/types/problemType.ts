@@ -1,6 +1,12 @@
+import type { Category } from "./categoryType";
+import type { Rank } from "./rankType";
+import type { TestCase } from "./testCaseType";
+
 export type Problem = {
     problem_id: string;
+    problem_title: string;
     problem_text: string;
-    cateory_id: string;
-    rank_id: string;
+    category: Category;
+    rank: Rank;
+    test_cases: TestCase[];
 }

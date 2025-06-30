@@ -1,62 +1,9 @@
 import { FaFilter, FaSearch } from "react-icons/fa";
 import styles from "./SkillCheckPage.module.css";
-const problems = [
-  {
-    title: "Reactコンポーネント設計",
-    description: "Webフレームワーク",
-    detail:
-      "Reactを使用して再利用可能なコンポーネントを設計する問題。状態管理とpropsの適切な使用方法を学びます。",
-    tags: ["React", "JavaScript", "コンポーネント"],
-    rank: "B",
-    rankColor: "#facc15",
-  },
-  {
-    title: "二分探索木の実装",
-    description: "アルゴリズム",
-    detail:
-      "二分探索木のデータ構造を実装し、挿入、検索、削除の操作を実装する問題。効率的なデータ構造の理解を深めます。",
-    tags: ["データ構造", "二分木", "探索"],
-    rank: "B",
-    rankColor: "#facc15",
-  },
-  {
-    title: "レスポンシブデザインの実装",
-    description: "UI/UX",
-    detail: "モバイルフレンドリーなWebページを設計する問題。メディアクエリとフレックスボックスを使用したレスポンシブデザインを学びます。",
-    tags: ["CSS", "レスポンシブ", "デザイン"],
-    rank: "B",
-    rankColor: "#facc15"
-  },
-  {
-    title: "データベース正規化",
-    description: "情報処理試験",
-    detail:
-      "データベース設計における正規化の概念と実践方法を学ぶ問題。第1正規形から第3正規形までの変換を行います。",
-    tags: ["データベース", "正規化", "SQL"],
-    rank: "A",
-    rankColor: "#f97316",
-  },
-  {
-    title: "GraphQLスキーマ設計",
-    description: "Webフレームワーク",
-    detail:
-      "GraphQLのスキーマ設計とリゾルバの実装を行う問題。RESTful APIとの違いと利点を理解します。",
-    tags: ["GraphQL", "API", "スキーマ"],
-    rank: "A",
-    rankColor: "#f97316",
-  },
-  {
-    title: "ダイクストラ法の実装",
-    description: "アルゴリズム",
-    detail:
-      "グラフ上の最短経路を求めるダイクストラ法を実装する問題。優先度キューを使った効率的な実装方法を学びます。",
-    tags: ["グラフ", "最短経路", "アルゴリズム"],
-    rank: "S",
-    rankColor: "#ef4444",
-  },
-];
+import { useProblems } from "../../hooks";
 
 export default function SkillCheckPage() {
+  const { problems } = useProblems();
   return (
     <div className={styles.wrapper}>
       <main className={styles.main}>
@@ -92,24 +39,21 @@ export default function SkillCheckPage() {
             <div className={styles.card} key={i}>
               <div className={styles.cardHeader}>
                 <div className={styles.cardTitleRow}>
-                  <h2 className={styles.cardTitle}>{p.title}</h2>
+                  <h2 className={styles.cardTitle}>{p.problem_title}</h2>
                   <span
                     className={styles.cardBadge}
-                    style={{ backgroundColor: p.rankColor }}
                   >
-                    {p.rank}
+                    {p.rank.rank_name}
                   </span>
                 </div>
-                <div className={styles.cardDescription}>{p.description}</div>
+                {/* <div className={styles.cardDescription}>{p.description}</div> */}
               </div>
               <div className={styles.cardContent}>
-                <p className={styles.cardText}>{p.detail}</p>
+                <p className={styles.cardText}>{p.problem_text}</p>
                 <div className={styles.cardTags}>
-                  {p.tags.map((tag, j) => (
-                    <span className={styles.cardTag} key={j}>
-                      {tag}
+                    <span className={styles.cardTag}>
+                      {p.category.category_name}
                     </span>
-                  ))}
                 </div>
               </div>
               <div className={styles.cardFooter}>
