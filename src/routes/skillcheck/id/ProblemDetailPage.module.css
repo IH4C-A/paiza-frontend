@@ -359,3 +359,52 @@
 }
 
 /* 他のスタイルも適宜調整してください */
+
+.modalButton {
+  padding: 10px 16px;
+  margin: 8px;
+  border: none;
+  background-color: #2c963f;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modalButton:hover {
+  background-color: #247830;
+}
+
+.explanationCard {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f7f7f7;
+  border-radius: 8px;
+}
+
+.codeBlock {
+  background: #eee;
+  padding: 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 400px;
+}
