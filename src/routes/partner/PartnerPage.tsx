@@ -7,17 +7,13 @@ import { FaMessage } from "react-icons/fa6";
 import { useMentorshipSchedules } from "../../hooks/useMentorSchedule";
 import type { MentorSchedule } from "../../types/mentorSchedule";
 import { useNavigate } from "react-router-dom";
+import { useSubmissions } from "../../hooks/useRunSubmission";
 
 // --- インターフェース定義 ---
 interface Message {
   text: string;
   sender: "user" | "plant";
   time: string;
-}
-
-interface LearningProgressItem {
-  subject: string;
-  percentage: number;
 }
 
 // --- カスタムコンポーネント (Shadcn UIのProgress代替) ---
@@ -99,15 +95,9 @@ export default function PartnerPage() {
   const [activeTab, setActiveTab] = useState("chat");
   const chatAreaRef = useRef<HTMLDivElement>(null);
   const { schedules } = useMentorshipSchedules();
+  const { submissions } = useSubmissions(plant?.user_id ?? "");
+  console.log(submissions)
   const navigate = useNavigate();
-
-  const learningProgressData: LearningProgressItem[] = [
-    { subject: "アルゴリズム", percentage: 65 },
-    { subject: "Webフレームワーク", percentage: 40 },
-    { subject: "UI/UX", percentage: 25 },
-    { subject: "情報処理試験", percentage: 10 },
-  ];
-
   useEffect(() => {
     if (chatAreaRef.current) {
       chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
@@ -258,17 +248,21 @@ export default function PartnerPage() {
                 </div>
                 <div className={styles.cardContent}>
                   <div className={styles.learningStatusGrid}>
-                    {learningProgressData.map((item) => (
-                      <div key={item.subject} className={styles.progressItem}>
+                    {submissions.map((item) => (
+                      <div key={item.submission_id} className={styles.progressItem}>
                         <div className={styles.statLabelContainer}>
                           <span className={styles.statLabel}>
-                            {item.subject}
+                            {item?.language}
                           </span>
                           <span className={styles.statValue}>
-                            {item.percentage}%
+                            {item?.passed === true ? (
+                              <p>正解</p>
+                            ): (
+                              <p>不正解</p>
+                            )}
                           </span>
                         </div>
-                        <CustomProgressBar value={item.percentage} />
+                        {item?.problem?.problem_title}
                       </div>
                     ))}
                   </div>

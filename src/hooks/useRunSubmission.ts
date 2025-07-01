@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { RunApiResponse, TestResult } from "../types/resultTestType";
+import type { Submission } from "../types/submissionType";
 
 export const useRunAndSubmit = () => {
   const [results, setResults] = useState<TestResult[]>([]);
@@ -64,4 +65,47 @@ export const useRunAndSubmit = () => {
   };
 
   return { runCode, submitCode, results, passedAll, loading, error };
+};
+
+
+export const useSubmissions = (
+  userId?: string
+) => {
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchSubmissions = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+
+      const response = await fetch(
+        `http://localhost:5000/submissions?${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data: Submission[] = await response.json();
+      setSubmissions(data);
+    } catch (err) {
+      console.error("Error fetching submissions:", err);
+      setError(err instanceof Error ? err.message : "Unknown error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubmissions();
+  }, [userId]);
+
+  return { submissions, loading, error, refetch: fetchSubmissions };
 };

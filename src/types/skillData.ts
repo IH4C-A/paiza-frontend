@@ -1,39 +1,90 @@
-// --- 言語に応じたデフォルトコードを返すヘルパー関数 (HTML/CSSを追加) ---
 export const getDefaultCode = (lang: string): string => {
-  switch (lang) {
+  switch (lang.toLowerCase()) {
     case "javascript":
       return `function solution(input) {
-  // ここにJavaScriptコードを書いてください
-  
+  // JavaScriptコードをここに記述
   return "";
 }`;
     case "typescript":
       return `function solution(input: any): any {
-  // ここにTypeScriptコードを書いてください
-  
+  // TypeScriptコードをここに記述
   return "";
 }`;
     case "python":
+    case "python3":
       return `def solution(input):
-  # ここにPythonコードを書いてください
-  
-  return ""
-`;
+  # Pythonコードをここに記述
+  return ""`;
     case "java":
       return `public class Solution {
-    public Object solution(Object input) {
-        // ここにJavaコードを書いてください
-        
-        return null;
-    }
+  public static Object solution(Object input) {
+    // Javaコードをここに記述
+    return null;
+  }
+}`;
+    case "php":
+      return `<?php
+function solution($input) {
+  // PHPコードをここに記述
+  return "";
 }`;
     case "ruby":
       return `def solution(input)
-  # ここにRubyコードを書いてください
-  
+  # Rubyコードをここに記述
   return ""
-end
-`;
+end`;
+    case "c":
+      return `#include <stdio.h>
+
+void solution(char* input) {
+  // Cコードをここに記述
+  printf("%s", input);
+}`;
+    case "c++":
+      return `#include <iostream>
+using namespace std;
+
+void solution(string input) {
+  // C++コードをここに記述
+  cout << input << endl;
+}`;
+    case "c#":
+    case "csharp":
+      return `using System;
+
+class Program {
+  public static string Solution(string input) {
+    // C#コードをここに記述
+    return "";
+  }
+}`;
+    case "go":
+      return `package main
+import "fmt"
+
+func solution(input string) string {
+  // Goコードをここに記述
+  return ""
+}`;
+    case "swift":
+      return `func solution(_ input: String) -> String {
+  // Swiftコードをここに記述
+  return ""
+}`;
+    case "rust":
+      return `fn solution(input: &str) -> String {
+  // Rustコードをここに記述
+  input.to_string()
+}`;
+    case "dart":
+      return `String solution(String input) {
+  // Dartコードをここに記述
+  return "";
+}`;
+    case "bash":
+      return `#!/bin/bash
+# Bashコードをここに記述
+echo "$1"`;
     case "html":
       return `<!DOCTYPE html>
 <html>
@@ -42,48 +93,52 @@ end
   <style>
     body {
       font-family: sans-serif;
-      margin: 20px;
-      padding: 0;
       background-color: #f0f0f0;
-    }
-    h1 {
-      color: #333;
-    }
-    .box {
-      width: 100px;
-      height: 100px;
-      background-color: skyblue;
-      border: 1px solid steelblue;
-      margin-top: 10px;
+      padding: 20px;
     }
   </style>
 </head>
 <body>
   <h1>Hello, HTML!</h1>
-  <p>ここにあなたのHTMLコードを書いてください。</p>
-  <div class="box"></div>
 </body>
 </html>`;
     case "css":
-      return `/* ここにCSSコードを書いてください */
+      return `/* CSSコードをここに記述 */
 body {
-  background-color: #e6ffe6; /* 薄い緑色の背景 */
-  color: #004d00; /* 濃い緑色の文字 */
-}
-
-h1 {
-  text-decoration: underline;
-  color: #006400; /* より濃い緑色 */
-}
-
-.box {
-  width: 100px;
-  height: 100px;
-  background-color: #fffacd; /* レモン色の背景 */
-  border: 2px dashed #ff4500; /* オレンジ色の破線 */
-}
-`;
+  background-color: #f5f5f5;
+  color: #333;
+}`;
+    case "sql":
+      return `-- SQLクエリをここに記述
+SELECT * FROM users;`;
+    case "r":
+      return `solution <- function(input) {
+  # Rコードをここに記述
+  return(input)
+}`;
+    case "vb":
+    case "visual basic":
+      return `Function Solution(ByVal input As String) As String
+  ' Visual Basicコードをここに記述
+  Return input
+End Function`;
+    case "assembly":
+      return `; Assemblyコードをここに記述
+section .data
+  msg db "Hello, Assembly!",0Ah
+section .text
+  global _start
+_start:
+  ; 実装省略`;
+    case "applescript":
+      return `-- AppleScriptコードをここに記述
+display dialog "Hello, AppleScript!"`;
+    case "google apps script":
+      return `function solution(input) {
+  // Google Apps Scriptコードをここに記述
+  return input;
+}`;
     default:
-      return `// 未知の言語です。ここにコードを書いてください。`;
+      return `// 未知の言語です。ここにコードを記述してください。`;
   }
 };
