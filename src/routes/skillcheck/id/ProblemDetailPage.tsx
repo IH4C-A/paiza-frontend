@@ -4,9 +4,10 @@ import Editor from "@monaco-editor/react";
 import styles from "./ProblemDetailPage.module.css";
 import { FaPaperPlane, FaPlay, FaSave } from "react-icons/fa";
 import { FaRotate } from "react-icons/fa6";
-import { useProblem } from "../../../hooks";
+import { useProblem, useAnswer } from "../../../hooks";
 import type { TestCase } from "../../../types/testCaseType";
 import { getDefaultCode } from "../../../types/skillData";
+import { useRunAndSubmit } from "../../../hooks/useRunSubmission";
 
 // --- 簡易Markdown表示コンポーネント (変更なし) ---
 const SimpleMarkdownDisplay: React.FC<{ content: string }> = ({ content }) => {
@@ -43,12 +44,17 @@ const SimpleMarkdownDisplay: React.FC<{ content: string }> = ({ content }) => {
 export default function ProblemDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { problem } = useProblem(id ?? "");
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState("");
   const [code, setCode] = useState(getDefaultCode(language));
-  console.log(problem);
   const [testResults, setTestResults] = useState<TestCase[]>([]);
-  const [isRunning, setIsRunning] = useState(false);
   const [activeTab, setActiveTab] = useState("problem"); // 'problem', 'examples', 'hints'
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [showExplanation, setShowExplanation] = useState(false); // 解説表示
+
+  const { runCode, submitCode, results, passedAll, loading } =
+    useRunAndSubmit();
+  const { answer } = useAnswer(problem?.problem_id ?? "");
 
   // ★★★ NEW: プレビュー表示/結果表示の切り替えタブ用State ★★★
   const [rightColumnTab, setRightColumnTab] = useState<
@@ -57,38 +63,32 @@ export default function ProblemDetailPage() {
     language === "html" || language === "css" ? "preview" : "none" // 初期表示はプレビュー
   );
 
-  const runCode = () => {
-    setIsRunning(true);
-    setTestResults([]);
-    // ★★★ コード実行時に結果タブに切り替える ★★★
+  console.log(rightColumnTab);
+
+  const handleRun = async () => {
+    if (!problem) return;
+    await runCode(code, language, problem.problem_id);
+
+    // テスト結果に変換して表示用にセット
+    const mapped = results.map((r) => ({
+      test_case_id: r.test_case_id,
+      problem_id: problem.problem_id,
+      input_text: r.input,
+      expected_output: r.expected_output,
+      status: r.passed ? "passed" : "failed",
+      executionTime: Math.floor(r.execution_time * 1000),
+    }));
+
+    setTestResults(mapped);
     setRightColumnTab("results");
-
-    setTimeout(() => {
-      const results = problem?.test_cases.map((testCase) => {
-        const currentStatus = Math.random() > 0.3 ? "passed" : "failed";
-
-        const newResult = {
-          test_case_id: testCase.test_case_id,
-          problem_id: id ?? "",
-          input_text: testCase.input_text,
-          expected_output: testCase.expected_output,
-          status: currentStatus,
-          is_public:
-            currentStatus === "passed"
-              ? testCase.is_public
-              : "エラー: 期待される結果と異なります",
-          executionTime: Math.floor(Math.random() * 100) + 50,
-        };
-        return newResult;
-      });
-
-      setTestResults(results ?? []);
-      setIsRunning(false);
-    }, 2000);
   };
 
-  const submitCode = () => {
-    alert("コードを提出しました！ (テスト用)");
+  const handleSubmit = async () => {
+    if (!problem) return;
+
+    await submitCode(code, language, problem.problem_id); // 成否に応じたモーダル表示
+    setIsCorrect(passedAll === true);
+    setShowResultModal(true);
   };
 
   const handleEditorChange = (value: string | undefined) => {
@@ -292,14 +292,14 @@ export default function ProblemDetailPage() {
                   />
                   <div className={styles.editorActions}>
                     <button
-                      onClick={runCode}
+                      onClick={handleRun}
                       disabled={
-                        isRunning || language === "html" || language === "css"
-                      } // HTML/CSSでは「実行」を無効化
+                        loading || language === "html" || language === "css"
+                      }
                       className={`${styles.editorButton} ${styles.primaryButton}`}
                     >
                       <FaPlay />
-                      {isRunning ? "実行中..." : "実行"}
+                      {loading ? "実行中..." : "実行"}
                     </button>
                     <button
                       className={`${styles.editorButton} ${styles.outlineButton}`}
@@ -314,11 +314,12 @@ export default function ProblemDetailPage() {
                       リセット
                     </button>
                     <button
-                      onClick={submitCode}
+                      onClick={handleSubmit}
+                      disabled={loading || passedAll === null}
                       className={`${styles.editorButton} ${styles.primaryButton} ${styles.submitButton}`}
                     >
                       <FaPaperPlane />
-                      提出
+                      {loading ? "提出中..." : "提出"}
                     </button>
                   </div>
                 </div>
@@ -366,7 +367,7 @@ export default function ProblemDetailPage() {
                           >
                             <div className={styles.resultHeader}>
                               <span className="font-medium">
-                                テストケース {result.test_case_id}
+                                テストケース {result.input_text}
                               </span>
                               <div className={styles.editorHeader}>
                                 <span
@@ -395,6 +396,68 @@ export default function ProblemDetailPage() {
                     </div>
                   </div>
                 )
+              )}
+              {showResultModal && (
+                <div className={styles.modalOverlay}>
+                  <div className={styles.modalContent}>
+                    <h2>{isCorrect ? "🎉 正解です！" : "❌ 不正解です"}</h2>
+                    <p>
+                      {isCorrect
+                        ? "すべてのテストケースを通過しました！"
+                        : "残念ながら不正解です。もう一度チャレンジしましょう。"}
+                    </p>
+
+                    {isCorrect ? (
+                      <button
+                        className={styles.modalButton}
+                        onClick={() => setShowExplanation(true)}
+                      >
+                        ✅ 解説を表示する
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          className={styles.modalButton}
+                          onClick={() => {
+                            setShowResultModal(false); // モーダルを閉じて
+                          }}
+                        >
+                          🔁 もう一度挑戦する
+                        </button>
+                        <button
+                          className={styles.modalButton}
+                          onClick={() => {
+                            setActiveTab("hints");
+                            setShowResultModal(false);
+                          }}
+                        >
+                          💡 ヒントを見る
+                        </button>
+                      </>
+                    )}
+
+                    <button
+                      className={styles.modalClose}
+                      onClick={() => setShowResultModal(false)}
+                    >
+                      閉じる
+                    </button>
+                  </div>
+                </div>
+              )}
+              {showExplanation && answer && (
+                <div className={styles.explanationCard}>
+                  <h3>✅ 模範解答</h3>
+                  <pre className={styles.codeBlock}>
+                    {answer.answer_text}
+                  </pre>
+                  {answer.explanation && (
+                    <>
+                      <h4>📝 解説</h4>
+                      <p>{answer.explanation}</p>
+                    </>
+                  )}
+                </div>
               )}
             </div>
           </div>
