@@ -1,20 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import styles from "./PartnerPage.module.css";
 import { usePlant } from "../../hooks/usePlant";
 import { plantTypes, personalities } from "../../types/plantType";
-import { FaCalendar, FaChevronCircleRight } from "react-icons/fa";
-import { FaMessage } from "react-icons/fa6";
+import { FaCalendar, FaChevronCircleRight, FaMicrophone, FaMicrophoneAltSlash } from "react-icons/fa";
 import { useMentorshipSchedules } from "../../hooks/useMentorSchedule";
 import type { MentorSchedule } from "../../types/mentorSchedule";
 import { useNavigate } from "react-router-dom";
 import { useSubmissions } from "../../hooks/useRunSubmission";
+import { fetchPlantResponse } from "../../hooks/useSpeerch";
 
-// --- インターフェース定義 ---
-interface Message {
-  text: string;
-  sender: "user" | "plant";
-  time: string;
-}
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 // --- カスタムコンポーネント (Shadcn UIのProgress代替) ---
 const CustomProgressBar: React.FC<{ value: number; barClassName?: string }> = ({
@@ -73,73 +70,61 @@ function groupThisWeekSchedules(schedules: MentorSchedule[]) {
 // --- メインコンポーネント ---
 export default function PartnerPage() {
   const { plant } = usePlant();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      text: "おはよう！今日も一緒に頑張ろうね！",
-      sender: "plant",
-      time: "9:00",
-    },
-    { text: "今日はどんな勉強をする予定？", sender: "plant", time: "9:01" },
-    {
-      text: "Reactのコンポーネント設計について勉強したいと思ってるよ",
-      sender: "user",
-      time: "9:05",
-    },
-    {
-      text: "いいね！Reactは楽しいよ。わからないことがあったら、いつでも質問してね！",
-      sender: "plant",
-      time: "9:06",
-    },
-  ]);
-  const [newMessage, setNewMessage] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  // const recognitionRef = useRef<SpeechRecognition | null>(null);
   const [activeTab, setActiveTab] = useState("chat");
-  const chatAreaRef = useRef<HTMLDivElement>(null);
   const { schedules } = useMentorshipSchedules();
   const { submissions } = useSubmissions(plant?.user_id ?? "");
-  console.log(submissions)
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (chatAreaRef.current) {
-      chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
-    }
-  }, [messages]);
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =useSpeechRecognition();
 
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: newMessage,
-          sender: "user",
-          time: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        },
-      ]);
-      setNewMessage("");
-      setTimeout(() => {
-        const responses = [
-          "その調子！頑張ってるね！",
-          "素晴らしい進捗だね！",
-          "何か困ったことはある？",
-          "今日の学習目標は達成できそう？",
-          "休憩も大切だよ！無理しないでね。",
-        ];
-        const randomResponse =
-          responses[Math.floor(Math.random() * responses.length)];
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: randomResponse,
-            sender: "plant",
-            time: new Date().toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-          },
-        ]);
-      }, 1000);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
+    null
+  );
+  const planttype = plantTypes.find(
+      (type) => type.id === plant?.growth_stage
+  );
+  const personalitieType = personalities.find(
+      (type) => type.id === plant?.mood
+  );
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+  const [audioURL, setAudioURL] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  console.log(audioChunks,audioURL)
+
+  if (!browserSupportsSpeechRecognition) {
+    return <div>ブラウザが音声認識をサポートしていません。</div>;
+  }
+  const handleListen = () => {
+    if (isListening) {
+      SpeechRecognition.stopListening();
+      mediaRecorder?.stop();
+      setIsListening(false);
+    } else {
+      resetTranscript();
+      setAudioChunks([]);
+      SpeechRecognition.startListening({ continuous: true });
+      setIsListening(true);
+
+      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        const recorder = new MediaRecorder(stream);
+        setMediaRecorder(recorder);
+
+        const chunks: Blob[] = [];
+
+        recorder.ondataavailable = (event) => {
+          chunks.push(event.data);
+        };
+
+        recorder.onstop = () => {
+          const blob = new Blob(chunks, { type: "audio/webm" });
+          setAudioChunks(chunks);
+          setAudioURL(URL.createObjectURL(blob));
+          fetchPlantResponse(transcript, planttype?.speaker ?? 0, personalitieType?.description ?? "");
+        };
+
+        recorder.start();
+      });
     }
   };
 
@@ -249,7 +234,10 @@ export default function PartnerPage() {
                 <div className={styles.cardContent}>
                   <div className={styles.learningStatusGrid}>
                     {submissions.map((item) => (
-                      <div key={item.submission_id} className={styles.progressItem}>
+                      <div
+                        key={item.submission_id}
+                        className={styles.progressItem}
+                      >
                         <div className={styles.statLabelContainer}>
                           <span className={styles.statLabel}>
                             {item?.language}
@@ -257,7 +245,7 @@ export default function PartnerPage() {
                           <span className={styles.statValue}>
                             {item?.passed === true ? (
                               <p>正解</p>
-                            ): (
+                            ) : (
                               <p>不正解</p>
                             )}
                           </span>
@@ -278,10 +266,7 @@ export default function PartnerPage() {
                 <div className={styles.cardContent}>
                   <div className={styles.calendarList}>
                     {Object.entries(progressData).map(([topic, count]) => (
-                      <div
-                        key={topic}
-                        className={styles.calendarItem}
-                      >
+                      <div key={topic} className={styles.calendarItem}>
                         <div className={styles.calendarIconContainer}>
                           {/* public/icons/calendar.svg を配置してください */}
                           <FaCalendar />
@@ -338,68 +323,43 @@ export default function PartnerPage() {
               </div>
 
               {activeTab === "chat" && (
-                <div className={styles.tabContent}>
-                  <div className={styles.card}>
-                    <div className={styles.cardHeader}>
-                      <h2 className={styles.cardTitle}>
-                        {plant?.plant_name}とチャット
-                      </h2>
-                      <p className={styles.cardDescription}>
-                        あなたのパートナーと会話しましょう
-                      </p>
+                <div className={styles.callContainer}>
+                  <div className={styles.callHeader}>
+                    {getPlantPreview()}
+                    <div>
+                      <h2 className={styles.callName}>{plant?.plant_name}</h2>
+                      <p className={styles.callStatus}>通話中 • 音声のみ</p>
                     </div>
-                    <div className={styles.cardContent}>
-                      <div className={styles.chatArea} ref={chatAreaRef}>
-                        {messages.map((message, index) => (
-                          <div
-                            key={index}
-                            className={`${styles.messageRow} ${
-                              message.sender === "user"
-                                ? styles.messageRowUser
-                                : styles.messageRowPlant
-                            }`}
-                          >
-                            <div
-                              className={`${styles.messageBubble} ${
-                                message.sender === "user"
-                                  ? styles.messageBubbleUser
-                                  : styles.messageBubblePlant
-                              }`}
-                            >
-                              <p>{message.text}</p>
-                              <p
-                                className={`${styles.messageTime} ${
-                                  message.sender === "user"
-                                    ? styles.messageTimeUser
-                                    : styles.messageTimePlant
-                                }`}
-                              >
-                                {message.time}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className={styles.chatInputContainer}>
-                        <input
-                          type="text"
-                          placeholder="メッセージを入力..."
-                          className={styles.chatInput}
-                          value={newMessage}
-                          onChange={(e) => setNewMessage(e.target.value)}
-                          onKeyDown={(e) =>
-                            e.key === "Enter" && handleSendMessage()
-                          }
-                        />
-                        <button
-                          onClick={handleSendMessage}
-                          className={`${styles.iconButton} ${styles.sendButton}`}
-                        >
-                          {/* public/icons/message-square.svg を配置してください */}
-                          <FaMessage />
-                        </button>
-                      </div>
-                    </div>
+                  </div>
+
+                  <div className={styles.waveformArea}>
+                    <p>🎙️ あなたの声を聞いています...</p>
+                    {/* ※ 再生アニメーション・波形などをここに表示可能 */}
+                  </div>
+
+                  <div className={styles.callControls}>
+                    <button
+                      className={styles.controlButton}
+                      onClick={handleListen}
+                    >
+                      {isListening ? <FaMicrophone /> : <FaMicrophoneAltSlash />}
+                    </button>
+                    <button
+                      className={styles.controlButton}
+                      onClick={() => {
+                        SpeechRecognition.stopListening();
+                        mediaRecorder?.stop();
+                        setIsListening(false);
+                      }}
+                    >
+                      ❌ 通話終了
+                    </button>
+                  </div>
+                  <div className={styles.transcriptArea}>
+                    <p className={styles.transcriptLabel}>📝 認識結果：</p>
+                    <p className={styles.transcript}>
+                      {transcript || "（まだ話していません）"}
+                    </p>
                   </div>
                 </div>
               )}
