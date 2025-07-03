@@ -31,24 +31,28 @@ export const plantTypes = [
       name: "新芽",
       description: "小さくて可愛い新芽。成長が早く、励ましが得意です。",
       icon: "🌱",
+      speaker: 1,
     },
     {
       id: "flower",
       name: "花",
       description: "美しい花を咲かせます。創造性を刺激してくれます。",
       icon: "🌸",
+      speaker: 3,
     },
     {
       id: "tree",
       name: "木",
       description: "しっかりとした木。安定感があり、長期的な目標達成をサポートします。",
       icon: "🌳",
+      speaker: 7,
     },
     {
       id: "cactus",
       name: "サボテン",
       description: "たくましいサボテン。困難に立ち向かう力を与えてくれます。",
       icon: "🌵",
+      speaker: 10,
     },
   ]
 

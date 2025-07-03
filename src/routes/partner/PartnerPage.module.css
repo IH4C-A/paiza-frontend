@@ -382,3 +382,63 @@
   font-size: 2.25rem; /* text-4xl */
   color: var(--background); /* Icon color inside colored circle */
 }
+
+.callContainer {
+  background: #2f3136;
+  color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.callHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #444;
+}
+
+.callName {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.callStatus {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.waveformArea {
+  margin: 1rem 0;
+  font-size: 1.2rem;
+}
+
+.callControls {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.controlButton {
+  padding: 0.8rem 1.6rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 999px;
+  background: #5865f2;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.controlButton:hover {
+  background: #4752c4;
+}
