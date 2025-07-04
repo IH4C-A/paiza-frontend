@@ -1,9 +1,8 @@
-import { Link } from 'react-router-dom';
-import React from 'react';
-import styles from '../TopPage.module.css'; 
+import { Link } from "react-router-dom";
+import styles from "./FeatureCard.module.css";
 
 type FeatureCardProps = {
-  image: React.ReactNode;
+  image: string;
   title: string;
   description: string;
   link: string;
@@ -11,13 +10,23 @@ type FeatureCardProps = {
 
 function FeatureCard({ image, title, description, link }: FeatureCardProps) {
   return (
-    <div className={styles.card}>
-      <figure>{image}</figure>
-      <h3>{title}</h3>
-      <p>{description}</p>
-      <Link to={link}>
-        <button className={styles.button}>使ってみる</button>
-      </Link>
+    <div className={styles.container}>
+      <figure>
+        <img
+          className={styles.cardImage}
+          src={image}
+          alt=""
+          width={200}
+          height={200}
+        />
+      </figure>
+      <div className={styles.featureDescription}>
+        <h2 className={styles.cardTitle}>{title}</h2>
+        <p className={styles.cardText}>{description}</p>
+        <Link className={styles.buttonLink} to={link}>
+          <button className={styles.cardButton}>使ってみる</button>
+        </Link>
+      </div>
     </div>
   );
 }
