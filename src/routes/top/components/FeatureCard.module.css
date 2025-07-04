@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+
+  width: 1000px;
+  height: 350px;
+  padding: 20px 40px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 50px;
+}
+.cardImage {
+  width: 250px;
+  object-fit: cover;
+}
+.featureDescription {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+.cardTitle {
+  font-size: 1.2rem;
+}
+.cardText {
+  font-size: 1.1rem;
+  line-height: 1.5rem;
+  word-break: break-all;
+}
+.buttonLink {
+  text-decoration: none;
+}
+.cardButton {
+  display: block;
+  margin: auto;
+  background-color: #93b636;
+  width: 100%;
+  height: 40px;
+
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1.1rem;
+}
