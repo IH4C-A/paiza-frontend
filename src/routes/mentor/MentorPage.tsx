@@ -236,7 +236,7 @@ const currentMentorList =
                           </div>
                           <div
                             className={`${styles.statusDot} ${
-                              mentor.employment_status === "available"
+                              mentor.mentor_status === "available"
                                 ? styles.statusDotAvailable
                                 : styles.statusDotBusy
                             }`}
@@ -319,7 +319,7 @@ const currentMentorList =
                         }`}
                         aria-disabled={mentor.employment_status === "busy"}
                       >
-                        {mentor.employment_status === "busy"
+                        {mentor.mentor_status === "busy"
                           ? "受付停止中"
                           : "申請する"}
                       </a>

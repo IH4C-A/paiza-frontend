@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { MentorQuery, MentorRequest, Mentorship } from "../types/mentorshipType";
+import type { MentorQuery, MentorRequest, Mentorship, MyMentor } from "../types/mentorshipType";
 import type { User } from "../types/userTypes";
 
 type MentorshipsResponse = {
@@ -372,4 +372,39 @@ export const useMentorshipUser = (id: string) => {
   });
 
   return { usermentors, loading, error, refetch: fetchMentors };
+};
+
+export const useMyMentors = () => {
+  const [mymentors, setMentors] = useState<MyMentor | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchMentors = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("http://localhost:5000/my-mentorships", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data: MyMentor = await response.json();
+      setMentors(data);
+    } catch (error) {
+      console.error("Error fetching mentors:", error);
+      setError(error instanceof Error ? error.message : "Unknown error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMentors();
+  }, []);
+
+  return { mymentors, loading, error, refetch: fetchMentors };
 };

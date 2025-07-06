@@ -1,6 +1,6 @@
 
 export type TestResult = {
-  test_case_id: string;
+  test_case_id: string | null;
   input: string;
   expected_output: string;
   actual_output: string;
