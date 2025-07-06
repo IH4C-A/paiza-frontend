@@ -10,7 +10,7 @@ import { useMyGroupChats } from "../../hooks/useGroupChat";
 import type { ChatUsers } from "../../types/chatsType";
 import type { User } from "../../types/userTypes";
 import { useCreateGroupChat } from "../../hooks/useGroupChat";
-import { useMentorships } from "../../hooks";
+import { useMyMentors } from "../../hooks";
 
 export default function ChatsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +19,9 @@ export default function ChatsPage() {
   const { chatHistory } = useChatHistory();
   const { myGroupChats } = useMyGroupChats();
   const { createGroupChat } = useCreateGroupChat();
-  const { candidateMentors } = useMentorships();
+  const { mymentors } = useMyMentors();
+
+  console.log(mymentors)
 
 
   // チャット検索
@@ -264,17 +266,17 @@ export default function ChatsPage() {
                 </div>
                 <p className={styles.modalDescription}>相談したいメンターを選択してください。</p>
                 <div className={styles.mentorSelectionList}>
-                  {candidateMentors.map(mentor => (
-                    <a href={`/chats/${mentor.user_id}`} key={mentor.user_id} className={styles.mentorSelectionItem} onClick={closeModal}>
+                  {mymentors?.mentorships.map(mentor => (
+                    <a href={`/chats/${mentor.user.user_id}`} key={mentor.user.user_id} className={styles.mentorSelectionItem} onClick={closeModal}>
                       <div className={styles.avatarWrapper}>
                         <div className={styles.avatarMini}>
-                          <img src={mentor.profile_image || ""} alt={mentor.first_name} className={styles.avatarImage} />
-                          <div className={styles.avatarFallbackMini}>{mentor.first_name.charAt(0)}</div>
+                          <img src={mentor.user?.profile_image || ""} alt={mentor.user?.first_name} className={styles.avatarImage} />
+                          <div className={styles.avatarFallbackMini}>{mentor.user?.first_name.charAt(0)}</div>
                         </div>
                         {/* {mentor.isOnline && <div className={styles.onlineIndicatorMini} />} */}
                       </div>
                       <div className={styles.mentorSelectionInfo}>
-                        <span className={styles.mentorSelectionName}>{mentor.first_name}</span>
+                        <span className={styles.mentorSelectionName}>{mentor.user?.first_name}</span>
                         {/* <span className={styles.mentorSelectionSpecialty}>{mentor.specialty}</span> */}
                       </div>
                     </a>

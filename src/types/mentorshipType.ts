@@ -20,3 +20,15 @@ export type MentorRequest = {
     requested_at: Date;
     mentee: User;
 }
+
+export type Result = {
+    mentorship_id: string;
+    startted_at: string;
+    ended_at: string;
+    user: User;
+}
+
+export type MyMentor = {
+    role: string;
+    mentorships: Result[];
+}

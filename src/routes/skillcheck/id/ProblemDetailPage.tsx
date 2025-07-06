@@ -71,7 +71,7 @@ export default function ProblemDetailPage() {
 
     // テスト結果に変換して表示用にセット
     const mapped = results.map((r) => ({
-      test_case_id: r.test_case_id,
+      test_case_id: r.test_case_id ?? "",
       problem_id: problem.problem_id,
       input_text: r.input,
       expected_output: r.expected_output,

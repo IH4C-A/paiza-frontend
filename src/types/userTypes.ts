@@ -18,6 +18,7 @@ export type User = {
     mentees_count?: number;
     response_time?: number;
     average_rating?: number;
+    mentor_status?: string;
     created_at: string;
 }
 

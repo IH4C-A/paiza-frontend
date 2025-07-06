@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./PartnerPage.module.css";
 import { usePlant } from "../../hooks/usePlant";
 import { plantTypes, personalities } from "../../types/plantType";
-import { FaCalendar, FaChevronCircleRight, FaMicrophone, FaMicrophoneAltSlash } from "react-icons/fa";
+import {
+  FaCalendar,
+  FaChevronCircleRight,
+  FaMicrophone,
+  FaMicrophoneAltSlash,
+} from "react-icons/fa";
 import { useMentorshipSchedules } from "../../hooks/useMentorSchedule";
 import type { MentorSchedule } from "../../types/mentorSchedule";
 import { useNavigate } from "react-router-dom";
@@ -71,56 +76,68 @@ function groupThisWeekSchedules(schedules: MentorSchedule[]) {
 export default function PartnerPage() {
   const { plant } = usePlant();
   const [isListening, setIsListening] = useState(false);
-  // const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<InstanceType<typeof window.SpeechRecognition> | InstanceType<typeof window.webkitSpeechRecognition> | null>(null);
   const [activeTab, setActiveTab] = useState("chat");
   const { schedules } = useMentorshipSchedules();
   const { submissions } = useSubmissions(plant?.user_id ?? "");
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =useSpeechRecognition();
+  const { browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
     null
   );
-  const planttype = plantTypes.find(
-      (type) => type.id === plant?.growth_stage
-  );
-  const personalitieType = personalities.find(
-      (type) => type.id === plant?.mood
-  );
+  const planttype = plantTypes.find((type) => type.id === plant?.growth_stage);
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  console.log(audioChunks,audioURL)
+  console.log(audioChunks, audioURL);
 
   if (!browserSupportsSpeechRecognition) {
     return <div>ブラウザが音声認識をサポートしていません。</div>;
   }
   const handleListen = () => {
     if (isListening) {
-      SpeechRecognition.stopListening();
-      mediaRecorder?.stop();
+      recognitionRef.current?.stop(); // 音声認識停止
+      mediaRecorder?.stop(); // 録音停止
       setIsListening(false);
     } else {
-      resetTranscript();
       setAudioChunks([]);
-      SpeechRecognition.startListening({ continuous: true });
       setIsListening(true);
 
+      // 音声認識初期化
+      const SpeechRecognitionClass =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognitionClass();
+      recognition.lang = "ja-JP";
+      recognition.interimResults = false;
+      recognition.continuous = false;
+
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
+        const latestTranscript = event.results[0][0].transcript;
+        console.log("🎙️ 認識結果:", latestTranscript);
+        fetchPlantResponse(
+          latestTranscript,
+          planttype?.speaker ?? 0,
+          plant?.plant_id ?? ""
+        );
+      };
+
+      recognition.onerror = (e) => console.error("認識エラー", e);
+
+      recognition.start();
+      recognitionRef.current = recognition;
+
+      // 音声録音開始
       navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
         const recorder = new MediaRecorder(stream);
         setMediaRecorder(recorder);
 
         const chunks: Blob[] = [];
-
-        recorder.ondataavailable = (event) => {
-          chunks.push(event.data);
-        };
-
+        recorder.ondataavailable = (e) => chunks.push(e.data);
         recorder.onstop = () => {
           const blob = new Blob(chunks, { type: "audio/webm" });
           setAudioChunks(chunks);
           setAudioURL(URL.createObjectURL(blob));
-          fetchPlantResponse(transcript, planttype?.speaker ?? 0, personalitieType?.description ?? "");
         };
 
         recorder.start();
@@ -342,7 +359,11 @@ export default function PartnerPage() {
                       className={styles.controlButton}
                       onClick={handleListen}
                     >
-                      {isListening ? <FaMicrophone /> : <FaMicrophoneAltSlash />}
+                      {isListening ? (
+                        <FaMicrophone />
+                      ) : (
+                        <FaMicrophoneAltSlash />
+                      )}
                     </button>
                     <button
                       className={styles.controlButton}
@@ -354,12 +375,6 @@ export default function PartnerPage() {
                     >
                       ❌ 通話終了
                     </button>
-                  </div>
-                  <div className={styles.transcriptArea}>
-                    <p className={styles.transcriptLabel}>📝 認識結果：</p>
-                    <p className={styles.transcript}>
-                      {transcript || "（まだ話していません）"}
-                    </p>
                   </div>
                 </div>
               )}
