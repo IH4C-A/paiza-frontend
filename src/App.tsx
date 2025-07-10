@@ -33,17 +33,18 @@ import NewSchedulePage from "./routes/mentor/schedule/new/NewSchedulePage";
 import MeetingDetailPage from "./routes/mentor/schedule/id/MeetingDetailPage";
 import MeetingRoomPage from "./routes/meeting/MeetingRoomPage";
 import ProfilePage from "./routes/profile/ProfilePage";
+import { Footer } from "./components/footer/Footer";
 
 function AppContent() {
   const location = useLocation();
 
-  const hideHeader =
+  const hideNavigation =
     location.pathname.startsWith("/auth/signin") ||
     location.pathname.startsWith("/auth/signup");
 
   return (
     <>
-      {!hideHeader && <Header />}
+      {!hideNavigation && <Header />}
       <Routes>
         <Route path="/" element={<TopPage />} />
         <Route path="/article" element={<ArticlesListPage />} />
@@ -81,6 +82,7 @@ function AppContent() {
         <Route path="/skillcheck/:id" element={<ProblemDetailPage />} />
         <Route path="/chats" element={<ChatsPage />} />
       </Routes>
+      {!hideNavigation && <Footer />}
     </>
   );
 }
