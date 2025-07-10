@@ -1,0 +1,42 @@
+.container {
+  background-color: #93b636;
+  padding: 20px;
+}
+.siteMap {
+  display: flex;
+  gap: 250px;
+  padding-bottom: 20px;
+}
+.footerLogo {
+  width: 350px;
+}
+.footerLogoImage {
+  width: 100%;
+}
+.footerDescription {
+  padding: 10px;
+  color: #fff;
+  font-size: 1.1rem;
+}
+.siteMapCaption {
+  font-size: 1.3rem;
+  padding: 10px 0;
+  color: #fff;
+}
+.siteMapItem {
+  font-size: 1.1rem;
+  padding: 10px 0;
+}
+.siteMapLink {
+  color: #fff;
+  text-decoration: none;
+}
+.copyright {
+  border-top: 1px solid #eeeeee;
+  padding-top: 20px;
+  text-align: right;
+}
+.copyrightText {
+  font-size: 0.9rem;
+  color: #fff;
+}
