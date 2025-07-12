@@ -138,6 +138,11 @@ display dialog "Hello, AppleScript!"`;
   // Google Apps Scriptコードをここに記述
   return input;
 }`;
+    case "kotlin":
+      return `fun solution(input: String): String {
+  // Kotlinコードをここに記述
+  return ""
+}`;
     default:
       return `// 未知の言語です。ここにコードを記述してください。`;
   }
