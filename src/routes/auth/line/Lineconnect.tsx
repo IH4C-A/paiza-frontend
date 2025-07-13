@@ -26,7 +26,7 @@ export const LineConnect = () => {
         clearInterval(interval);
         setIsConnected(true);
         setTimeout(() => {
-          navigate("/auth/signin"); // ✅ 通知連携完了後の遷移先
+          navigate("/"); // ✅ 通知連携完了後の遷移先
         }, 2000);
       }
     }, 3000);
