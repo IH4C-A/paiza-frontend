@@ -35,7 +35,7 @@ function TopPage() {
       <div className={styles.heroSection}>
         <div className={styles.serviceDescription}>
           <h2 className={styles.catchcopy}>育てて育つ</h2>
-          <figure>
+          <figure className={styles.heroLogo}>
             <img src="/logo.png" alt="ロゴ" />
           </figure>
           <p className={styles.descriptionText}>3つの新機能で、</p>
