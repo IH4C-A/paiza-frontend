@@ -59,8 +59,8 @@
   display: none;
 }
 
-/* スマホ対応 */
-@media screen and (max-width: 768px) {
+/* タブレット・スマホ対応 */
+@media screen and (max-width: 1024px) {
   .menuToggle {
     display: block;
   }
@@ -104,5 +104,18 @@
   .rightNav {
     position: relative;
     z-index: 2001;
+  }
+
+  /* タブレット専用の調整 */
+  @media screen and (min-width: 769px) and (max-width: 1024px) {
+    .logo {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .logo img {
+      width: 200px;
+    }
   }
 }
