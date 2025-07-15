@@ -4,7 +4,7 @@ import { z } from "zod";
 import { useLogin } from "./useUser";
 import { useNavigate } from "react-router-dom";
 
-// Zodバリデーションスキーマ
+// バリデーションスキーマ
 const signinSchema = z.object({
   email: z
     .string()
@@ -16,46 +16,64 @@ const signinSchema = z.object({
 export type SigninFormData = z.infer<typeof signinSchema>;
 
 const useSignin = () => {
-  const navigate = useNavigate(); // React RouterのuseNavigateを使用
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<SigninFormData>({
     resolver: zodResolver(signinSchema),
-    mode: "onChange", // リアルタイムバリデーション
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const { login } = useLogin(); // API呼び出しのための関数をインポート
+  const { login } = useLogin();
 
-  // フォーム送信処理
+  // 通常ログイン処理
   const onSubmit = async (data: SigninFormData) => {
-    // ここで実際のサインイン処理を行う
-    // 例: API呼び出しなど
     try {
       await login(data);
-      // 成功した場合の処理
-      // 例: リダイレクト、トークン保存など
-      navigate("/"); // サインイン成功後のリダイレクト先
-      console.log("サインイン処理を実行:", data);
+      navigate("/"); // 成功時リダイレクト
+      console.log("✅ 通常ログイン成功:", data);
     } catch (error) {
-      console.error("サインインエラー:", error);
-      // エラーハンドリング
-      // 例: エラーメッセージの表示など
+      console.error("❌ ログイン失敗:", error);
+    }
+  };
+
+  // LINEログイン処理
+  const signInWithLineId = async (lineUserId: string) => {
+    try {
+      const res = await fetch("https://paiza-nurture-api.inrigsnet.com/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ line_user_id: lineUserId }),
+      });
+
+      const result = await res.json();
+
+      if (res.ok && result.token) {
+        // トークン保存やログイン状態の更新など
+        localStorage.setItem("token", result.token);
+        console.log("✅ LINEログイン成功:", result);
+        navigate("/");
+      } else {
+        console.error("❌ LINEログイン失敗:", result);
+      }
+    } catch (err) {
+      console.error("❌ LINEログイン中にエラー:", err);
     }
   };
 
   return {
-    // React Hook Formの機能
     register,
     handleSubmit: handleSubmit(onSubmit),
     errors,
-
-    // バリデーションスキーマ
+    signInWithLineId, // LINEログイン関数を公開
     schema: signinSchema,
   };
 };

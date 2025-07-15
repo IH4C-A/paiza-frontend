@@ -1,8 +1,18 @@
+import { useSearchParams } from "react-router-dom";
 import useSignup from "../../../../hooks/useSignup";
 import style from "./SignupForm.module.css";
+import { useEffect } from "react";
 
 export const SignupForm = () => {
-  const { register, handleSubmit, searchAddress, errors } = useSignup();
+  const { register, handleSubmit, searchAddress, errors, setValue } = useSignup();
+  const [params] = useSearchParams();
+const line_user_id = params.get("line_user_id");
+
+  useEffect(() => {
+    if (line_user_id) {
+      setValue("line_login_user_id", line_user_id);  // react-hook-form にセット
+    }
+  }, [line_user_id]);
 
   const genderOption = [
     { id: 1, gender: "男性" },
@@ -17,6 +27,17 @@ export const SignupForm = () => {
     { id: 3, industry: "社会人(IT系以外)" },
     { id: 4, industry: "その他" },
   ];
+
+  const LINE_CHANNEL_ID = "2007736198";
+  const LINE_LOGIN_REDIRECT_URI =
+    "https://paiza-nurture-api.inrigsnet.com/api/line/callback";
+
+  const handleLineLogin = () => {
+    const redirectUri = encodeURIComponent(LINE_LOGIN_REDIRECT_URI);
+    const loginUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CHANNEL_ID}&redirect_uri=${redirectUri}&state=signup&scope=openid profile email`;
+
+    window.location.href = loginUrl;
+  };
 
   return (
     <div className={style.container}>
@@ -158,6 +179,17 @@ export const SignupForm = () => {
                 {errors.employment_status.message}
               </p>
             )}
+          </div>
+          {/* LINE連携ボタン */}
+          <div style={{ marginTop: 20 }}>
+            <button
+              type="button"
+              onClick={handleLineLogin}
+              className={style.lineButton}
+            >
+              LINEアカウントと連携
+            </button>
+            <input type="hidden" {...register("line_login_user_id")} />
           </div>
 
           <div className={style.inputFullWidth}>

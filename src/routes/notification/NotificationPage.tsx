@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styles from "./NotificationPage.module.css";
 import { useNotifications, useMarkNotificationsAsRead } from "../../hooks";
 import type { Notification } from "../../types/notificationType";
+import { useNavigate } from "react-router-dom";
 // SVG Icon Components (Inline)
 const BellIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
@@ -109,6 +110,7 @@ const HeartIcon = ({ className, style }: { className?: string; style?: React.CSS
 export default function NotificationsPage() {
   const [notification, setNotifications] = useState<Notification[]>([]);
   const { notifications } = useNotifications();
+  const navigate = useNavigate();
   const { markAsRead } = useMarkNotificationsAsRead();
   const [activeTab, setActiveTab] = useState<"all" | "unread" | "read">("all");
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
@@ -155,6 +157,12 @@ export default function NotificationsPage() {
         return <BookOpenIcon className={`${iconClassName} ${styles.iconIndigo}`} />;
       case "mentor_rating":
         return <StarIcon className={`${iconClassName} ${styles.iconOrange}`} />;
+      case "mentorship_request":
+        return <UsersIcon className={`${iconClassName} ${styles.iconBlue}`} />;
+      case "mentorship_approved":
+        return <CheckCheckIcon className={`${iconClassName} ${styles.iconGreen}`} />;
+      case "task_reminder":
+        return <BellIcon className={`${iconClassName} ${styles.iconRed}`} />;
       default:
         return <BellIcon className={`${iconClassName} ${styles.iconGray}`} />;
     }
@@ -371,6 +379,14 @@ export default function NotificationsPage() {
                 <SettingsIcon className={`${styles.buttonIconMargin}`} style={{height: "1rem", width: "1rem"}}/>
                 設定
               </a>
+              {/* ここにLINE連携ボタンを追加 */}
+              <button
+                type="button"
+                className={`${styles.button} ${styles.buttonVariantOutline}`}
+                onClick={() => navigate("/line/connect")}
+              >
+                LINE連携
+              </button>
             </div>
           </div>
 

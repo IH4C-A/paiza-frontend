@@ -5,29 +5,39 @@
   flex-direction: column;
   gap: 25px;
 
-  width: 700px;
+  /* 最大幅を設定し、画面幅に合わせて縮小 */
+  max-width: 700px;
+  width: 90%; /* 画面幅の90%を使用し、左右に余白を持たせる */
   padding: 40px 20px;
   border: 1px solid #aaa;
   border-radius: 5px;
+  box-sizing: border-box; /* パディングとボーダーを幅に含める */
 }
+
 .formTitle {
   font-size: 1.4rem;
   padding: 20px 0;
+  text-align: center; /* タイトルを中央揃えに */
 }
+
 .inputWrap {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  width: 100%; /* 親要素の幅いっぱいに広げる */
 }
+
 .inputGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 25px;
   width: 100%;
 }
+
 .inputFullWidth {
   grid-column: 1 / -1;
 }
+
 .inputForm {
   width: 100%;
   height: 50px;
@@ -37,12 +47,15 @@
   box-sizing: border-box;
   font-size: 1.1rem;
 }
+
 .addressSearch {
   display: flex;
   gap: 25px;
+  width: 100%; /* 親要素の幅いっぱいに広げる */
 }
+
 .addressNumberInput {
-  width: 50%;
+  width: 50%; /* ここは変更なしでOKな場合が多い */
   height: 50px;
   padding: 10px;
   border: 1px solid #ccc;
@@ -50,6 +63,7 @@
   box-sizing: border-box;
   font-size: 1.1rem;
 }
+
 .addressSearchButton {
   height: 50px;
   padding: 10px;
@@ -60,7 +74,10 @@
   color: #fff;
   font-size: 1.1rem;
   font-weight: 500;
+  /* ボタンはコンテンツに合わせるか、flex-growで調整 */
+  flex-shrink: 0; /* 縮小しないように設定 */
 }
+
 .inputButton {
   width: 100%;
   height: 50px;
@@ -72,7 +89,9 @@
   color: #fff;
   font-size: 1.1rem;
   font-weight: 500;
+  cursor: pointer; /* クリック可能であることを示す */
 }
+
 .errorSummary {
   background-color: #fee;
   border: 1px solid #fcc;
@@ -80,9 +99,62 @@
   padding: 10px;
   margin-bottom: 20px;
   border-radius: 4px;
+  width: 100%; /* 親要素の幅いっぱいに広げる */
+  box-sizing: border-box;
 }
+
 .errorMessage {
   color: #e74c3c;
   font-size: 1rem;
   margin-top: 4px;
+}
+
+/* --- レスポンシブ対応 --- */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 30px 15px; /* パディングを少し減らす */
+    width: 95%; /* 狭い画面では幅を広げる */
+  }
+
+  .formTitle {
+    font-size: 1.2rem; /* フォントサイズを少し小さく */
+  }
+
+  .inputGrid {
+    /* 1列表示に変更 */
+    grid-template-columns: 1fr;
+    gap: 20px; /* ギャップを少し減らす */
+  }
+
+  .addressSearch {
+    flex-direction: column; /* 縦並びにする */
+    gap: 15px; /* ギャップを減らす */
+  }
+
+  .addressNumberInput {
+    width: 100%; /* 全幅にする */
+  }
+
+  .addressSearchButton {
+    width: 100%; /* 全幅にする */
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 10px; /* さらにパディングを減らす */
+  }
+
+  .formTitle {
+    font-size: 1.1rem; /* さらにフォントサイズを小さく */
+  }
+
+  .inputForm,
+  .addressNumberInput,
+  .addressSearchButton,
+  .inputButton {
+    height: 45px; /* 入力フィールドとボタンの高さを少し減らす */
+    font-size: 1rem; /* フォントサイズを小さく */
+  }
 }

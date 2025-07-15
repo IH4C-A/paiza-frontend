@@ -17,6 +17,7 @@
     "dompurify": "^3.2.6",
     "jposta": "^0.3.13",
     "marked": "^15.0.12",
+    "qrcode.react": "^4.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.57.0",

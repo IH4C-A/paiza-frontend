@@ -43,6 +43,7 @@ const signupSchema = z.object({
       message: "正しい年齢を入力してください(0-150)",
     }),
   employment_status: z.string().min(1, "職業を選択してください"),
+  line_login_user_id: z.string().optional(),
 });
 
 export type SignupFormData = z.infer<typeof signupSchema>;
@@ -68,6 +69,7 @@ const useSignup = () => {
       seibetu: "",
       age: "",
       employment_status: "",
+      line_login_user_id: "",
     },
   });
 
@@ -130,6 +132,7 @@ const useSignup = () => {
     isDirty,
     searchAddress, // 郵便番号検索機能を追加
     schema: signupSchema,
+    setValue
   };
 };
 

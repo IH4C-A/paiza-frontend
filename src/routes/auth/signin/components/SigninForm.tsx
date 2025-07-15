@@ -1,8 +1,42 @@
+import { useEffect } from "react";
 import useSignin from "../../../../hooks/useSignin";
 import style from "./SigninForm.module.css";
+import { useSearchParams } from "react-router-dom";
 
 export const SigninForm = () => {
-  const { register, handleSubmit, errors } = useSignin();
+  const { register, handleSubmit, errors, signInWithLineId } = useSignin();
+  const [searchParams] = useSearchParams();
+
+  const LINE_CHANNEL_ID = "2007736198";
+  const LINE_LOGIN_REDIRECT_URI =
+    "https://paiza-nurture-api.inrigsnet.com/api/line/callback";
+
+  // ✅ LINEログインに遷移（LINE公式ログイン画面へリダイレクト）
+  const redirectToLineLogin = () => {
+    const redirectUri = encodeURIComponent(LINE_LOGIN_REDIRECT_URI);
+    const loginUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CHANNEL_ID}&redirect_uri=${redirectUri}&state=signin&scope=openid%20profile%20email`;
+
+    window.location.href = loginUrl;
+  };
+
+  // ✅ コールバック後にline_user_idからログイン処理
+  const tryLineLoginFromLocalStorage = async () => {
+    const line_user_id = localStorage.getItem("line_user_id");
+    if (line_user_id) {
+      await signInWithLineId(line_user_id);
+    } else {
+      alert("LINEログインIDが見つかりません");
+    }
+  };
+
+  // ✅ 初回マウント時にURLからline_user_idをチェックして自動ログイン
+  useEffect(() => {
+    const id = searchParams.get("line_user_id");
+    if (id) {
+      localStorage.setItem("line_user_id", id); // 保存
+      tryLineLoginFromLocalStorage(); // 自動ログイン
+    }
+  }, []);
 
   return (
     <div className={style.container}>
@@ -68,6 +102,7 @@ export const SigninForm = () => {
             <input
               className={style.lineLoginButton}
               type="button"
+              onClick={redirectToLineLogin}
               value="LINEでログイン"
             />
           </div>

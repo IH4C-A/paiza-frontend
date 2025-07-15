@@ -1,0 +1,130 @@
+/* === ベーススタイル（モバイル向け） === */
+.container {
+  background-color: #93b636;
+  padding: 40px 20px;
+  color: #fff;
+}
+
+.siteMap {
+  display: flex;
+  /* モバイルでは縦積みにする */
+  flex-direction: column;
+  gap: 40px; /* 各セクションの間の余白 */
+  padding-bottom: 30px;
+}
+
+/* 最初のコンテンツ（ロゴと説明）は中央寄せに */
+.siteMapContents:first-child {
+  text-align: center;
+}
+
+.footerLogo {
+  width: 280px; /* モバイルでのロゴサイズを調整 */
+  margin: 0 auto; /* 中央寄せ */
+}
+
+.footerLogoImage {
+  width: 100%;
+  height: auto; /* 画像のアスペクト比を維持 */
+}
+
+.footerDescription {
+  padding-top: 15px;
+  font-size: 1rem;
+}
+
+.siteMapCaption {
+  font-size: 1.2rem;
+  padding-bottom: 10px;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6); /* 区切り線を少し見やすく */
+  margin-bottom: 10px;
+}
+
+.siteMapItem {
+  font-size: 1rem;
+  padding: 8px 0;
+}
+
+.siteMapLink {
+  color: #fff;
+  text-decoration: none;
+  transition: opacity 0.3s ease; /* ホバー時のアニメーション */
+}
+
+.siteMapLink:hover {
+  opacity: 0.75;
+}
+
+.copyright {
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  padding-top: 20px;
+  /* モバイルでは中央寄せ */
+  text-align: center;
+}
+
+.copyrightText {
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+/* === タブレット向けのスタイル (画面幅が768px以上の場合) === */
+@media (min-width: 768px) {
+  .siteMap {
+    /* 横並びに変更 */
+    flex-direction: row;
+    /* 要素がはみ出す場合に折り返す */
+    flex-wrap: wrap;
+    /* 各要素の間隔を均等に配置 */
+    justify-content: space-between;
+    gap: 40px 30px; /* 縦と横の隙間を指定 */
+  }
+
+  .siteMapContents {
+    /* flex-grow, flex-shrink, flex-basis */
+    /* 各要素が横幅180pxを基本とし、余白を分け合うように伸びる */
+    flex: 1 1 180px;
+  }
+
+  .siteMapContents:first-child {
+    /* ロゴエリアは幅を広めに確保 */
+    flex: 1 1 100%;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    text-align: left; /* 左寄せに戻す */
+    margin-bottom: 20px;
+  }
+
+  .footerLogo {
+    width: 300px; /* ロゴサイズを調整 */
+    margin: 0; /* 中央寄せを解除 */
+  }
+
+  .copyright {
+    /* 右寄せに戻す */
+    text-align: right;
+  }
+}
+
+/* === PC向けのスタイル (画面幅が1024px以上の場合) === */
+@media (min-width: 1024px) {
+  .siteMap {
+    /* PCでは折り返さない */
+    flex-wrap: nowrap;
+    gap: 50px; /* 要素間の隙間を広げる */
+    align-items: flex-start; /* 上揃えで配置 */
+  }
+
+  .siteMapContents:first-child {
+    flex-basis: 350px; /* ロゴエリアの幅を固定 */
+    flex-shrink: 0; /* 縮まないようにする */
+    flex-grow: 0; /* 伸びないようにする */
+    display: block; /* flex設定をリセット */
+    margin-bottom: 0;
+  }
+
+  .footerLogo {
+    width: 350px; /* 元のCSSのサイズに戻す */
+  }
+}

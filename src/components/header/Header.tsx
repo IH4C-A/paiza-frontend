@@ -12,6 +12,7 @@ export const Header = () => {
 
   return (
     <div className={style.container}>
+
       {/* ハンバーガー：スマホサイズ時 */}
       <button className={style.menuToggle} onClick={() => setMenuOpen(!menuOpen)}>
         <FaBars />
@@ -27,6 +28,15 @@ export const Header = () => {
       <div className={`${style.responsiveMenu} ${menuOpen ? style.active : ""}`}>
         <a className={style.navigationLink} href="/">トップ</a>
         <a className={style.navigationLink} href="/mentor">メンター</a>
+
+<!--       <div className={style.navigationList}>
+        <figure>
+          <img src="/logo.png" alt="logo" width={250} />
+        </figure>
+        <a className={style.navigationLink} href="/">
+          トップ
+        </a> -->
+
         {currentUser?.ranks?.some(
           (rank: Rank) => rank.rank_code === "mentor"
         ) ? (
@@ -34,7 +44,9 @@ export const Header = () => {
             メンティー申請
           </a>
         ) : (
-          <div className={style.hidden}></div>
+          <a className={style.navigationLink} href="/mentor">
+            メンター
+          </a>
         )}
         {plant ? (
           <a className={style.navigationLink} href="/partner">
