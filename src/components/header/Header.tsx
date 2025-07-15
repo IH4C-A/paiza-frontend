@@ -12,9 +12,11 @@ export const Header = () => {
 
   return (
     <div className={style.container}>
-
       {/* ハンバーガー：スマホサイズ時 */}
-      <button className={style.menuToggle} onClick={() => setMenuOpen(!menuOpen)}>
+      <button
+        className={style.menuToggle}
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
         <FaBars />
       </button>
 
@@ -23,19 +25,21 @@ export const Header = () => {
         <img src="/logo.png" alt="logo" width={250} />
       </figure>
 
-
       {/* ハンバーガー内メニュー */}
-      <div className={`${style.responsiveMenu} ${menuOpen ? style.active : ""}`}>
-        <a className={style.navigationLink} href="/">トップ</a>
-        <a className={style.navigationLink} href="/mentor">メンター</a>
-
-<!--       <div className={style.navigationList}>
-        <figure>
-          <img src="/logo.png" alt="logo" width={250} />
+      <div
+        className={`${style.responsiveMenu} ${menuOpen ? style.active : ""}`}
+      >
+        {/* スマホサイズ時のロゴ表示 */}
+        <figure className={style.mobileLogoContainer}>
+          <img src="/logo.png" alt="logo" width={200} />
         </figure>
+
         <a className={style.navigationLink} href="/">
           トップ
-        </a> -->
+        </a>
+        <a className={style.navigationLink} href="/mentor">
+          メンター
+        </a>
 
         {currentUser?.ranks?.some(
           (rank: Rank) => rank.rank_code === "mentor"
@@ -57,11 +61,16 @@ export const Header = () => {
             うちのコ
           </a>
         )}
-        <a className={style.navigationLink} href="/skillcheck">スキルチェック</a>
-        <a className={style.navigationLink} href="/article">技術記事</a>
-        <a className={style.navigationLink} href="/chats">チャット</a>
+        <a className={style.navigationLink} href="/skillcheck">
+          スキルチェック
+        </a>
+        <a className={style.navigationLink} href="/article">
+          技術記事
+        </a>
+        <a className={style.navigationLink} href="/chats">
+          チャット
+        </a>
       </div>
-
 
       {/* 通知 + ログイン */}
       <div className={style.rightNav}>
@@ -78,7 +87,6 @@ export const Header = () => {
           </a>
         )}
       </div>
-
     </div>
   );
 };
