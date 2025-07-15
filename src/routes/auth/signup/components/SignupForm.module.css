@@ -1,3 +1,35 @@
+/* 戻るボタンのスタイル */
+.backButton {
+  align-self: flex-start; /* 左寄せ */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #93b636;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.backButton:hover {
+  background-color: rgba(147, 182, 54, 0.1);
+  color: #7a9c2e;
+}
+
+.backButton:active {
+  transform: translateY(1px);
+}
+
+.backIcon {
+  font-size: 0.9rem;
+}
+
+/* 既存のCSSに追加 */
 .container {
   display: flex;
   align-items: center;
@@ -9,7 +41,7 @@
   max-width: 700px;
   width: 90%; /* 画面幅の90%を使用し、左右に余白を持たせる */
   padding: 40px 20px;
-  border: 1px solid #aaa;
+  /* border: 1px solid #aaa; */
   border-radius: 5px;
   box-sizing: border-box; /* パディングとボーダーを幅に含める */
 }
@@ -109,6 +141,37 @@
   margin-top: 4px;
 }
 
+.lineButton {
+  /* レイアウトと基本スタイル */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* アイコンとテキストの間隔 */
+  width: 100%;
+  height: 50px; /* 他のボタンと高さを合わせる */
+  padding: 10px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  /* デザイン */
+  background-color: #06c052; /* LINEグリーン */
+  color: #fff; /* 白文字 */
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.lineButton:hover {
+  opacity: 0.9;
+}
+
+/* アイコンのサイズ調整 */
+.lineButton svg {
+  font-size: 1.3rem;
+}
+
 /* --- レスポンシブ対応 --- */
 
 @media (max-width: 768px) {
@@ -139,6 +202,17 @@
   .addressSearchButton {
     width: 100%; /* 全幅にする */
   }
+
+  /* レスポンシブ時の戻るボタン調整 */
+  .backButton {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
+  .backIcon {
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -156,5 +230,11 @@
   .inputButton {
     height: 45px; /* 入力フィールドとボタンの高さを少し減らす */
     font-size: 1rem; /* フォントサイズを小さく */
+  }
+
+  /* 小画面での戻るボタン調整 */
+  .backButton {
+    font-size: 0.85rem;
+    padding: 5px 8px;
   }
 }

@@ -1,16 +1,24 @@
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { FaLine, FaArrowLeft } from "react-icons/fa";
 import useSignup from "../../../../hooks/useSignup";
 import style from "./SignupForm.module.css";
-import { useEffect } from "react";
 
 export const SignupForm = () => {
-  const { register, handleSubmit, searchAddress, errors, setValue } = useSignup();
+  const { register, handleSubmit, searchAddress, errors, setValue } =
+    useSignup();
   const [params] = useSearchParams();
-const line_user_id = params.get("line_user_id");
+  const navigate = useNavigate();
+  const line_user_id = params.get("line_user_id");
+
+  // ✅ 戻るボタンの処理
+  const handleBack = () => {
+    navigate(-1); // 前のページに戻る
+  };
 
   useEffect(() => {
     if (line_user_id) {
-      setValue("line_login_user_id", line_user_id);  // react-hook-form にセット
+      setValue("line_login_user_id", line_user_id); // react-hook-form にセット
     }
   }, [line_user_id]);
 
@@ -41,6 +49,12 @@ const line_user_id = params.get("line_user_id");
 
   return (
     <div className={style.container}>
+      {/* 戻るボタン */}
+      <button className={style.backButton} onClick={handleBack} type="button">
+        <FaArrowLeft className={style.backIcon} />
+        戻る
+      </button>
+
       <h1 className={style.formTitle}>新規登録</h1>
 
       {/* handleSubmitでフォーム送信を処理 */}
@@ -180,14 +194,14 @@ const line_user_id = params.get("line_user_id");
               </p>
             )}
           </div>
-          {/* LINE連携ボタン */}
-          <div style={{ marginTop: 20 }}>
+          <div className={style.inputFullWidth}>
             <button
               type="button"
               onClick={handleLineLogin}
               className={style.lineButton}
             >
-              LINEアカウントと連携
+              <FaLine />
+              <span>LINEアカウントと連携</span>
             </button>
             <input type="hidden" {...register("line_login_user_id")} />
           </div>
