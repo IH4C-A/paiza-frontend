@@ -34,6 +34,7 @@ import MeetingDetailPage from "./routes/mentor/schedule/id/MeetingDetailPage";
 import MeetingRoomPage from "./routes/meeting/MeetingRoomPage";
 import ProfilePage from "./routes/profile/ProfilePage";
 import { Footer } from "./components/footer/Footer";
+import { LineConnect } from "./routes/auth/line/Lineconnect";
 
 function AppContent() {
   const location = useLocation();
@@ -81,6 +82,7 @@ function AppContent() {
         <Route path="/skillcheck" element={<SkillCheckPage />} />
         <Route path="/skillcheck/:id" element={<ProblemDetailPage />} />
         <Route path="/chats" element={<ChatsPage />} />
+        <Route path="/line/connect" element={<LineConnect />} />
       </Routes>
       {!hideNavigation && <Footer />}
     </>

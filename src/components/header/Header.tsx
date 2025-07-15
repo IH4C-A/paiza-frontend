@@ -17,9 +17,6 @@ export const Header = () => {
         <a className={style.navigationLink} href="/">
           トップ
         </a>
-        <a className={style.navigationLink} href="/mentor">
-          メンター
-        </a>
         {currentUser?.ranks?.some(
           (rank: Rank) => rank.rank_code === "mentor"
         ) ? (
@@ -27,7 +24,9 @@ export const Header = () => {
             メンティー申請
           </a>
         ) : (
-          <div className={style.hidden}></div>
+          <a className={style.navigationLink} href="/mentor">
+            メンター
+          </a>
         )}
         {plant ? (
           <a className={style.navigationLink} href="/partner">

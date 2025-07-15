@@ -24,14 +24,6 @@ import styles from "./MeetingRoomPage.module.css"; // module.css をインポー
 import { useCreateMentorshipNote } from "../../hooks/useMentorNote";
 import { useMentorshipSchedule } from "../../hooks/useMentorSchedule";
 
-// MeetingRoomPage コンポーネントの外部に直接型定義を置く
-interface CustomJitsiMeetExternalAPI {
-  dispose: () => void;
-  addEventListener: (event: string, handler: (event: any) => void) => void; // イベントのハンドラの型は後で詳しく
-  executeCommand: (command: string, ...args: any[]) => void;
-  // 必要に応じて他のJitsi APIメソッドを追加
-}
-
 interface JitsiAudioMuteEvent {
   muted: boolean;
 }
@@ -41,15 +33,11 @@ interface JitsiVideoMuteEvent {
 interface JitsiScreenSharingEvent {
   on: boolean;
 }
-interface JitsiParticipantEvent { // participantJoined, participantLeft
-  id: string;
-  displayName: string;
-}
 // Jitsi Meet API の型定義 (変更なし)
 declare global {
   interface Window {
     JitsiMeetExternalAPI: {
-      new (domain: string, options: any): JitsiMeetExternalAPI;
+      new (domain: string, options: unknown): JitsiMeetExternalAPI;
     };
   }
 }
@@ -59,7 +47,7 @@ export default function MeetingRoomPage() {
   const { schedule } = useMentorshipSchedule(params.scheduleId || "");
 
   const jitsiContainerRef = useRef<HTMLDivElement>(null);
-  const [jitsiApi, setJitsiApi] = useState<any>(null);
+  const [jitsiApi, setJitsiApi] = useState<JitsiMeetExternalAPI | null>(null);
   const [isJitsiLoaded, setIsJitsiLoaded] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
@@ -106,12 +94,12 @@ export default function MeetingRoomPage() {
       }
       document.head.removeChild(script);
     };
-  }, [schedule]);
+  }, [schedule, isJitsiLoaded, jitsiApi]);
 
-   const initializeJitsi = () => {
-    if (!jitsiContainerRef.current || !schedule) return
+  const initializeJitsi = () => {
+    if (!jitsiContainerRef.current || !schedule) return;
 
-    const domain = "meet.jit.si"
+    const domain = "meet.jit.si";
     const options = {
       roomName: schedule.topic,
       width: "100%",
@@ -127,59 +115,91 @@ export default function MeetingRoomPage() {
       },
       interfaceConfigOverwrite: {
         TOOLBAR_BUTTONS: [
-          "microphone", "camera", "closedcaptions", "desktop", "fullscreen",
-          "fodeviceselection", "hangup", "profile", "chat", "recording",
-          "livestreaming", "etherpad", "sharedvideo", "settings", "raisehand",
-          "videoquality", "filmstrip", "invite", "feedback", "stats",
-          "shortcuts", "tileview", "videobackgroundblur", "download", "help",
+          "microphone",
+          "camera",
+          "closedcaptions",
+          "desktop",
+          "fullscreen",
+          "fodeviceselection",
+          "hangup",
+          "profile",
+          "chat",
+          "recording",
+          "livestreaming",
+          "etherpad",
+          "sharedvideo",
+          "settings",
+          "raisehand",
+          "videoquality",
+          "filmstrip",
+          "invite",
+          "feedback",
+          "stats",
+          "shortcuts",
+          "tileview",
+          "videobackgroundblur",
+          "download",
+          "help",
           "mute-everyone",
         ],
-        SETTINGS_SECTIONS: ["devices", "language", "moderator", "profile", "calendar"],
+        SETTINGS_SECTIONS: [
+          "devices",
+          "language",
+          "moderator",
+          "profile",
+          "calendar",
+        ],
         SHOW_JITSI_WATERMARK: false,
         SHOW_WATERMARK_FOR_GUESTS: false,
       },
       userInfo: {
         displayName: "あなた",
       },
-    }
+    };
 
     // ★JitsiMeetExternalAPI のインスタンス化時に Window 型アサーションを使用★
-    const api: CustomJitsiMeetExternalAPI = new (window as any).JitsiMeetExternalAPI(domain, options);
-
+    const api = new window.JitsiMeetExternalAPI(domain, options);
 
     // イベントリスナーの設定 - イベントオブジェクトの型を指定
     api.addEventListener("ready", () => {
-      setIsJitsiLoaded(true)
-      console.log("Jitsi Meet is ready")
-    })
+      setIsJitsiLoaded(true);
+      console.log("Jitsi Meet is ready");
+    });
 
     // ★event: any を JitsiAudioMuteEvent に変更★
-    api.addEventListener("audioMuteStatusChanged", (event: JitsiAudioMuteEvent) => {
-      setIsMuted(event.muted)
-    })
+    api.addEventListener(
+      "audioMuteStatusChanged",
+      (event: JitsiAudioMuteEvent) => {
+        setIsMuted(event.muted);
+      }
+    );
 
     // ★event: any を JitsiVideoMuteEvent に変更★
-    api.addEventListener("videoMuteStatusChanged", (event: JitsiVideoMuteEvent) => {
-      setIsVideoOff(event.muted)
-    })
+    api.addEventListener(
+      "videoMuteStatusChanged",
+      (event: JitsiVideoMuteEvent) => {
+        setIsVideoOff(event.muted);
+      }
+    );
 
     // ★event: any を JitsiScreenSharingEvent に変更★
-    api.addEventListener("screenSharingStatusChanged", (event: JitsiScreenSharingEvent) => {
-      setIsScreenSharing(event.on)
-    })
+    api.addEventListener("screenSharingStatusChanged", (event) => {
+      const e = event as JitsiScreenSharingEvent;
+      setIsScreenSharing(e.on);
+    });
 
     // ★event: any を JitsiParticipantEvent に変更★
-    api.addEventListener("participantJoined", (event: JitsiParticipantEvent) => {
-      console.log("Participant joined:", event)
-    })
+    api.addEventListener("participantJoined", (event) => {
+      console.log("Participant joined:", event);
+    });
 
     // ★event: any を JitsiParticipantEvent に変更★
-    api.addEventListener("participantLeft", (event: JitsiParticipantEvent) => {
-      console.log("Participant left:", event)
-    })
+    api.addEventListener("participantLeft", (event) => {
+      console.log("Participant left:", event);
+    });
 
-    setJitsiApi(api)
-  }
+    setJitsiApi(api);
+  };
 
   // ドロップダウンメニューの外部クリックで閉じる
   useEffect(() => {
@@ -318,20 +338,21 @@ export default function MeetingRoomPage() {
             {formatDuration(meetingDuration)}
           </div>
           <div className={styles.participantsListHeader}>
-              <div
-                className={styles.participantAvatarContainer}
-              >
-                <div className={styles.participantAvatar}>
-                  <img
-                    src={schedule.mentorship_id.mentee.profile_image || "/placeholder.svg"}
-                    alt={schedule?.mentorship_id?.mentee?.first_name}
-                    className={styles.avatarImage}
-                  />
-                  <div className={styles.avatarFallback}>
-                    {schedule?.mentorship_id?.mentee?.first_name.charAt(0)}
-                  </div>
+            <div className={styles.participantAvatarContainer}>
+              <div className={styles.participantAvatar}>
+                <img
+                  src={
+                    schedule.mentorship_id.mentee.profile_image ||
+                    "/placeholder.svg"
+                  }
+                  alt={schedule?.mentorship_id?.mentee?.first_name}
+                  className={styles.avatarImage}
+                />
+                <div className={styles.avatarFallback}>
+                  {schedule?.mentorship_id?.mentee?.first_name.charAt(0)}
                 </div>
               </div>
+            </div>
           </div>
         </div>
       </header>
@@ -572,33 +593,38 @@ export default function MeetingRoomPage() {
           >
             <h3 className={styles.participantsHeading}>参加者</h3>
             <div className={styles.participantsGrid}>
-                <div className={styles.participantItem}>
-                  <div className={styles.participantAvatarRelative}>
-                    <div className={styles.participantAvatarSm}>
-                      <img
-                        src={schedule.mentorship_id?.mentee?.profile_image || "/placeholder.svg"}
-                        alt={schedule.mentorship_id?.mentee?.first_name}
-                        className={styles.avatarImage}
-                      />
-                      <div className={styles.avatarFallback}>
-                        {schedule.mentorship_id?.mentee?.first_name.charAt(0)}
-                      </div>
+              <div className={styles.participantItem}>
+                <div className={styles.participantAvatarRelative}>
+                  <div className={styles.participantAvatarSm}>
+                    <img
+                      src={
+                        schedule.mentorship_id?.mentee?.profile_image ||
+                        "/placeholder.svg"
+                      }
+                      alt={schedule.mentorship_id?.mentee?.first_name}
+                      className={styles.avatarImage}
+                    />
+                    <div className={styles.avatarFallback}>
+                      {schedule.mentorship_id?.mentee?.first_name.charAt(0)}
                     </div>
                   </div>
-                  <div className={styles.participantDetails}>
-                    <div className={styles.participantName}>
-                      {schedule.mentorship_id?.mentee?.first_name}{" "}
-                    </div>
-                    <div className={styles.participantRole}>
-                      {schedule.mentorship_id?.mentee?.ranks?.[1].rank_code === "mentor" ? "メンター" : "学習者"}
-                    </div>
-                  </div>
-                  {schedule.mentorship_id?.mentee?.ranks?.[1].rank_code === "mentor" && (
-                    <span className={styles.participantRoleBadge}>
-                      メンター
-                    </span>
-                  )}
                 </div>
+                <div className={styles.participantDetails}>
+                  <div className={styles.participantName}>
+                    {schedule.mentorship_id?.mentee?.first_name}{" "}
+                  </div>
+                  <div className={styles.participantRole}>
+                    {schedule.mentorship_id?.mentee?.ranks?.[1].rank_code ===
+                    "mentor"
+                      ? "メンター"
+                      : "学習者"}
+                  </div>
+                </div>
+                {schedule.mentorship_id?.mentee?.ranks?.[1].rank_code ===
+                  "mentor" && (
+                  <span className={styles.participantRoleBadge}>メンター</span>
+                )}
+              </div>
             </div>
           </div>
         </div>
