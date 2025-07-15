@@ -1,33 +1,95 @@
 .container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
-  /* position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  width: 100%; */
+  justify-content: space-between;
   height: 75px;
   background-color: #93b636;
   padding: 5px;
   z-index: 1000;
 }
-.navigationList {
+
+/* ハンバーガーボタン */
+.menuToggle {
+  display: none;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: white;
+  z-index: 2;
+}
+
+.responsiveMenu {
   display: flex;
-  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  margin-left: 30px;
   gap: 20px;
 }
+
+/* 通知・ユーザー名 */
+.rightNav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/* ナビリンク */
 .navigationLink {
-  transition: 0.3s;
-  padding: 10px;
-  height: 100%;
+  color: white;
   text-decoration: none;
-  color: #fff;
+  padding: 8px;
+  transition: opacity 0.3s;
 }
 .navigationLink:hover {
-  opacity: 0.5;
+  opacity: 0.6;
 }
+
+
 .hidden {
   display: none;
 }
+
+
+
+/* スマホ対応 */
+@media screen and (max-width: 768px) {
+  .menuToggle {
+    display: block;
+  }
+
+  .responsiveMenu {
+    position: absolute;
+    top: 75px;
+    left: 0;
+    right: 0;
+    background-color: #93b636;
+    flex-direction: column;
+    display: none;
+    padding: 1rem;
+    gap: 1rem;
+    margin-left: 0px;
+    z-index: 9999;
+  }
+
+  .responsiveMenu.active {
+    display: flex;
+  }
+
+  .responsiveMenu a{
+    text-align: center;
+  }
+
+  
+  .logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  }
+
+  .responsiveMenu {
+  display: none;
+  }
+}
+
+
