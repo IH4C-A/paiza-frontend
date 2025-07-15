@@ -157,6 +157,12 @@ export default function NotificationsPage() {
         return <BookOpenIcon className={`${iconClassName} ${styles.iconIndigo}`} />;
       case "mentor_rating":
         return <StarIcon className={`${iconClassName} ${styles.iconOrange}`} />;
+      case "mentorship_request":
+        return <UsersIcon className={`${iconClassName} ${styles.iconBlue}`} />;
+      case "mentorship_approved":
+        return <CheckCheckIcon className={`${iconClassName} ${styles.iconGreen}`} />;
+      case "task_reminder":
+        return <BellIcon className={`${iconClassName} ${styles.iconRed}`} />;
       default:
         return <BellIcon className={`${iconClassName} ${styles.iconGray}`} />;
     }
