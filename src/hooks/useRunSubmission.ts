@@ -81,7 +81,7 @@ export const useSubmissions = (
     try {
 
       const response = await fetch(
-        `http://localhost:5000/submissions?${userId}`,
+        `http://localhost:5000/submissions`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token") || ""}`,

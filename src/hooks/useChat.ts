@@ -149,7 +149,8 @@ export const useChat = () => {
     send_user_id: string;
     receiver_user_id?: string;
     group_id?: string;
-    image?: { filename: string } | null;
+    image?: { filename: string, data: string } | null;
+    type:string;
   }) => {
     if (socket) {
       socket.emit("send_message", messageData);

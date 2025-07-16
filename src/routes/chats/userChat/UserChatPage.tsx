@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react"; // useEffectを追加
+import type { ChangeEvent } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import {
   HiOutlineArrowLeft,
   HiOutlineCodeBracket,
@@ -8,13 +9,14 @@ import {
   HiOutlineStar,
   HiOutlineEllipsisVertical,
   HiOutlineDocumentText,
-} from "react-icons/hi2"; // Heroicons v2
-import { FaPaperPlane, FaStar } from "react-icons/fa"; // Font Awesome
-import { useChat } from "../../../hooks/useChat"; // useChatフックをインポート
-import { useCurrentUser } from "../../../hooks/useUser"; // useCurrentUserフックをインポート
-import styles from "./UserChatPage.module.css"; // CSSモジュールをインポート
-import { useParams } from "react-router-dom"; // react-router-domからuseParamsをインポート
+} from "react-icons/hi2";
+import { FaPaperPlane, FaStar } from "react-icons/fa";
+import { useChat } from "../../../hooks/useChat";
+import { useCurrentUser } from "../../../hooks/useUser";
+import styles from "./UserChatPage.module.css";
+import { useParams } from "react-router-dom";
 import MentorshipFeedbackModal from "../../../components/modal/FeedBackModal";
+import CodeInputModal from "../../../components/modal/CodeInputModal";
 import { useRegisterMentorshipFeedback } from "../../../hooks/useMentorFeedBack";
 import { useMentorshipUser } from "../../../hooks";
 import { FaStarHalfStroke } from "react-icons/fa6";
@@ -24,7 +26,9 @@ export default function IndividualChatPage() {
   const { currentUser } = useCurrentUser();
   const [message, setMessage] = useState("");
   const { registerFeedback } = useRegisterMentorshipFeedback();
-  const { usermentors } = useMentorshipUser(id || ""); // メンター情報を取得するフック
+  const { usermentors } = useMentorshipUser(id || "");
+  // このステートは削除またはコメントアウトしてください:
+  const [uploadedImage, setUploadedImage] = useState<{ filename: string; data: string; } | undefined>(undefined);
 
   const { chats, sendMessage, allUsers, fetchChatHistory } = useChat();
 
@@ -38,64 +42,101 @@ export default function IndividualChatPage() {
     }
   }, [id, fetchChatHistory]);
 
-  // ドロップダウンメニューの開閉状態を管理
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isCodeInputModalOpen, setIsCodeInputModalOpen] = useState(false);
 
-  // チャットメッセージを整形して表示形式に変換
   const formattedMessages = chats.map((chat) => ({
     id: chat.chat_id,
-    // 現在のユーザーIDとメッセージの送信者IDを比較して、senderを"user"または"mentor"に決定
     sender: chat.sender,
-    content: chat.message || chat.image || "", // メッセージ内容または画像
+    content: chat.message || "", // テキストやコードメッセージのコンテンツ
+    image: chat.image, // 画像メッセージのファイル名
     timestamp: new Date(chat.chat_at).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
-    }), // タイムスタンプを整形
+    }),
     type: chat.type || "text",
   }));
 
-  // メッセージ送信時の処理
   const handleSendMessage = () => {
     if (message.trim()) {
-      // メッセージが空白でない場合
       sendMessage({
-        message: message, // 送信するメッセージ
-        send_user_id: currentUser?.user_id || "", // 送信者のユーザーID
-        receiver_user_id: id, // 受信者のユーザーID
+        message: message,
+        send_user_id: currentUser?.user_id || "",
+        receiver_user_id: id,
+        type: "text",
       });
-      setMessage(""); // メッセージ入力フィールドをクリア
+      setMessage("");
     }
   };
 
-  // メンター評価
-  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
-
-  // ★★★ NEW: メンター評価モーダルを開く関数 ★★★
-  const handleOpenFeedbackModal = () => {
-    setIsFeedbackModalOpen(true);
-    setIsDropdownOpen(false); // モーダルを開くときにドロップダウンを閉じる
+  const handleImageSend = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
+      setUploadedImage({ filename: file.name, data: reader.result as string }); // 非同期性を避けるため削除
+      reader.onloadend = () => {
+        if (reader.result) {
+          console.log(uploadedImage)
+          sendMessage({
+            // NEW: Base64データとファイル名を直接 sendMessage に渡す
+            image: uploadedImage, // Base64データ
+            send_user_id: currentUser?.user_id || ""
+            ,
+            receiver_user_id: id,
+            message: "", // オプション: 画像のキャプション
+            type: "image",
+          });
+          // ファイル入力フィールドをクリアして、同じファイルを再度アップロードできるようにする
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  // ★★★ NEW: メンター評価モーダルを閉じる関数 ★★★
+  
+
+  const handleCodeSend = (codeContent: string) => {
+    if (codeContent.trim()) {
+      sendMessage({
+        message: codeContent, // コードをメッセージとして送信
+        send_user_id: currentUser?.user_id || "",
+        receiver_user_id: id,
+        type: "code",
+      });
+      setIsCodeInputModalOpen(false);
+    }
+  };
+
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+
+  const handleOpenFeedbackModal = () => {
+    setIsFeedbackModalOpen(true);
+    setIsDropdownOpen(false);
+  };
+
   const handleCloseFeedbackModal = () => {
     setIsFeedbackModalOpen(false);
   };
 
   const handleSubmitFeedback = (rating: number, comment: string) => {
-    // ここで評価を送信する処理を実装
     console.log("Rating:", rating);
     console.log("Comment:", comment);
     const feedback = {
-      mentorship_id: usermentors.mentorship_id || "", // メンターシップID（undefinedの場合は空文字列）
-      content: comment, // コメント内容
-      rating: rating, // 評価
+      mentorship_id: usermentors.mentorship_id || "",
+      content: comment,
+      rating: rating,
     };
     registerFeedback(feedback)
       .then(() => {
         alert("メンターの評価を送信しました！");
-        handleCloseFeedbackModal(); // モーダルを閉じる
+        handleCloseFeedbackModal();
       })
-      .catch((error: unknown) => {
+      .catch((error) => {
         console.error("評価の送信に失敗しました:", error);
         alert("評価の送信に失敗しました。");
       });
@@ -103,27 +144,22 @@ export default function IndividualChatPage() {
 
   const renderStarRating = (rating: number | null | undefined) => {
     if (rating === null || rating === undefined) {
-      return (
-        <span className={styles.noRatingText}>評価なし</span> // 評価がない場合の表示
-      );
+      return <span className={styles.noRatingText}>評価なし</span>;
     }
 
     const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0; // 小数点以下があるか (例: 4.5 -> 0.5)
+    const hasHalfStar = rating % 1 !== 0;
 
     const stars = [];
 
-    // 塗りつぶされた星
     for (let i = 0; i < fullStars; i++) {
       stars.push(<FaStar key={`full-${i}`} className={styles.starIcon} />);
     }
 
-    // 半分の星
     if (hasHalfStar) {
       stars.push(<FaStarHalfStroke key="half" className={styles.starIcon} />);
     }
 
-    // 残りの空の星（合計5つになるように）
     const emptyStars = 5 - stars.length;
     for (let i = 0; i < emptyStars; i++) {
       stars.push(
@@ -139,15 +175,12 @@ export default function IndividualChatPage() {
 
   return (
     <div className={styles.container}>
-      {/* メインコンテンツ */}
       <main className={styles.main}>
-        {/* チャットヘッダー */}
         <div className={styles.chatHeaderWrapper}>
           <div className={styles.chatHeaderContent}>
             <div className={styles.chatHeaderLeft}>
               <a href="/chats" className={styles.iconButton}>
-                <HiOutlineArrowLeft className={styles.iconSmall} />{" "}
-                {/* 戻るアイコン */}
+                <HiOutlineArrowLeft className={styles.iconSmall} />
               </a>
               <div className={styles.mentorInfoInHeader}>
                 <div className={styles.avatarWrapper}>
@@ -158,37 +191,34 @@ export default function IndividualChatPage() {
                       className={styles.avatarImage}
                     />
                     <div className={styles.avatarFallback}>
-                      {receiverUser?.first_name?.charAt(0)}{" "}
-                      {/* プロフィール画像のフォールバック */}
+                      {receiverUser?.first_name?.charAt(0)}
                     </div>
                   </div>
                 </div>
                 <div>
                   <div className={styles.mentorRankRow}>
                     <h1 className={styles.mentorNameHeader}>
-                      {receiverUser?.first_name} {/* 相手のユーザー名 */}
+                      {receiverUser?.first_name}
                     </h1>
                   </div>
                 </div>
               </div>
             </div>
-            {/* ドロップダウンメニュー */}
             <div className={styles.dropdownMenu}>
               <button
                 className={styles.iconButton}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)} // ドロップダウンの開閉
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <HiOutlineEllipsisVertical className={styles.iconSmall} />{" "}
-                {/* 縦三点リーダーアイコン */}
+                <HiOutlineEllipsisVertical className={styles.iconSmall} />
               </button>
-              {isDropdownOpen && ( // ドロップダウンが開いている場合のみ表示
+              {isDropdownOpen && (
                 <div className={styles.dropdownMenuContent}>
                   <button
                     className={styles.dropdownMenuItem}
-                    onClick={() => setIsDropdownOpen(false)}
+                    onClick={handleOpenFeedbackModal}
                   >
                     <HiOutlineStar className={styles.dropdownMenuItemIcon} />
-                    メンターを評価 {/* メニューアイテム */}
+                    メンターを評価
                   </button>
                   <button
                     className={styles.dropdownMenuItem}
@@ -197,7 +227,7 @@ export default function IndividualChatPage() {
                     <HiOutlineDocumentText
                       className={styles.dropdownMenuItemIcon}
                     />
-                    チャット履歴をエクスポート {/* メニューアイテム */}
+                    チャット履歴をエクスポート
                   </button>
                 </div>
               )}
@@ -205,135 +235,138 @@ export default function IndividualChatPage() {
           </div>
         </div>
 
-        {/* チャットとサイドバーのコンテナ */}
         <div className={styles.chatAndSidebarContainer}>
-          {/* チャットメッセージエリア */}
           <div className={styles.chatArea}>
             <div className={styles.messagesContainer}>
-              {formattedMessages.map(
-                (
-                  msg // 整形されたメッセージをマップ
-                ) => (
+              {formattedMessages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`${styles.messageWrapper} ${
+                    msg.sender === currentUser?.first_name
+                      ? styles.messageUser
+                      : styles.messageMentor
+                  }`}
+                >
                   <div
-                    key={msg.id}
-                    className={`${styles.messageWrapper} ${
-                      msg.sender === currentUser?.first_name // 送信者によってスタイルを切り替え
-                        ? styles.messageUser
-                        : styles.messageMentor
+                    className={`${styles.messageBubbleContainer} ${
+                      msg.sender === currentUser?.first_name
+                        ? styles.messageBubbleUserOrder
+                        : styles.messageBubbleMentorOrder
                     }`}
                   >
+                    {msg.sender === receiverUser?.first_name && (
+                      <div className={styles.mentorAvatarInMessage}>
+                        <div className={styles.avatarMini}>
+                          <img
+                            src={
+                              receiverUser?.profile_image || "/placeholder.svg"
+                            }
+                            alt={receiverUser?.first_name}
+                            className={styles.avatarImage}
+                          />
+                          <div className={styles.avatarFallbackMini}>
+                            {receiverUser?.first_name}
+                          </div>
+                        </div>
+                        <span className={styles.mentorNameMini}>
+                          {receiverUser?.first_name}
+                        </span>
+                      </div>
+                    )}
                     <div
-                      className={`${styles.messageBubbleContainer} ${
+                      className={`${styles.messageBubble} ${
                         msg.sender === currentUser?.first_name
-                          ? styles.messageBubbleUserOrder
-                          : styles.messageBubbleMentorOrder
+                          ? styles.messageBubblePrimary
+                          : msg.type === "code"
+                          ? styles.messageBubbleCode
+                          : styles.messageBubbleMuted
                       }`}
                     >
-                      {msg.sender === receiverUser?.first_name && ( // 相手のメッセージの場合のみアバターと名前を表示
-                        <div className={styles.mentorAvatarInMessage}>
-                          <div className={styles.avatarMini}>
-                            <img
-                              src={
-                                receiverUser?.profile_image ||
-                                "/placeholder.svg"
-                              }
-                              alt={receiverUser?.first_name}
-                              className={styles.avatarImage}
+                      {msg.type === "code" ? (
+                        <div>
+                          <div className={styles.codeHeader}>
+                            <HiOutlineCodeBracket
+                              className={styles.codeIcon}
                             />
-                            <div className={styles.avatarFallbackMini}>
-                              {receiverUser?.first_name}
-                            </div>
+                            <span className={styles.codeLanguage}></span>
                           </div>
-                          <span className={styles.mentorNameMini}>
-                            {receiverUser?.first_name}
-                          </span>
+                          <pre className={styles.codeBlock}>
+                            <code>{msg.content}</code>
+                          </pre>
                         </div>
+                      ) : msg.type === "image" ? (
+                        <img
+                          src={`http://127.0.0.1:5000/chat_image/${msg.image}`}
+                          alt="添付画像"
+                          className={styles.chatImage}
+                        />
+                      ) : (
+                        <p className={styles.messageText}>{msg.content}</p>
                       )}
-                      <div
-                        className={`${styles.messageBubble} ${
-                          msg.sender === "user" // 送信者とタイプによってバブルのスタイルを切り替え
-                            ? styles.messageBubblePrimary
-                            : msg.type === "code"
-                            ? styles.messageBubbleCode
-                            : styles.messageBubbleMuted
-                        }`}
-                      >
-                        {msg.type === "code" ? ( // コードメッセージの場合
-                          <div>
-                            <div className={styles.codeHeader}>
-                              <HiOutlineCodeBracket
-                                className={styles.codeIcon}
-                              />
-                              <span className={styles.codeLanguage}></span>
-                            </div>
-                            <pre className={styles.codeBlock}>
-                              <code>{msg.content}</code>
-                            </pre>
-                          </div>
-                        ) : (
-                          // テキストメッセージの場合
-                          <p className={styles.messageText}>{msg.content}</p>
-                        )}
-                      </div>
-                      <div
-                        className={`${styles.messageTimestamp} ${
-                          msg.sender === "user"
-                            ? styles.messageTimestampUser
-                            : ""
-                        }`}
-                      >
-                        {msg.timestamp} {/* タイムスタンプ */}
-                      </div>
+                    </div>
+                    <div
+                      className={`${styles.messageTimestamp} ${
+                        msg.sender === currentUser?.first_name
+                          ? styles.messageTimestampUser
+                          : ""
+                      }`}
+                    >
+                      {msg.timestamp}
                     </div>
                   </div>
-                )
-              )}
+                </div>
+              ))}
             </div>
 
-            {/* メッセージ入力エリア */}
             <div className={styles.messageInputArea}>
               <div className={styles.messageInputWrapper}>
-                <button className={styles.outlineIconButton}>
-                  <HiOutlinePaperClip className={styles.iconSmall} />{" "}
-                  {/* クリップアイコン */}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleImageSend}
+                  accept="image/*"
+                />
+                <button
+                  className={styles.outlineIconButton}
+                  onClick={() => fileInputRef?.current?.click()}
+                >
+                  <HiOutlinePaperClip className={styles.iconSmall} />
                 </button>
-                <button className={styles.outlineIconButton}>
-                  <HiOutlineCodeBracket className={styles.iconSmall} />{" "}
-                  {/* コードブラケットアイコン */}
+                <button
+                  className={styles.outlineIconButton}
+                  onClick={() => setIsCodeInputModalOpen(true)}
+                >
+                  <HiOutlineCodeBracket className={styles.iconSmall} />
                 </button>
-                {/* メッセージ入力用のtextarea */}
                 <textarea
                   placeholder="メッセージを入力..."
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)} // 入力値の更新
+                  onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
-                      // Enterキーが押され、Shiftキーが押されていない場合
-                      e.preventDefault(); // デフォルトの改行動作を防止
-                      handleSendMessage(); // メッセージを送信
+                      e.preventDefault();
+                      handleSendMessage();
                     }
                   }}
                   className={styles.messageTextarea}
-                  rows={1} // 初期行数
+                  rows={1}
                 />
                 <button
-                  onClick={handleSendMessage} // クリックでメッセージ送信
-                  disabled={!message.trim()} // メッセージが空白の場合は無効化
+                  onClick={handleSendMessage}
+                  disabled={!message.trim()}
                   className={styles.primaryButton}
                 >
-                  <FaPaperPlane className={styles.iconSmall} />{" "}
-                  {/* 送信アイコン */}
+                  <FaPaperPlane className={styles.iconSmall} />
                 </button>
               </div>
             </div>
           </div>
 
-          {/* 右サイドバー (メンター情報) */}
           <div className={styles.sidebar}>
             <div className={styles.card}>
               <div className={styles.cardHeader}>
-                <h2 className={styles.cardTitle}>メンター情報</h2>{" "}
-                {/* サイドバーのタイトル */}
+                <h2 className={styles.cardTitle}>メンター情報</h2>
               </div>
               <div className={styles.cardContent}>
                 <div className={styles.mentorInfoBlock}>
@@ -371,7 +404,6 @@ export default function IndividualChatPage() {
                     <span className={styles.detailLabel}>評価:</span>
                     <div className={styles.detailValue}>
                       {renderStarRating(receiverUser?.average_rating)}{" "}
-                      {/* ★ ここを修正 ★ */}
                       <span className={styles.ratingText}>
                         {receiverUser?.average_rating !== undefined &&
                         receiverUser?.average_rating !== null
@@ -381,8 +413,9 @@ export default function IndividualChatPage() {
                     </div>
                   </div>
                   <div className={styles.detailRow}>
-                    <span className={styles.detailLabel}>返信時間:{receiverUser?.response_time}</span>
-                    {/* 返信時間のプレースホルダー */}
+                    <span className={styles.detailLabel}>
+                      返信時間:{receiverUser?.response_time}
+                    </span>
                   </div>
                   <div className={styles.detailRow}>
                     <span className={styles.detailLabel}>ステータス</span>
@@ -394,22 +427,27 @@ export default function IndividualChatPage() {
                 </div>
                 <button
                   className={`${styles.outlineButton} ${styles.fullWidthButton}`}
-                  onClick={handleOpenFeedbackModal} // メンター評価モーダルを開く
+                  onClick={handleOpenFeedbackModal}
                 >
                   <HiOutlineStar className={styles.buttonIcon} />
-                  メンターを評価 {/* メンター評価ボタン */}
+                  メンターを評価
                 </button>
               </div>
             </div>
           </div>
         </div>
       </main>
-      {/* ★★★ NEW: MentorshipFeedbackModal コンポーネントをレンダリング ★★★ */}
       <MentorshipFeedbackModal
         isOpen={isFeedbackModalOpen}
         onClose={handleCloseFeedbackModal}
         onSubmit={handleSubmitFeedback}
-        mentorName={receiverUser?.first_name || "メンター"} // メンターの名前を渡す
+        mentorName={receiverUser?.first_name || "メンター"}
+      />
+
+      <CodeInputModal
+        isOpen={isCodeInputModalOpen}
+        onClose={() => setIsCodeInputModalOpen(false)}
+        onSubmit={handleCodeSend}
       />
     </div>
   );

@@ -11,8 +11,9 @@
 }
 
 .mainContainer {
-  padding: 1.5rem 0;
-  width: 1200px;
+  padding: 1rem; /* Adjust padding for smaller screens */
+  width: 100%; /* Make width 100% for full responsiveness */
+  max-width: 1200px; /* Keep a max-width for larger screens */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -38,29 +39,58 @@
 }
 
 .pageTitle {
-  font-size: 1.5rem;
+  font-size: 1.25rem; /* Slightly smaller for mobile */
   font-weight: bold;
   letter-spacing: -0.025em;
 }
 
+@media (min-width: 768px) {
+  .pageTitle {
+    font-size: 1.5rem; /* Original size for larger screens */
+  }
+}
+
 .pageSubtitle {
   color: #6b7280;
+  font-size: 0.875rem; /* Adjust for mobile readability */
+}
+
+@media (min-width: 768px) {
+  .pageSubtitle {
+    font-size: 1rem; /* Original size for larger screens */
+  }
 }
 
 .searchFilterWrapper {
   display: flex;
-  align-items: center;
+  flex-direction: column; /* Stack for smaller screens */
+  align-items: center; /* Center items when stacked */
   gap: 1rem;
   width: 100%;
-  max-width: 85%;
-  margin-left: auto;
-  justify-content: flex-end;
+  max-width: 100%; /* Allow full width on smaller screens */
+  margin-top: 1rem; /* Add some top margin for separation */
+  justify-content: flex-end; /* This will only apply when flex-direction is row */
+}
+
+@media (min-width: 768px) {
+  .searchFilterWrapper {
+    flex-direction: row; /* Back to row for larger screens */
+    max-width: 85%; /* Original max-width */
+    margin-left: auto;
+    margin-top: 0; /* Remove top margin when row */
+  }
 }
 
 .searchBox {
   position: relative;
-  width: 100%;
-  max-width: 16rem;
+  width: 100%; /* Full width for search box on small screens */
+  max-width: 100%; /* Override original max-width for mobile */
+}
+
+@media (min-width: 768px) {
+  .searchBox {
+    max-width: 16rem; /* Original max-width for larger screens */
+  }
 }
 
 .searchIcon {
@@ -94,15 +124,19 @@
   margin-top: 1.5rem;
   margin: 0 auto;
   display: grid;
-  gap: 0.5rem;
+  gap: 1rem; /* Increase gap slightly for better spacing on mobile */
   justify-content: center;
-  width: 1200px;
-  max-width: 85%;
+  width: 100%; /* Make width 100% for responsiveness */
+  max-width: 1200px; /* Keep max-width for larger screens */
+  padding: 0 1rem; /* Add horizontal padding for smaller screens */
 }
 
 @media (min-width: 768px) {
   .cardGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem; /* Revert to original gap for larger screens */
+    max-width: 85%; /* Original max-width */
+    padding: 0; /* Remove padding when max-width is applied */
   }
 }
 
@@ -114,7 +148,6 @@
 
 .card {
   width: 100%;
-  /* padding: 1rem; */
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   background-color: #fff;
@@ -135,11 +168,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap; /* Allow wrapping for long titles/badges on small screens */
 }
 
 .cardTitle {
-  font-size: 1rem;
+  font-size: 0.9rem; /* Slightly smaller for better fit on small cards */
   font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .cardTitle {
+    font-size: 1rem; /* Original size for larger screens */
+  }
 }
 
 .cardBadge {
@@ -152,6 +192,8 @@
   font-size: 0.75rem;
   font-weight: 500;
   color: #fff;
+  flex-shrink: 0; /* Prevent badge from shrinking */
+  margin-left: 0.5rem; /* Add a little space between title and badge */
 }
 
 .cardDescription {
