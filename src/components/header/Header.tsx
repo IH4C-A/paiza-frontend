@@ -1,22 +1,46 @@
-import { FaBell } from "react-icons/fa";
+import { FaBell, FaBars } from "react-icons/fa";
 import style from "./Header.module.css";
 import { useCurrentUser } from "../../hooks/useUser";
 import { usePlant } from "../../hooks/usePlant";
 import type { Rank } from "../../types/rankType";
+import { useState } from "react";
 
 export const Header = () => {
   const { currentUser } = useCurrentUser();
   const { plant } = usePlant();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className={style.container}>
-      <div className={style.navigationList}>
-        <figure>
-          <img src="/logo.png" alt="logo" width={250} />
+      {/* ハンバーガー：スマホサイズ時 */}
+      <button
+        className={style.menuToggle}
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        <FaBars />
+      </button>
+
+      {/* ロゴ */}
+      <figure className={style.logo}>
+        <img src="/logo.png" alt="logo" width={250} />
+      </figure>
+
+      {/* ハンバーガー内メニュー */}
+      <div
+        className={`${style.responsiveMenu} ${menuOpen ? style.active : ""}`}
+      >
+        {/* スマホサイズ時のロゴ表示 */}
+        <figure className={style.mobileLogoContainer}>
+          <img src="/logo.png" alt="logo" width={200} />
         </figure>
+
         <a className={style.navigationLink} href="/">
           トップ
         </a>
+        <a className={style.navigationLink} href="/mentor">
+          メンター
+        </a>
+
         {currentUser?.ranks?.some(
           (rank: Rank) => rank.rank_code === "mentor"
         ) ? (
@@ -47,7 +71,9 @@ export const Header = () => {
           チャット
         </a>
       </div>
-      <div className={style.navigationList}>
+
+      {/* 通知 + ログイン */}
+      <div className={style.rightNav}>
         <a className={style.navigationLink} href="/notification">
           <FaBell />
         </a>

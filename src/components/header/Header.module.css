@@ -1,33 +1,121 @@
 .container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-
-  /* position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  width: 100%; */
+  justify-content: space-between;
   height: 75px;
   background-color: #93b636;
   padding: 5px;
   z-index: 1000;
+  position: relative;
 }
-.navigationList {
+
+/* ハンバーガーボタン */
+.menuToggle {
+  display: none;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: white;
+  z-index: 2001;
+  position: relative;
+}
+
+.responsiveMenu {
   display: flex;
-  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  margin-left: 30px;
   gap: 20px;
 }
+
+/* スマホ専用ロゴコンテナ */
+.mobileLogoContainer {
+  display: none;
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 通知・ユーザー名 */
+.rightNav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ナビリンク */
 .navigationLink {
-  transition: 0.3s;
-  padding: 10px;
-  height: 100%;
+  color: white;
   text-decoration: none;
-  color: #fff;
+  padding: 8px;
+  transition: opacity 0.3s;
 }
 .navigationLink:hover {
-  opacity: 0.5;
+  opacity: 0.6;
 }
+
 .hidden {
   display: none;
+}
+
+/* タブレット・スマホ対応 */
+@media screen and (max-width: 1024px) {
+  .menuToggle {
+    display: block;
+  }
+
+  /* デスクトップ用ロゴを非表示 */
+  .logo {
+    display: none;
+  }
+
+  .responsiveMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #93b636;
+    flex-direction: column;
+    display: none;
+    padding: 100px 2rem 2rem;
+    gap: 1.5rem;
+    margin-left: 0px;
+    z-index: 2000;
+    overflow-y: auto;
+  }
+
+  .responsiveMenu.active {
+    display: flex;
+  }
+
+  /* スマホサイズ時のロゴ表示 */
+  .mobileLogoContainer {
+    display: block;
+  }
+
+  .responsiveMenu a {
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 12px;
+  }
+
+  .rightNav {
+    position: relative;
+    z-index: 2001;
+  }
+
+  /* タブレット専用の調整 */
+  @media screen and (min-width: 769px) and (max-width: 1024px) {
+    .logo {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .logo img {
+      width: 200px;
+    }
+  }
 }

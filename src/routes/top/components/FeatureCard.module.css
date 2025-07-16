@@ -1,39 +1,51 @@
+/* === ベーススタイル（モバイル向け） === */
 .container {
   display: flex;
+  flex-direction: column; /* 縦積みに変更 */
   gap: 20px;
   align-items: center;
 
-  width: 1000px;
-  height: 350px;
-  padding: 20px 40px;
-  background-color: rgba(255, 255, 255, 0.8);
+  /* 横幅を画面に合わせ、左右に余白を持たせる */
+  width: 90vw;
+  height: auto; /* 高さを自動調整 */
+  padding: 25px; /* 内側の余白を調整 */
+  text-align: center;
+
+  background-color: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  border-radius: 50px;
+  border-radius: 25px; /* 角丸を調整 */
 }
+
 .cardImage {
-  width: 250px;
+  width: 200px; /* 画像サイズを調整 */
+  height: 200px;
   object-fit: cover;
 }
+
 .featureDescription {
   display: flex;
   width: 100%;
   justify-content: center;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
+
 .cardTitle {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
+
 .cardText {
-  font-size: 1.1rem;
-  line-height: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
   word-break: break-all;
 }
+
 .buttonLink {
   text-decoration: none;
 }
+
 .cardButton {
   display: block;
   margin: auto;
@@ -45,4 +57,41 @@
   border-radius: 10px;
   color: #fff;
   font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.cardButton:hover {
+  background-color: #7b9a2d;
+}
+
+/* === PC向けのスタイル (画面幅が1024px以上の場合) === */
+@media (min-width: 1024px) {
+  .container {
+    flex-direction: row; /* 横並びに変更 */
+    gap: 20px;
+    align-items: center;
+    width: 1000px; /* 元の幅に戻す */
+    height: 350px;
+    padding: 20px 40px;
+    text-align: left; /* 左寄せに戻す */
+    border-radius: 50px;
+  }
+
+  .cardImage {
+    width: 250px; /* 元のサイズに戻す */
+    height: 250px;
+  }
+
+  .featureDescription {
+    gap: 20px;
+  }
+
+  .cardTitle {
+    font-size: 1.2rem;
+  }
+
+  .cardText {
+    font-size: 1.1rem;
+    line-height: 1.5rem;
+  }
 }

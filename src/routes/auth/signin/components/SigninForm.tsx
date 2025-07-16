@@ -1,15 +1,22 @@
 import { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 import useSignin from "../../../../hooks/useSignin";
 import style from "./SigninForm.module.css";
-import { useSearchParams } from "react-router-dom";
 
 export const SigninForm = () => {
   const { register, handleSubmit, errors, signInWithLineId } = useSignin();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const LINE_CHANNEL_ID = "2007736198";
   const LINE_LOGIN_REDIRECT_URI =
     "https://paiza-nurture-api.inrigsnet.com/api/line/callback";
+
+  // ✅ 戻るボタンの処理
+  const handleBack = () => {
+    navigate(-1); // 前のページに戻る
+  };
 
   // ✅ LINEログインに遷移（LINE公式ログイン画面へリダイレクト）
   const redirectToLineLogin = () => {
@@ -40,6 +47,12 @@ export const SigninForm = () => {
 
   return (
     <div className={style.container}>
+      {/* 戻るボタン */}
+      <button className={style.backButton} onClick={handleBack} type="button">
+        <FaArrowLeft className={style.backIcon} />
+        戻る
+      </button>
+
       <h1 className={style.formTitle}>ログイン</h1>
       <form onSubmit={handleSubmit}>
         <div className={style.inputContainer}>
