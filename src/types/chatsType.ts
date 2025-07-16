@@ -1,13 +1,16 @@
 export type Chats = {
-    chat_id: string;
-    message: string | null;
-    image: string | null;
-    sender: string;
-    receiver_user_id: string | null;
-    group_id: string | null;
-    chat_at: Date;
-    type: string;
-}
+  chat_id: string; // または number
+  message: string | null;
+  image: string | null; // 画像ファイル名
+  code: string | null; // コードスニペット (バックエンドが返す場合)
+  sender: string; // フロントエンドで表示するsender名 (例: first_name)
+  send_user_id: string; // 送信者のユーザーID
+  receiver_user_id?: string; // 受信者のユーザーID (個人チャットの場合)
+  group_id?: string; // グループID (グループチャットの場合)
+  chat_at: string; // 日時文字列
+  type: 'text' | 'image' | 'code'; // メッセージタイプ
+  // ... その他のプロパティ
+};
 
 export type ChatHistory = {
     message: string | null;

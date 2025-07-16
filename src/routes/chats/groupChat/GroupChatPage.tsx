@@ -146,28 +146,11 @@ console.log(member)
                     <div className={styles.messageContentWrapper}>
                       <div className={styles.messageSenderDetails}>
                         <span className={styles.messageSenderName}>{msg.sender}</span>
-                        {/* <div
-                          className={`${styles.senderRank} ${
-                            msg.rank === "S"
-                              ? styles.rankS
-                              : msg.sender?.rank === "A"
-                              ? styles.rankA
-                              : msg.sender?.rank === "B"
-                              ? styles.rankB
-                              : styles.rankC
-                          }`}
-                        >
-                          {msg.sender.rank}
-                        </div>
-                        {msg.sender.role === "moderator" && (
-                          <FaCrown className={styles.moderatorIcon} title="モデレーター" />
-                        )} */}
                         {getMessageTypeLabel(msg.type) && (
                           <span className={styles.messageTypeLabel}>
                             {getMessageTypeLabel(msg.type)}
                           </span>
                         )}
-                        {/* {msg.isPinned && <HiOutlineMapPin className={styles.pinnedIcon} title="ピン留め" />} */}
                         <span className={styles.messageTimestamp}>{msg.timestamp}</span>
                       </div>
                       <p className={styles.messageText}>{msg.content}</p>
